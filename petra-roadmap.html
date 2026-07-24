@@ -1,0 +1,830 @@
+<title>Petra Connect — Pre-Deployment Roadmap</title>
+<style>
+:root {
+  --bg:       #F2F5FA;
+  --surface:  #FFFFFF;
+  --card:     #FFFFFF;
+  --border:   #D8E0EE;
+  --text:     #0C1528;
+  --muted:    #64748B;
+  --gold:     #96650F;
+  --gold-bg:  #96650F18;
+  --green:    #16A34A;
+  --green-bg: #16A34A14;
+  --red:      #DC2626;
+  --red-bg:   #DC262614;
+  --amber:    #B45309;
+  --amber-bg: #B4530914;
+  --blue:     #1D4ED8;
+  --blue-bg:  #1D4ED814;
+  --purple:   #6D28D9;
+  --purple-bg:#6D28D914;
+  --slate-bg: #64748B18;
+  --sidebar:  220px;
+  --hdr:      56px;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg:       #070C18;
+  --surface:  #0C1424;
+  --card:     #101B2F;
+  --border:   #1A2A40;
+  --text:     #D8E2F2;
+  --muted:    #556070;
+  --gold:     #C9913D;
+  --gold-bg:  #C9913D1A;
+  --green:    #34D399;
+  --green-bg: #34D39914;
+  --red:      #F87171;
+  --red-bg:   #F8717114;
+  --amber:    #FBBF24;
+  --amber-bg: #FBBF2414;
+  --blue:     #60A5FA;
+  --blue-bg:  #60A5FA14;
+  --purple:   #A78BFA;
+  --purple-bg:#A78BFA14;
+  --slate-bg: #FFFFFF0A;
+  --sidebar:  220px;
+}}
+:root[data-theme="dark"] {
+  --bg:#070C18;--surface:#0C1424;--card:#101B2F;--border:#1A2A40;
+  --text:#D8E2F2;--muted:#556070;--gold:#C9913D;--gold-bg:#C9913D1A;
+  --green:#34D399;--green-bg:#34D39914;--red:#F87171;--red-bg:#F8717114;
+  --amber:#FBBF24;--amber-bg:#FBBF2414;--blue:#60A5FA;--blue-bg:#60A5FA14;
+  --purple:#A78BFA;--purple-bg:#A78BFA14;--slate-bg:#FFFFFF0A;
+}
+:root[data-theme="light"] {
+  --bg:#F2F5FA;--surface:#FFFFFF;--card:#FFFFFF;--border:#D8E0EE;
+  --text:#0C1528;--muted:#64748B;--gold:#96650F;--gold-bg:#96650F18;
+  --green:#16A34A;--green-bg:#16A34A14;--red:#DC2626;--red-bg:#DC262614;
+  --amber:#B45309;--amber-bg:#B4530914;--blue:#1D4ED8;--blue-bg:#1D4ED814;
+  --purple:#6D28D9;--purple-bg:#6D28D914;--slate-bg:#64748B18;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+#hdr {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--hdr);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 20px;
+}
+#hdr-title {
+  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.2px;
+  white-space: nowrap;
+}
+#hdr-title span { color: var(--gold); }
+#progress-wrap {
+  flex: 1;
+  display: flex; align-items: center; gap: 10px;
+}
+#progress-bar-outer {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+#progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #E8B252);
+  border-radius: 99px;
+  transition: width .4s ease;
+  width: 0%;
+}
+#progress-label {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+  min-width: 64px;
+  text-align: right;
+}
+#theme-toggle {
+  background: var(--slate-bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#theme-toggle:hover { color: var(--text); }
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+#sidebar {
+  position: fixed;
+  top: var(--hdr);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 16px 0 32px;
+}
+.sb-phase {
+  padding: 0 12px;
+  margin-bottom: 2px;
+}
+.sb-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 11.5px;
+  transition: background .15s, color .15s;
+}
+.sb-link:hover { background: var(--gold-bg); color: var(--text); }
+.sb-link.active { background: var(--gold-bg); color: var(--gold); font-weight: 600; }
+.sb-num {
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  background: var(--slate-bg);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  letter-spacing: 0;
+}
+.sb-link.active .sb-num { background: var(--gold-bg); color: var(--gold); }
+.sb-pct {
+  margin-left: auto;
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.sb-divider {
+  margin: 10px 20px;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ── MAIN ─────────────────────────────────────────────── */
+#main {
+  margin-left: var(--sidebar);
+  margin-top: var(--hdr);
+  padding: 32px 28px 64px;
+  max-width: 960px;
+}
+
+/* ── PHASE SECTION ─────────────────────────────────────── */
+.phase-section {
+  margin-bottom: 48px;
+}
+.phase-hdr {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.phase-badge {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: var(--gold-bg);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'SF Mono','Fira Code','Courier New',monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.phase-info { flex: 1; }
+.phase-title {
+  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-wrap: balance;
+  letter-spacing: -.2px;
+  line-height: 1.3;
+}
+.phase-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.phase-meta {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 8px; flex-wrap: wrap;
+}
+.phase-count {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── TASK GROUP ─────────────────────────────────────────── */
+.task-group { margin-bottom: 18px; }
+.task-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+/* ── TASK CARD ─────────────────────────────────────────── */
+.task-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  transition: border-color .15s, background .15s;
+  cursor: default;
+}
+.task-card:hover { border-color: var(--gold); }
+.task-card.done {
+  opacity: .55;
+}
+.task-card.done .task-title { text-decoration: line-through; }
+
+.task-cb {
+  width: 17px; height: 17px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.task-card.done .task-cb {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.task-body { flex: 1; min-width: 0; }
+.task-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+.task-id {
+  font-family: 'SF Mono','Fira Code','Courier New',monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-right: 6px;
+}
+.task-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.task-chips {
+  display: flex; align-items: center; gap: 5px;
+  margin-top: 7px; flex-wrap: wrap;
+}
+
+/* chips */
+.chip {
+  display: inline-flex; align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+.chip-critical { background: var(--red-bg); color: var(--red); }
+.chip-high     { background: var(--amber-bg); color: var(--amber); }
+.chip-medium   { background: var(--blue-bg); color: var(--blue); }
+.chip-low      { background: var(--slate-bg); color: var(--muted); }
+.chip-fe       { background: var(--blue-bg); color: var(--blue); }
+.chip-be       { background: var(--purple-bg); color: var(--purple); }
+.chip-both     { background: var(--gold-bg); color: var(--gold); }
+.chip-devops   { background: var(--slate-bg); color: var(--muted); }
+.chip-done     { background: var(--green-bg); color: var(--green); }
+.chip-partial  { background: var(--amber-bg); color: var(--amber); }
+.chip-missing  { background: var(--red-bg); color: var(--red); }
+
+@media (max-width: 640px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 20px 16px 64px; }
+}
+</style>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div id="hdr-title">Petra<span>Connect</span> — Pre-Deployment Roadmap</div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 0 tasks</div>
+  </div>
+  <button id="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+</div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-phase">
+    <a class="sb-link" href="#p0">
+      <span class="sb-num">P0</span> Audit &amp; Inventory
+      <span class="sb-pct" id="pct-p0">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p1">
+      <span class="sb-num">P1</span> Security
+      <span class="sb-pct" id="pct-p1">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p2">
+      <span class="sb-num">P2</span> Features
+      <span class="sb-pct" id="pct-p2">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p3">
+      <span class="sb-num">P3</span> UX Polish
+      <span class="sb-pct" id="pct-p3">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p4">
+      <span class="sb-num">P4</span> Performance
+      <span class="sb-pct" id="pct-p4">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p5">
+      <span class="sb-num">P5</span> Testing
+      <span class="sb-pct" id="pct-p5">—</span>
+    </a>
+  </div>
+  <div class="sb-phase">
+    <a class="sb-link" href="#p6">
+      <span class="sb-num">P6</span> Deployment
+      <span class="sb-pct" id="pct-p6">—</span>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main"></main>
+
+<script>
+const PHASES = [
+  {
+    id: 'p0',
+    num: 'P0',
+    title: 'Audit & Inventory',
+    desc: 'Before touching code, take stock of what is built, what is broken, and what is missing. This phase produces the ground truth every later phase builds on.',
+    groups: [
+      {
+        label: 'Codebase Audit',
+        tasks: [
+          { id:'P0-01', title:'Document all API endpoints and their response shapes', desc:'List every PHP file in petra-api/, the HTTP method it accepts, its required parameters, and a sample response. Catch inconsistencies before they become bugs in production.', priority:'high', scope:'be', status:'missing' },
+          { id:'P0-02', title:'Manual happy-path test of every existing feature', desc:'Walk through every page and action as three roles — member, hub leader, admin. Record what works, what errors silently, and what shows no feedback at all.', priority:'high', scope:'both', status:'missing' },
+          { id:'P0-03', title:'Identify all role-guard gaps in API endpoints', desc:'Verify each endpoint checks the authenticated user\'s role where relevant. A member should never be able to call an admin or hub_leader endpoint.', priority:'critical', scope:'be', status:'missing' },
+          { id:'P0-04', title:'Audit the database schema for missing indexes and nullable columns', desc:'Open phpMyAdmin and inspect every table. Check for columns that should be NOT NULL, missing foreign key constraints, and tables with no primary index.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P0-05', title:'Compile a prioritised known-bugs list', desc:'From the happy-path test in P0-02, collect every bug and UX gap. Stack-rank by user impact. This list drives Phase 2 sequencing.', priority:'high', scope:'both', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p1',
+    num: 'P1',
+    title: 'Security Hardening',
+    desc: 'Lock down the backend before any new feature is added. Security issues retrofitted after the fact are harder to test and easier to miss.',
+    groups: [
+      {
+        label: 'Authentication & Tokens',
+        tasks: [
+          { id:'P1-01', title:'Verify token expiry (exp) is enforced in requireAuth()', desc:'The HMAC token payload contains an exp field. Confirm requireAuth() rejects requests where exp < time(). Without this, tokens never actually expire.', priority:'critical', scope:'be', status:'partial' },
+          { id:'P1-02', title:'Frontend auto-logout on any 401 response', desc:'Wrap the fetch request() helper so that any 401 response calls clearSession() and redirects to login. Users should never stay logged in with an expired or invalid token.', priority:'critical', scope:'fe', status:'missing' },
+          { id:'P1-03', title:'Rate-limit the login and register endpoints', desc:'Add a simple per-IP request counter in PHP (using APCu or a DB table) that blocks after 10 failed attempts in 15 minutes. Prevents brute-force attacks.', priority:'high', scope:'be', status:'missing' },
+        ]
+      },
+      {
+        label: 'Input & File Validation',
+        tasks: [
+          { id:'P1-04', title:'Sanitize all user inputs server-side on every POST endpoint', desc:'Apply trim() and strip_tags() to every string field received via POST before using it in a query or writing it to the DB. Prepared statements prevent SQL injection but not stored XSS.', priority:'critical', scope:'be', status:'partial' },
+          { id:'P1-05', title:'Validate file upload MIME type and enforce size limit', desc:'In upload-audio.php (and any future upload endpoint), use finfo_file() to check the actual MIME type of the uploaded file — not the client-supplied Content-Type. Set a 10MB cap.', priority:'critical', scope:'be', status:'partial' },
+          { id:'P1-06', title:'Validate all GET query parameters (with, since, id)', desc:'Parameters like ?with= and ?id= should be validated as valid UUIDs (36 chars, correct format) before being used in queries. Reject and 400 anything that does not match.', priority:'high', scope:'be', status:'missing' },
+        ]
+      },
+      {
+        label: 'Server & Infrastructure',
+        tasks: [
+          { id:'P1-07', title:'Lock CORS to the production domain', desc:'cors.php currently allows localhost:3000. Before deploying, change the allowed origin to the production domain only. Never allow * in production.', priority:'critical', scope:'be', status:'missing' },
+          { id:'P1-08', title:'Disable directory listing for uploads/audio/', desc:'Add Options -Indexes to the .htaccess inside uploads/ so that visiting /petra-api/uploads/audio/ does not enumerate all recorded voice files.', priority:'high', scope:'devops', status:'missing' },
+          { id:'P1-09', title:'Add security response headers in Apache', desc:'Set X-Frame-Options: DENY, X-Content-Type-Options: nosniff, and Referrer-Policy: strict-origin-when-cross-origin in .htaccess or httpd.conf.', priority:'high', scope:'devops', status:'missing' },
+          { id:'P1-10', title:'Suppress raw PHP errors in production', desc:'Set display_errors = Off and log_errors = On in php.ini (or at the top of config files). API consumers should receive JSON error objects, never raw PHP stack traces.', priority:'high', scope:'be', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p2',
+    num: 'P2',
+    title: 'Feature Completion',
+    desc: 'Build everything that is missing or partially implemented. Work group by group — complete each area fully before moving to the next.',
+    groups: [
+      {
+        label: 'A — User Profiles',
+        tasks: [
+          { id:'P2-01', title:'Backend: GET /users/profile.php — own full profile', desc:'Return the authenticated user\'s full record: id, full_name, email, profession, bio, profile_photo, role, hub_name, hub_status, member_since.', priority:'high', scope:'be', status:'missing' },
+          { id:'P2-02', title:'Backend: POST /users/update.php — edit own profile', desc:'Allow updating full_name, profession, and bio. Validate lengths. Return the updated user object.', priority:'high', scope:'be', status:'missing' },
+          { id:'P2-03', title:'Backend: POST /users/photo.php — profile photo upload', desc:'Accept a multipart image upload (jpg/png/webp, max 2MB). Resize to 400×400 using GD. Save to uploads/photos/ and update the users.profile_photo column.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-04', title:'Backend: GET /users/view.php?id=X — public profile', desc:'Return a user\'s public-facing profile: name, profession, bio, photo, hub, mutual connections count. Requires authentication but not a specific role.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-05', title:'Frontend: Profile page component (own profile + edit form)', desc:'A /profile route that shows the authenticated user\'s info and an inline edit form for name, profession, and bio. Includes photo upload with preview.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P2-06', title:'Frontend: Profile photo in all avatar slots', desc:'Replace every initials avatar throughout the app (messages, members list, connections, admin panel) with the user\'s actual photo when one is set, falling back to initials.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P2-07', title:'Frontend: Clickable member names → profile view', desc:'In the members directory, connections list, and message sidebar, make member names/avatars open a profile modal or navigate to /profile/:id.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'B — Announcements',
+        tasks: [
+          { id:'P2-08', title:'Backend: update and delete announcement endpoints', desc:'POST /announcements/update.php (title, content, announcement_id) and /announcements/delete.php. Verify that only the author or an admin can modify.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-09', title:'Frontend: Edit/delete controls on own announcements', desc:'Show edit and delete icon buttons on announcement cards when the viewing user is the author or an admin. Inline editing preferred over a modal.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'C — Events',
+        tasks: [
+          { id:'P2-10', title:'Backend: GET /events/view.php?id=X — event detail + attendees', desc:'Return the full event object plus an attendees array (id, full_name, profession). Include registered_count and a is_registered flag for the current user.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-11', title:'Backend: update and delete event endpoints', desc:'POST /events/update.php and /events/delete.php. Only the creator or an admin may modify. On delete, cascade-delete all event_registrations.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-12', title:'Frontend: Event detail modal or page', desc:'Clicking an event opens a detail view showing full description, date/time/location, attendee list, and edit/delete for the creator. Registration toggle included.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'D — Connections',
+        tasks: [
+          { id:'P2-13', title:'Backend: POST /connections/remove.php — remove a connection', desc:'Accept connection_id and delete the row. Both users should lose the connection from their list. Return a success confirmation.', priority:'low', scope:'be', status:'missing' },
+          { id:'P2-14', title:'Frontend: Remove connection button in connections list', desc:'Add a "Remove" action to each accepted connection entry. Confirm with a dialog before calling remove.php.', priority:'low', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'E — Hub Leader Panel',
+        tasks: [
+          { id:'P2-15', title:'Backend: return approved member list for leader\'s hub', desc:'Extend /hub-members/pending.php or add /hub-members/approved.php so the hub leader can see all currently active members, not just pending requests.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-16', title:'Frontend: Leader dashboard with hub stats', desc:'Add a stats section to the hub leader view: total approved members, pending count, upcoming events count. Show the full approved-member list below.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'F — Admin Panel',
+        tasks: [
+          { id:'P2-17', title:'DB: create audit_logs table', desc:'CREATE TABLE audit_logs (id char(36) DEFAULT (uuid()), action varchar(100), performed_by char(36), target_id char(36), detail text, created_at datetime DEFAULT current_timestamp()). Index on performed_by and created_at.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-18', title:'Backend: write role changes to audit_logs table', desc:'In update-role.php, INSERT a row into audit_logs after every successful role change. Add /admin/audit-logs.php to return paginated logs for the admin panel.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-19', title:'Frontend: Admin panel loads persistent audit logs from DB', desc:'Replace the session-only in-memory log array with data from /admin/audit-logs.php. Logs now survive page refreshes and accumulate over time.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P2-20', title:'Backend + Frontend: Hub management for admins', desc:'Admin should be able to create new hubs (name, type, description) and edit existing ones. Add /admin/hubs.php endpoints and a hub management section in AdminPanel.tsx.', priority:'low', scope:'both', status:'missing' },
+        ]
+      },
+      {
+        label: 'G — Messaging Extras',
+        tasks: [
+          { id:'P2-21', title:'Backend: soft-delete own messages', desc:'POST /messages/delete.php — sets is_deleted=1 on the message row (after adding that column). The thread endpoint should filter out deleted messages. Only the sender can delete.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-22', title:'Frontend: long-press a message bubble → delete option', desc:'On mobile, long-pressing a "mine" bubble shows a small context menu with a Delete option. On desktop, a right-click or hover menu works. Call delete.php and remove the message from state.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P2-23', title:'Backend: image attachment support in send.php', desc:'POST /messages/upload-image.php — accept jpg/png/gif/webp, validate MIME, resize if >1920px wide, save to uploads/images/. send.php accepts message_type="image" and image_url.', priority:'medium', scope:'be', status:'missing' },
+          { id:'P2-24', title:'Frontend: image send and display in chat', desc:'Add a camera/clip button to the compose bar. On selection, upload via upload-image.php then send. Render image messages as tappable thumbnails in the bubble — full screen on tap.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P2-25', title:'Frontend: in-thread message search', desc:'A search icon in the chat header opens a search bar. Filter the rendered message list by the query string, highlight matching text, and scroll to the first match.', priority:'low', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'H — Authentication Extras',
+        tasks: [
+          { id:'P2-26', title:'Backend: password reset via email (forgot + reset endpoints)', desc:'POST /auth/forgot.php generates a time-limited token stored in a password_resets table and sends it by email. POST /auth/reset.php validates the token and updates the password hash.', priority:'high', scope:'be', status:'missing' },
+          { id:'P2-27', title:'Frontend: Forgot Password page and Reset Password page', desc:'A "Forgot password?" link on the login screen leads to a form where the user enters their email. A separate /reset-password route accepts the emailed token and a new password.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P2-28', title:'Frontend: session expiry warning banner', desc:'Calculate token exp from the JWT payload stored in localStorage. Show a dismissible yellow banner ("Your session expires in 10 minutes — log in again to stay connected") with a re-login button.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'I — Resources',
+        tasks: [
+          { id:'P2-29', title:'Backend: Resources endpoints (list, upload, download)', desc:'GET /resources/index.php returns files shared in the user\'s hub. POST /resources/upload.php accepts pdf/doc/xlsx/zip (max 20MB), saves to uploads/resources/, records in the resources table.', priority:'low', scope:'be', status:'missing' },
+          { id:'P2-30', title:'Frontend: Resources page — file library and upload', desc:'A /resources route listing all shared files in the user\'s hub with name, uploader, date, and a download link. Includes an Upload button with a file picker and progress indicator.', priority:'low', scope:'fe', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p3',
+    num: 'P3',
+    title: 'UX & UI Polish',
+    desc: 'The difference between a prototype and a product is how it behaves when something goes wrong. Cover every loading, error, and empty state before declaring features complete.',
+    groups: [
+      {
+        label: 'Loading States',
+        tasks: [
+          { id:'P3-01', title:'Skeleton loaders for messages thread and conversations list', desc:'Replace blank white space during data fetch with animated skeleton cards. Match the approximate shape of a conversation row and a message bubble.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P3-02', title:'Skeleton loaders for members, events, and announcements lists', desc:'Each list page should show 4–6 skeleton rows while the API call is in flight. Use a shimmer animation that works in both light and dark themes.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P3-03', title:'Button loading spinner and disabled state on all async actions', desc:'Every button that triggers an API call should show a small spinner and become pointer-events:none after the first click to prevent double-submits. Restore after the response.', priority:'high', scope:'fe', status:'partial' },
+        ]
+      },
+      {
+        label: 'Error States',
+        tasks: [
+          { id:'P3-04', title:'Global toast notification for API errors', desc:'Replace silent catch(){} blocks throughout the app with a toast system. Errors should surface a brief, user-readable message (e.g. "Couldn\'t send message — try again") for 4 seconds.', priority:'high', scope:'fe', status:'partial' },
+          { id:'P3-05', title:'Inline form validation messages (all forms)', desc:'Validate required fields, email format, password minimum length, and field max lengths on the frontend before submitting. Show an inline message below the relevant input, not an alert().', priority:'high', scope:'fe', status:'partial' },
+          { id:'P3-06', title:'Network offline detection banner', desc:'Use window navigator.onLine and the online/offline events to show a sticky banner at the top when the connection drops. Dismiss automatically when reconnected.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'Empty States',
+        tasks: [
+          { id:'P3-07', title:'Empty states with clear call-to-action for every list', desc:'No messages, no connections, no events, no notifications, no announcements — each needs a distinct empty state with an icon, a short sentence, and (where applicable) a primary action button.', priority:'high', scope:'fe', status:'partial' },
+        ]
+      },
+      {
+        label: 'Responsive Design',
+        tasks: [
+          { id:'P3-08', title:'Test and fix all pages at 320px (iPhone SE width)', desc:'At 320px many flex and grid layouts break. Walk every page at this breakpoint and fix overflowing content, unreadable text, and buttons that fall off screen.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P3-09', title:'Verify messages page mobile layout on a real device', desc:'The back-button, panel switching, and keyboard appearance all behave differently on a physical phone than in DevTools. Test on Android and/or iOS.', priority:'high', scope:'fe', status:'partial' },
+          { id:'P3-10', title:'Admin table horizontal scroll on small screens', desc:'Ensure the users table in AdminPanel has overflow-x: auto on its wrapper so it scrolls horizontally rather than causing page-level overflow on phones.', priority:'medium', scope:'fe', status:'partial' },
+        ]
+      },
+      {
+        label: 'Accessibility',
+        tasks: [
+          { id:'P3-11', title:'ARIA labels on all icon-only buttons', desc:'Every button that contains only an icon (mic, send, play/pause, emoji, attach, close) needs an aria-label="…" so screen readers can announce its purpose.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P3-12', title:'Visible keyboard focus states throughout the app', desc:'Remove outline:none without a replacement. Every interactive element — links, buttons, inputs, checkboxes — needs a clear :focus-visible ring, matching the brand gold on dark backgrounds.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P3-13', title:'Color contrast audit (WCAG AA minimum)', desc:'Run the muted text colors (#6B7280 on white) and gold text through a contrast checker. WCAG AA requires 4.5:1 for body text. Adjust shades where it fails.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      },
+      {
+        label: 'Interaction Polish',
+        tasks: [
+          { id:'P3-14', title:'Unified toast / snackbar notification system', desc:'Build a single ToastProvider (or a lightweight utility) that any component can call to show success, error, and info messages. Replace all window.alert() and silent failures.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P3-15', title:'Confirmation dialogs before destructive actions', desc:'Deleting a message, removing a connection, changing a user\'s role in the admin panel — each should present a concise confirmation prompt before the action executes.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p4',
+    num: 'P4',
+    title: 'Performance',
+    desc: 'Address the issues that will become visible under real load. Focus on the database layer first — a slow query hurts every user simultaneously.',
+    groups: [
+      {
+        label: 'Database',
+        tasks: [
+          { id:'P4-01', title:'Add composite index on messages (sender_id, receiver_id, created_at)', desc:'The thread and poll queries filter by sender/receiver pair and sort by created_at. Without an index this is a full table scan on every message poll. Add via ALTER TABLE or phpMyAdmin.', priority:'critical', scope:'be', status:'missing' },
+          { id:'P4-02', title:'Add index on notifications (user_id, is_read)', desc:'fetchNotifications filters by user and is_read. As notifications accumulate this becomes slow. A composite index on (user_id, is_read) fixes it.', priority:'high', scope:'be', status:'missing' },
+          { id:'P4-03', title:'Paginate all unbounded list endpoints', desc:'Messages thread, members list, events list, and notifications should all accept ?page=N and return a fixed page size (e.g. 30 rows). The frontend should implement infinite scroll or a "Load more" button.', priority:'high', scope:'both', status:'missing' },
+          { id:'P4-04', title:'Audit conversations.php for N+1 query pattern', desc:'Check whether conversations.php runs a separate query per conversation to get the last message or partner info. If so, rewrite as a single JOIN query.', priority:'medium', scope:'be', status:'missing' },
+        ]
+      },
+      {
+        label: 'Apache / Static Assets',
+        tasks: [
+          { id:'P4-05', title:'Enable gzip compression for API responses', desc:'Add mod_deflate rules to .htaccess so JSON responses are gzip-compressed. On a slow connection this can cut response size 60–80%.', priority:'medium', scope:'devops', status:'missing' },
+          { id:'P4-06', title:'Cache-Control headers for uploaded audio and images', desc:'Served files in uploads/ are immutable (uuid filenames). Add Cache-Control: public, max-age=31536000 so the browser never re-fetches the same audio file on replay.', priority:'medium', scope:'devops', status:'missing' },
+        ]
+      },
+      {
+        label: 'Frontend Bundle',
+        tasks: [
+          { id:'P4-07', title:'Route-level code splitting with React.lazy + Suspense', desc:'Import each page component (MessagesPage, AdminPanel, EventsPage, etc.) lazily so the initial bundle only loads the code needed for the first screen. Wrap in Suspense with a skeleton fallback.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P4-08', title:'Memoize heavy list-item components', desc:'Wrap MessageBubble and ConversationItem in React.memo to prevent re-renders when sibling state (e.g. input text) changes. Profile with React DevTools before and after.', priority:'medium', scope:'fe', status:'missing' },
+          { id:'P4-09', title:'Analyse and cap bundle size', desc:'Run npm run build and check the Vite output sizes. Any chunk over 200KB should be investigated. emoji-picker-react is a known large dependency — lazy-load it on first Emoji button click.', priority:'medium', scope:'fe', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p5',
+    num: 'P5',
+    title: 'Testing',
+    desc: 'Validate every critical user journey end-to-end. Work through the matrix systematically — do not skip edge cases.',
+    groups: [
+      {
+        label: 'Critical Path Tests',
+        tasks: [
+          { id:'P5-01', title:'Auth flow: register → login → token expiry → auto-logout', desc:'Register a new account. Log in. Manually expire the token (set exp to past time in DB or wait). Attempt an API action — confirm the user is redirected to login without a crash.', priority:'critical', scope:'both', status:'missing' },
+          { id:'P5-02', title:'Role guard test: member cannot access leader or admin endpoints', desc:'As a member account, manually call POST /hub-members/approve.php and /admin/update-role.php with a valid token. Both must return 403. Verify the frontend also hides those UI elements.', priority:'critical', scope:'both', status:'missing' },
+          { id:'P5-03', title:'Two-way messaging between two accounts in two browsers', desc:'Open Account A in Chrome and Account B in Firefox. Send messages in both directions. Verify real-time delivery (within ~2s), correct bubble sides, and read receipts updating.', priority:'critical', scope:'both', status:'done' },
+          { id:'P5-04', title:'Voice message: record → upload → play on both sides', desc:'Record a voice note in Account A. Confirm it appears in Account B\'s thread within 2s. Press play in both browsers. Confirm no playback lag and the waveform displays correctly.', priority:'high', scope:'both', status:'partial' },
+          { id:'P5-05', title:'Connection request flow end to end', desc:'A sends a request to B → B receives a notification → B accepts → both appear in each other\'s connections list → A can now open a chat with B from connections.', priority:'high', scope:'both', status:'missing' },
+          { id:'P5-06', title:'Hub join request and approval flow end to end', desc:'Member applies to join a hub → hub leader sees the pending request → leader approves → member\'s dashboard updates to show approved status → member gains access to hub content.', priority:'high', scope:'both', status:'missing' },
+          { id:'P5-07', title:'Event: create → register → attendee count updates → unregister', desc:'A hub leader creates an event. A member registers. Leader sees the attendee count increment. Member unregisters. Count decrements. Verify the is_registered flag toggles correctly.', priority:'medium', scope:'both', status:'missing' },
+          { id:'P5-08', title:'Admin role change: member → hub_leader → admin → member', desc:'As admin, cycle a test account through all three roles. Verify the DB updates, the audit log entry appears, and the account\'s accessible features change correctly in the same session.', priority:'high', scope:'both', status:'missing' },
+        ]
+      },
+      {
+        label: 'Edge Cases',
+        tasks: [
+          { id:'P5-09', title:'Edge: very long message (1000+ characters)', desc:'Send a 1000-character message. Verify the bubble wraps correctly, does not overflow the chat area, and is stored and retrieved intact from the DB.', priority:'medium', scope:'both', status:'missing' },
+          { id:'P5-10', title:'Edge: special characters, emoji, and Arabic/RTL text in messages', desc:'Send messages containing &, <, >, ", emoji (🔥), and Arabic text. Verify they are stored correctly (not HTML-encoded in the DB), retrieved intact, and display without layout breakage.', priority:'high', scope:'both', status:'missing' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'p6',
+    num: 'P6',
+    title: 'Deployment Preparation',
+    desc: 'Everything needed to move from localhost to a live server — environment config, build pipeline, SSL, and post-deploy validation.',
+    groups: [
+      {
+        label: 'Environment Configuration',
+        tasks: [
+          { id:'P6-01', title:'Move API base URL to a Vite environment variable', desc:'Replace the hardcoded "http://localhost/petra-api" in api.ts with import.meta.env.VITE_API_BASE. Create .env.local (localhost) and .env.production (live domain). Never commit either file.', priority:'critical', scope:'fe', status:'missing' },
+          { id:'P6-02', title:'Move DB credentials and JWT secret to server environment variables', desc:'In database.php and auth.php, read credentials from getenv() instead of hardcoded strings. On the production server, set these as Apache SetEnv directives or server environment variables.', priority:'critical', scope:'be', status:'missing' },
+          { id:'P6-03', title:'Update CORS allowed origin to production domain', desc:'Change cors.php to only emit Access-Control-Allow-Origin for the production HTTPS domain. Remove the localhost:3000 entry entirely. Confirm preflight OPTIONS requests still work.', priority:'critical', scope:'be', status:'missing' },
+        ]
+      },
+      {
+        label: 'Database',
+        tasks: [
+          { id:'P6-04', title:'Export complete DB schema as a versioned schema.sql file', desc:'Use mysqldump --no-data to export the full schema. Commit schema.sql to the repo. This is the migration script used to initialise the database on the production server.', priority:'high', scope:'be', status:'missing' },
+          { id:'P6-05', title:'Set up automated database backups', desc:'Configure a daily cron job (or use the hosting panel\'s backup feature) to run mysqldump and save the output to a separate location or cloud storage. Test a restore from the backup.', priority:'high', scope:'devops', status:'missing' },
+        ]
+      },
+      {
+        label: 'Build & Deploy',
+        tasks: [
+          { id:'P6-06', title:'Run production build and test dist/ locally', desc:'Run npm run build. Serve the dist/ folder with "npx serve dist" or "python -m http.server". Walk through every page to verify the compiled build works before uploading.', priority:'high', scope:'fe', status:'missing' },
+          { id:'P6-07', title:'.htaccess for SPA routing', desc:'Add a RewriteRule to redirect all non-file, non-directory requests to index.html so that refreshing on a React Router route (e.g. /messages) does not return Apache 404.', priority:'critical', scope:'devops', status:'missing' },
+          { id:'P6-08', title:'Register .webm MIME type in Apache', desc:'Add AddType audio/webm .webm to .htaccess or mime.types so that Apache serves voice files with the correct Content-Type header. Without this, some browsers refuse to play them.', priority:'high', scope:'devops', status:'missing' },
+          { id:'P6-09', title:'Configure SSL certificate and force HTTPS', desc:'Install a Let\'s Encrypt certificate via Certbot or the hosting control panel. Add an .htaccess redirect from HTTP to HTTPS. Update VITE_API_BASE and CORS to the https:// domain.', priority:'critical', scope:'devops', status:'missing' },
+          { id:'P6-10', title:'Upload and configure production server', desc:'Upload dist/ to the web root for the frontend domain. Upload petra-api/ to a subdomain or subfolder. Set file permissions: 644 for files, 755 for directories, 600 for config files with secrets.', priority:'critical', scope:'devops', status:'missing' },
+        ]
+      },
+      {
+        label: 'Post-Deploy Validation',
+        tasks: [
+          { id:'P6-11', title:'Smoke test all critical paths on production', desc:'After deploying, walk through: register, login, send a message, send a voice note, join a hub, create an event, change a role (admin). Do this as each of the three roles.', priority:'critical', scope:'both', status:'missing' },
+          { id:'P6-12', title:'Set up uptime monitoring', desc:'Register the production API URL with a free uptime monitor (UptimeRobot, BetterStack). Set a 5-minute check interval and email/SMS alert so you know immediately when the server goes down.', priority:'medium', scope:'devops', status:'missing' },
+        ]
+      }
+    ]
+  },
+];
+
+// ── Render ────────────────────────────────────────────
+const STORE_KEY = 'petra_roadmap_v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch {}
+
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+
+function scopeChip(s) {
+  const map = { fe:'chip-fe', be:'chip-be', both:'chip-both', devops:'chip-devops' };
+  const label = { fe:'Frontend', be:'Backend', both:'FE + BE', devops:'DevOps' };
+  return `<span class="chip ${map[s]}">${label[s]}</span>`;
+}
+function priorityChip(p) {
+  return `<span class="chip chip-${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</span>`;
+}
+function statusChip(s) {
+  const map = { done:'chip-done', partial:'chip-partial', missing:'chip-missing' };
+  const label = { done:'✓ Done', partial:'~ Partial', missing:'✗ Missing' };
+  return `<span class="chip ${map[s]}">${label[s]}</span>`;
+}
+function checkIcon() {
+  return `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4 7L8 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function renderTask(t) {
+  const done = !!state[t.id];
+  return `
+    <div class="task-card${done?' done':''}" id="card-${t.id}">
+      <div class="task-cb" id="cb-${t.id}" onclick="toggle('${t.id}')" role="checkbox" aria-checked="${done}" tabindex="0">
+        ${done ? checkIcon() : ''}
+      </div>
+      <div class="task-body">
+        <div class="task-title">
+          <span class="task-id">${t.id}</span>${t.title}
+        </div>
+        <div class="task-desc">${t.desc}</div>
+        <div class="task-chips">
+          ${priorityChip(t.priority)}
+          ${scopeChip(t.scope)}
+          ${statusChip(t.status)}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPhase(ph) {
+  const allTasks = ph.groups.flatMap(g => g.tasks);
+  const groupsHtml = ph.groups.map(g => `
+    <div class="task-group">
+      ${ph.groups.length > 1 ? `<div class="task-group-label">${g.label}</div>` : ''}
+      ${g.tasks.map(renderTask).join('')}
+    </div>`).join('');
+
+  return `
+    <section class="phase-section" id="${ph.id}">
+      <div class="phase-hdr">
+        <div class="phase-badge">${ph.num}</div>
+        <div class="phase-info">
+          <div class="phase-title">${ph.title}</div>
+          <div class="phase-desc">${ph.desc}</div>
+        </div>
+        <div class="phase-count" id="phase-count-${ph.id}">0 / ${allTasks.length}</div>
+      </div>
+      ${groupsHtml}
+    </section>`;
+}
+
+document.getElementById('main').innerHTML = PHASES.map(renderPhase).join('');
+
+function toggle(id) {
+  state[id] = !state[id];
+  save();
+  const card = document.getElementById('card-' + id);
+  const cb   = document.getElementById('cb-'   + id);
+  if (state[id]) {
+    card.classList.add('done');
+    cb.setAttribute('aria-checked', 'true');
+    cb.innerHTML = checkIcon();
+  } else {
+    card.classList.remove('done');
+    cb.setAttribute('aria-checked', 'false');
+    cb.innerHTML = '';
+  }
+  updateProgress();
+}
+
+// keyboard support for checkboxes
+document.addEventListener('keydown', e => {
+  if ((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('task-cb')) {
+    e.preventDefault();
+    const id = e.target.id.replace('cb-', '');
+    toggle(id);
+  }
+});
+
+function updateProgress() {
+  let total = 0, done = 0;
+  PHASES.forEach(ph => {
+    let phTotal = 0, phDone = 0;
+    ph.groups.forEach(g => g.tasks.forEach(t => {
+      total++; phTotal++;
+      if (state[t.id]) { done++; phDone++; }
+    }));
+    const pct = phTotal ? Math.round((phDone/phTotal)*100) : 0;
+    const el = document.getElementById('pct-' + ph.id);
+    if (el) el.textContent = pct + '%';
+    const cnt = document.getElementById('phase-count-' + ph.id);
+    if (cnt) cnt.textContent = `${phDone} / ${phTotal}`;
+  });
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${total} tasks`;
+}
+
+updateProgress();
+
+// ── Theme toggle ──────────────────────────────────────
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('petra_theme', next);
+}
+const savedTheme = localStorage.getItem('petra_theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+// ── Sidebar active highlight on scroll ────────────────
+const sections = PHASES.map(p => document.getElementById(p.id));
+const links    = PHASES.map(p => document.querySelector(`.sb-link[href="#${p.id}"]`));
+function onScroll() {
+  let active = 0;
+  sections.forEach((s, i) => {
+    if (s && s.getBoundingClientRect().top < 120) active = i;
+  });
+  links.forEach((l, i) => {
+    if (l) l.classList.toggle('active', i === active);
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>

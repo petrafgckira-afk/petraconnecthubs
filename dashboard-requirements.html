@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Functional Requirements | Petra Connect Hubs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f4f6fb;
+      color: #1a1a2e;
+      padding: 40px 24px;
+    }
+    .page { max-width: 960px; margin: 0 auto; }
+
+    /* Header */
+    .doc-header {
+      background: #1D2D5F;
+      color: #fff;
+      border-radius: 14px;
+      padding: 32px 36px;
+      margin-bottom: 36px;
+    }
+    .doc-header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+    .doc-header p  { font-size: 13px; color: #a8b8d8; margin-top: 6px; }
+    .badge {
+      display: inline-block;
+      background: #F37021;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* Section wrapper */
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .section-header {
+      background: #1D2D5F;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header .num {
+      background: #F37021;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 14px; font-weight: 700; }
+    .section-body { padding: 20px 24px; }
+
+    /* Requirement rows */
+    .req-group { margin-bottom: 20px; }
+    .req-group:last-child { margin-bottom: 0; }
+    .req-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #F37021;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #f0e0d0;
+    }
+    .req-list { list-style: none; }
+    .req-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #334155;
+      padding: 7px 0;
+      border-bottom: 1px solid #f1f5f9;
+      line-height: 1.5;
+    }
+    .req-list li:last-child { border-bottom: none; }
+    .req-list li::before {
+      content: '✓';
+      color: #1D2D5F;
+      font-weight: 800;
+      font-size: 12px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    /* Role chips */
+    .roles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .role-chip {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .role-member  { background: #dbeafe; color: #1e40af; }
+    .role-leader  { background: #fef3c7; color: #92400e; }
+    .role-admin   { background: #ede9fe; color: #5b21b6; }
+    .role-all     { background: #dcfce7; color: #166534; }
+
+    /* Data fields table */
+    .fields-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+    .fields-table th {
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .fields-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      vertical-align: top;
+    }
+    .fields-table tr:last-child td { border-bottom: none; }
+    .field-name { font-weight: 700; color: #1D2D5F; font-family: monospace; }
+    .source-db  { color: #16a34a; font-weight: 600; font-size: 10px; }
+    .source-calc { color: #d97706; font-weight: 600; font-size: 10px; }
+
+    /* API endpoint pill */
+    .endpoint {
+      display: inline-block;
+      background: #0f172a;
+      color: #7dd3fc;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin: 3px 3px 3px 0;
+    }
+    .method-get  { color: #86efac; }
+    .method-post { color: #fca5a5; }
+
+    /* Legend */
+    .legend {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 11px; color: #64748b;
+      padding: 12px 24px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+    .legend span { display: flex; align-items: center; gap: 5px; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .summary-card .num-big { font-size: 28px; font-weight: 900; color: #1D2D5F; }
+    .summary-card .label   { font-size: 11px; color: #64748b; margin-top: 2px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="badge">Internal Documentation</div>
+    <h1>Petra Connect Hubs — Dashboard Functional Requirements</h1>
+    <p>Covers all UI sections, data sources, role visibility, and required API endpoints for the Dashboard view.</p>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card"><div class="num-big">5</div><div class="label">UI Sections</div></div>
+    <div class="summary-card"><div class="num-big">3</div><div class="label">Role Variants</div></div>
+    <div class="summary-card"><div class="num-big">6</div><div class="label">API Endpoints Needed</div></div>
+    <div class="summary-card"><div class="num-big">4</div><div class="label">Stat Cards</div></div>
+  </div>
+
+  <!-- SECTION 1: Welcome Banner -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">1</div>
+      <h2>Welcome / Hero Banner</h2>
+    </div>
+    <div class="section-body">
+      <div class="req-group">
+        <div class="req-group-title">Behaviour</div>
+        <ul class="req-list">
+          <li>Displays a time-aware greeting (Good Morning / Afternoon / Evening / Night) using the user's local clock.</li>
+          <li>Shows the logged-in user's full name highlighted in the greeting.</li>
+          <li>Displays a role badge label: <strong>Steward Dashboard</strong> (member) / <strong>Steward Administrator Panel</strong> (leader) / <strong>Sovereign System Core</strong> (admin).</li>
+          <li>The sub-text paragraph changes based on role — member sees their hub name, leader sees their hub's member count and pending approvals count, admin sees global control message.</li>
+        </ul>
+      </div>
+      <div class="req-group">
+        <div class="req-group-title">Role Visibility</div>
+        <div class="roles">
+          <span class="role-chip role-all">All Roles</span>
+        </div>
+      </div>
+      <div class="req-group">
+        <div class="req-group-title">Data Required from API</div>
+        <table class="fields-table">
+          <thead><tr><th>Field</th><th>Source</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">full_name</td><td><span class="source-db">DB → users</span></td><td>Shown in greeting</td></tr>
+            <tr><td class="field-name">role</td><td><span class="source-db">DB → users</span></td><td>Controls badge label and paragraph variant</td></tr>
+            <tr><td class="field-name">profession (hub)</td><td><span class="source-db">DB → users</span></td><td>Hub name shown in member paragraph</td></tr>
+            <tr><td class="field-name">hub member count</td><td><span class="source-calc">Calculated → hub_members</span></td><td>Leader variant only — count of approved members in their hub</td></tr>
+            <tr><td class="field-name">pending approvals</td><td><span class="source-calc">Calculated → hub_members</span></td><td>Leader variant only — count of pending applications</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Stats Cards -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">2</div>
+      <h2>Professional Stats Panel (4 Cards)</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="req-group">
+        <div class="req-group-title">Card 1 — My Hub (Verified Vocation Peers)</div>
+        <ul class="req-list">
+          <li>Shows the total count of <strong>approved</strong> members in the logged-in user's hub.</li>
+          <li>Fetched from <code>hub_members</code> where <code>hub_id</code> matches the user's hub and <code>status = 'approved'</code>.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Card 2 — Connections (Network Circle Size)</div>
+        <ul class="req-list">
+          <li>Shows the total count of accepted connection requests for the logged-in user.</li>
+          <li>Fetched from <code>connection_requests</code> where the user is sender or receiver and <code>status = 'accepted'</code>.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Card 3 — Guild Status</div>
+        <ul class="req-list">
+          <li>Shows the user's membership status: <strong>Active Member</strong> (green) or <strong>Pending</strong> (amber) or <strong>Rejected</strong> (red).</li>
+          <li>Displays the user's hub name below the status.</li>
+          <li>Status is read from <code>hub_members.status</code> for the current user.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Card 4 — Conditional (Role-based)</div>
+        <ul class="req-list">
+          <li><strong>Leader / Admin:</strong> Shows count of pending hub membership applications with a link navigating to the Leader Panel.</li>
+          <li><strong>Member:</strong> Shows an "Inspect Church Directory" shortcut card that navigates to the Members Directory.</li>
+        </ul>
+        <div class="roles" style="margin-top:8px">
+          <span class="role-chip role-leader">Leader — pending approvals</span>
+          <span class="role-chip role-admin">Admin — pending approvals</span>
+          <span class="role-chip role-member">Member — directory shortcut</span>
+        </div>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Required API Endpoints</div>
+        <span class="endpoint"><span class="method-get">GET</span> /dashboard/stats.php</span>
+        <p style="font-size:12px;color:#64748b;margin-top:8px;">Returns: hub_member_count, connections_count, membership_status, pending_approvals_count (for leader/admin)</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: Announcements Feed -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">3</div>
+      <h2>Recent Platform Bulletins (Announcements Feed)</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="req-group">
+        <div class="req-group-title">Display Rules</div>
+        <ul class="req-list">
+          <li>Shows announcements where <code>hub_id</code> matches the user's hub OR where <code>hub_id</code> is <strong>NULL</strong> (platform-wide / global announcements).</li>
+          <li>Each post shows: author name, author role/title, hub tag, date posted, post title, post body content.</li>
+          <li>Posts are sorted by <code>created_at</code> descending (newest first).</li>
+          <li>Empty state shown when no announcements exist for the user's hub.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">User Interactions</div>
+        <ul class="req-list">
+          <li><strong>Like:</strong> Users can like/unlike an announcement. Like count updates in real time. State stored per user in the DB.</li>
+          <li><strong>Comments:</strong> Comment count shown; clicking navigates to the Messages or a comment thread (future feature).</li>
+          <li><strong>Post Bulletin (Leader only):</strong> A "+ Post Bulletin" button visible only to leaders navigates to the Leader Panel to compose a new announcement.</li>
+        </ul>
+        <div class="roles" style="margin-top:8px">
+          <span class="role-chip role-all">All Roles — read &amp; like</span>
+          <span class="role-chip role-leader">Leader — post bulletin</span>
+          <span class="role-chip role-admin">Admin — post &amp; delete</span>
+        </div>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Data Fields per Post</div>
+        <table class="fields-table">
+          <thead><tr><th>Field</th><th>DB Column</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">id</td><td>announcements.id</td><td>For like toggle targeting</td></tr>
+            <tr><td class="field-name">title</td><td>announcements.title</td><td></td></tr>
+            <tr><td class="field-name">message</td><td>announcements.message</td><td>Post body</td></tr>
+            <tr><td class="field-name">hub_id</td><td>announcements.hub_id</td><td>NULL = global</td></tr>
+            <tr><td class="field-name">created_at</td><td>announcements.created_at</td><td>Displayed as formatted date</td></tr>
+            <tr><td class="field-name">author full_name</td><td>users.full_name (JOIN)</td><td>Via created_by FK</td></tr>
+            <tr><td class="field-name">author role</td><td>users.role (JOIN)</td><td>Shown below author name</td></tr>
+            <tr><td class="field-name">likes_count</td><td>Calculated</td><td>Count of likes for this post — needs a likes table or column</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Required API Endpoints</div>
+        <span class="endpoint"><span class="method-get">GET</span> /announcements/index.php?hub_id=X</span>
+        <span class="endpoint"><span class="method-post">POST</span> /announcements/like.php</span>
+        <span class="endpoint"><span class="method-post">POST</span> /announcements/create.php</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 4: Events -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">4</div>
+      <h2>Upcoming Formations (Events Panel)</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="req-group">
+        <div class="req-group-title">Display Rules</div>
+        <ul class="req-list">
+          <li>Lists upcoming events where <code>event_date &gt;= NOW()</code>, sorted by nearest date first.</li>
+          <li>Shows events global to all hubs, or scoped to the user's specific hub.</li>
+          <li>Each event card shows: hub tag, event title, short description, speaker name &amp; title (if set), date, time, location.</li>
+          <li>Shows current attendee count on the registration button.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">User Interactions</div>
+        <ul class="req-list">
+          <li><strong>Register / Unregister:</strong> Toggle button registers or unregisters the user for an event. Button text and style change to reflect current state (registered = green check).</li>
+          <li>Attendee count updates immediately on toggle.</li>
+          <li>Registration state persists in <code>event_registrations</code> table.</li>
+        </ul>
+        <div class="roles" style="margin-top:8px">
+          <span class="role-chip role-all">All Roles — register/unregister</span>
+          <span class="role-chip role-leader">Leader — can create events (in Leader Panel)</span>
+          <span class="role-chip role-admin">Admin — can create &amp; delete events</span>
+        </div>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Data Fields per Event</div>
+        <table class="fields-table">
+          <thead><tr><th>Field</th><th>DB Column</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="field-name">id</td><td>events.id</td><td></td></tr>
+            <tr><td class="field-name">title</td><td>events.title</td><td></td></tr>
+            <tr><td class="field-name">description</td><td>events.description</td><td>Truncated to 2 lines in card</td></tr>
+            <tr><td class="field-name">event_date</td><td>events.event_date</td><td>Formatted for display</td></tr>
+            <tr><td class="field-name">location</td><td>events.location</td><td>Physical or online link</td></tr>
+            <tr><td class="field-name">meeting_link</td><td>events.meeting_link</td><td>For virtual events</td></tr>
+            <tr><td class="field-name">speaker_name</td><td>events.organizer_id → users JOIN</td><td>Optional keynote speaker</td></tr>
+            <tr><td class="field-name">attendees_count</td><td>COUNT(event_registrations)</td><td>Calculated</td></tr>
+            <tr><td class="field-name">is_registered</td><td>event_registrations</td><td>Check if current user has a row for this event</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">Required API Endpoints</div>
+        <span class="endpoint"><span class="method-get">GET</span> /events/index.php?hub_id=X</span>
+        <span class="endpoint"><span class="method-post">POST</span> /events/register.php</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 5: Scriptural Mandate Card -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">5</div>
+      <h2>Scriptural Mandate Card</h2>
+    </div>
+    <div class="section-body">
+      <div class="req-group">
+        <div class="req-group-title">Behaviour</div>
+        <ul class="req-list">
+          <li>A static inspirational card displayed in the right column below the events panel.</li>
+          <li>Shows a Bible verse relevant to professional fellowship and vocation.</li>
+          <li>Content is hardcoded (not from DB) — it is a fixed brand element, not dynamic data.</li>
+          <li>Current verse: <em>Hebrews 10:24–25</em></li>
+        </ul>
+        <div class="roles" style="margin-top:8px"><span class="role-chip role-all">All Roles</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: Navigation Integration -->
+  <div class="section">
+    <div class="section-header">
+      <div class="num">6</div>
+      <h2>Dashboard Navigation Integrations</h2>
+    </div>
+    <div class="section-body">
+      <div class="req-group">
+        <div class="req-group-title">Cross-Navigation Links from Dashboard</div>
+        <ul class="req-list">
+          <li>Stat Card 4 (Leader/Admin) → navigates to <strong>Leader Panel</strong> view.</li>
+          <li>Stat Card 4 (Member) → navigates to <strong>Members Directory</strong> view.</li>
+          <li>"+ Post Bulletin" button (Leader) → navigates to <strong>Leader Panel</strong> view.</li>
+          <li>Comment button on any announcement → navigates to <strong>Messages</strong> view.</li>
+        </ul>
+      </div>
+
+      <div class="req-group">
+        <div class="req-group-title">All Endpoints the Dashboard Requires</div>
+        <span class="endpoint"><span class="method-get">GET</span> /dashboard/stats.php</span>
+        <span class="endpoint"><span class="method-get">GET</span> /announcements/index.php</span>
+        <span class="endpoint"><span class="method-post">POST</span> /announcements/like.php</span>
+        <span class="endpoint"><span class="method-post">POST</span> /announcements/create.php</span>
+        <span class="endpoint"><span class="method-get">GET</span> /events/index.php</span>
+        <span class="endpoint"><span class="method-post">POST</span> /events/register.php</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="section">
+    <div class="legend">
+      <span><span class="role-chip role-member">Member</span> Visible to members</span>
+      <span><span class="role-chip role-leader">Leader</span> Visible to hub leaders</span>
+      <span><span class="role-chip role-admin">Admin</span> Visible to admins</span>
+      <span><span class="role-chip role-all">All Roles</span> Visible to everyone</span>
+      <span><span class="source-db">● DB</span> = live from database</span>
+      <span><span class="source-calc">● Calculated</span> = computed server-side</span>
+    </div>
+  </div>
+
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:20px;">
+    Petra Connect Hubs — Dashboard Requirements · Generated 2026
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@keyframes flagMarquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes heroGradientFlow {
+  0%   { background-position: 0px 0px; }
+  100% { background-position: 340px 0px; }
+}
+
+@keyframes heroShimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -100% center; }
+}
+
+@theme {
+  --font-sans: "Raleway", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Raleway", ui-serif, system-serif, serif;
+  --font-mono: "Raleway", ui-monospace, monospace;
+
+  /* Custom palette matching the official Petra Full Gospel Church - Royal Navy, Orange and Golden Wheat colors */
+  --color-navy-50: #eff2fb;
+  --color-navy-100: #d3dbf4;
+  --color-navy-200: #a9b9e6;
+  --color-navy-300: #7f94d3;
+  --color-navy-400: #5469ad;
+  --color-navy-500: #394c8e;
+  --color-navy-600: #283975;
+  --color-navy-700: #1D2D5F; /* Iconic Petra Navy Blue from the brand wordmark! */
+  --color-navy-800: #19214d;
+  --color-navy-900: #141a3d;
+  --color-navy-950: #0f132e; /* Beautiful Deep Midnight Navy */
+
+  --color-brand-gold: #F37021; /* Vibrant Petra Orange (Uganda/Flame core) */
+  --color-brand-gold-hover: #FAA61A; /* Golden Wheat Yellow */
+  --color-brand-gold-light: rgba(243, 112, 33, 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Force standard system background & text color classes dynamically matching the golden-sand landscape */
+html {
+  background-color: #0c0f24;
+}
+
+body {
+  background-color: transparent;
+  color: #f4f6fc;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* Unified Theme Core Classes Overrides */
+.bg-slate-50, .bg-gray-50, .bg-slate-100, .bg-neutral-50 {
+  background-color: rgba(10, 13, 33, 0.45) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.bg-white {
+  background-color: rgba(20, 26, 61, 0.65) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.bg-navy-50, .bg-navy-50\/50, .bg-slate-[50px] {
+  background-color: rgba(25, 33, 77, 0.55) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.border-slate-100, .border-slate-200, .border-slate-150, .border-gray-100, .border-gray-150, .border-gray-200, .border-navy-100, .border-navy-200 {
+  border-color: rgba(36, 44, 92, 0.5) !important;
+}
+
+.text-navy-950, .text-navy-900, .text-gray-900, .text-slate-900, .text-[#0d172a] {
+  color: #f4f6fc !important;
+}
+
+/* Ensure contrast for text lines layered directly on gold containers/buttons/accents */
+.bg-brand-gold, .bg-brand-gold *, button.bg-brand-gold, button.bg-brand-gold *, .bg-amber-400, button.bg-amber-400 {
+  color: #ffffff !important;
+}
+
+.text-gray-500, .text-gray-600, .text-slate-500, .text-slate-600 {
+  color: #aeb4c6 !important;
+}
+
+.text-gray-400 {
+  color: #8c94ac !important;
+}
+
+/* Dynamic inputs styles with blur transparency */
+input[type="text"], input[type="email"], input[type="password"], textarea, select {
+  background-color: rgba(25, 33, 77, 0.6) !important;
+  color: #f4f6fc !important;
+  border-color: rgba(36, 44, 92, 0.6) !important;
+  backdrop-filter: blur(8px);
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+  border-color: #F37021 !important;
+  outline: none;
+}
+
+/* Absolute Brand Color Overrides for Inline Classes used in LandingPage and beyond */
+[class*="bg-[#0b0c10]"], .bg-\[\#0b0c10\] {
+  background-color: rgba(15, 19, 46, 0.6) !important; /* Fixed semi-transparent midnight blue */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+[class*="bg-[#07080a]"], .bg-\[\#07080a\] {
+  background-color: rgba(7, 8, 10, 0.45) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+[class*="bg-[#121319]"], .bg-\[\#121319\] {
+  background-color: rgba(20, 26, 61, 0.25) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+[class*="bg-[#121318]"], .bg-\[\#121318\] {
+  background-color: rgba(20, 26, 61, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+[class*="bg-[#0a0b0e]"], .bg-\[\#0a0b0e\] {
+  background-color: rgba(9, 12, 30, 0.55) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Text overrides for Gold -> Yellow/Orange */
+[class*="text-[#c5a880]"], .text-\[\#c5a880\] {
+  color: #FAA61A !important; /* Gold/Yellow details */
+}
+[class*="hover:text-[#c5a880]"]:hover, .hover\:text-\[\#c5a880\]:hover {
+  color: #F37021 !important;
+}
+[class*="selection:bg-[#c5a880]"]::selection, .selection\:bg-\[\#c5a880\]::selection {
+  background-color: #F37021 !important;
+  color: #ffffff !important;
+}
+
+/* Background overrides for old Gold -> Orange button */
+[class*="bg-[#c5a880]"], .bg-\[\#c5a880\] {
+  background-color: #f3f1f0 !important;
+  color: #ffffff !important;
+}
+button[class*="bg-[#c5a880]"], .bg-\[\#c5a880\]-btn {
+  background-color: #F37021 !important;
+  color: #ffffff !important;
+}
+[class*="hover:bg-[#c5a880]"]:hover, .hover\:bg-\[\#c5a880\]:hover {
+  background-color: #FAA61A !important; /* Gold on hover */
+  color: #0f132e !important;
+}
+
+/* Custom scrollbar for hub selector */
+.pad-custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #F37021 transparent;
+}
+.pad-custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.pad-custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pad-custom-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F37021 0%, #c5a880 100%);
+  border-radius: 999px;
+}
+.pad-custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FAA61A 0%, #F37021 100%);
+}
+.pad-custom-scroll::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Border overrides */
+[class*="border-[#c5a880]"], .border-\[\#c5a880\] {
+  border-color: #F37021 !important;
+}
+[class*="border-neutral-800"], [class*="border-neutral-900"], .border-neutral-800, .border-neutral-900 {
+  border-color: #242c5c !important;
+}
+[class*="border-[#c5a880]/15"], .border-\[\#c5a880\]\/15 {
+  border-color: rgba(243, 112, 33, 0.15) !important;
+}
+[class*="border-[#c5a880]/20"], .border-\[\#c5a880\]\/20 {
+  border-color: rgba(243, 112, 33, 0.2) !important;
+}
+[class*="border-[#c5a880]/30"], .border-\[\#c5a880\]\/30 {
+  border-color: rgba(243, 112, 33, 0.3) !important;
+}
+[class*="border-[#c5a880]/40"], .border-\[\#c5a880\]\/40 {
+  border-color: rgba(243, 112, 33, 0.4) !important;
+}
+
+/* Background-opacity overrides for Old Gold */
+[class*="bg-[#c5a880]/5"], .bg-\[\#c5a880\]\/5 {
+  background-color: rgba(243, 112, 33, 0.05) !important;
+}
+[class*="bg-[#c5a880]/10"], .bg-\[\#c5a880\]\/10 {
+  background-color: rgba(243, 112, 33, 0.1) !important;
+}
+
+/* Fix shadows */
+[class*="shadow-[#c5a880]"], .shadow-\[\#c5a880\] {
+  box-shadow: 0 4px 20px -2px rgba(243, 112, 33, 0.25) !important;
+}
+
+/* Fix shadow visuals standard */
+.shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Enforce static, viewport-fixed position constraints and transparent glassy backdrop filtering */
+.landing-page-root {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.landing-header-glass {
+  background-color: rgba(15, 19, 46, 0.72) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* Custom Styles for Modern Floating Light Header */
+.landing-header-floating {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Custom Text/Link Selectors to bypass index.css overrides */
+.landing-header-floating .header-logo-title {
+  color: #0c0f24 !important; /* Deep dark blue for the name */
+}
+
+.landing-header-floating .header-logo-subtitle {
+  color: #F37021 !important; /* Brand vibrant Orange for modern professional fellowship */
+}
+
+.landing-header-floating nav a {
+  color: #F37021 !important;
+  font-family: 'Raleway', sans-serif !important;
+  font-weight: 600 !important;
+  transition: color 0.15s ease-in-out;
+}
+
+.landing-header-floating nav a:hover {
+  color: #F37021 !important; /* Accent gold/orange on hover */
+}
+
+.landing-header-floating .peers-indicator-text {
+  color: #FAA61A !important; /* Beautiful contrast golden/orange secure peers indicator */
+}
+
+.landing-header-floating .signin-btn {
+  color: #4b5563 !important;
+  font-weight: 600 !important;
+  transition: color 0.15s ease-in-out;
+}
+
+.landing-header-floating .signin-btn:hover {
+  color: #F37021 !important;
+}
+
+/* Redesign primary CTA button to solid blue with white text and rounded corners */
+.landing-header-floating .register-btn-modern {
+  background-color: #1D2D5F !important; /* Solid iconic Petra brand blue color */
+  color: #ffffff !important;
+  border: 1px solid #1D2D5F !important;
+  border-radius: 9px !important; /* Elegantly rounded corners */
+  font-weight: 700 !important;
+  padding: 8px 16px !important; /* Symmetrical clean size */
+  box-shadow: 0 2px 8px rgba(29, 45, 95, 0.15) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.landing-header-floating .register-btn-modern:hover {
+  background-color: #293f85 !important; /* Slightly lighter interactive blue */
+  border-color: #293f85 !important;
+  box-shadow: 0 4px 12px rgba(29, 45, 95, 0.25) !important;
+  transform: translateY(-0.5px);
+}
+
+

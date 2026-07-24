@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/svg+xml" href="/petra-logo.svg" />
+    <title>Petra Connect Hubs — Professional Fellowship</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Block Ctrl+scroll wheel zoom
+      window.addEventListener('wheel', function(e) {
+        if (e.ctrlKey) e.preventDefault();
+      }, { passive: false });
+
+      // Block Ctrl++  Ctrl+-  Ctrl+0 keyboard zoom
+      window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '_' || e.key === '0')) {
+          e.preventDefault();
+        }
+      });
+
+      // Block pinch-to-zoom on trackpads
+      window.addEventListener('gesturestart',  function(e) { e.preventDefault(); });
+      window.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+      window.addEventListener('gestureend',    function(e) { e.preventDefault(); });
+    </script>
+  </body>
+</html>
+
