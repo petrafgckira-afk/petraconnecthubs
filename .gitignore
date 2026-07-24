@@ -10,3 +10,5 @@ coverage/
 ffmpeg/
 metadata.json
 assets/.aistudio/
+*.NEF
+*.nef
