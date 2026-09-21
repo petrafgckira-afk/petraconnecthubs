@@ -1,4 +1,6 @@
-const API_BASE = 'http://localhost/petra-api';
+export const API_BASE     = 'https://api.petrafgc.org/petra-api/'; // the local -- http://localhost/petra-api
+export const PUSHER_KEY     = 'e8ad8fc8c6f7a13297ba';
+export const PUSHER_CLUSTER = 'eu';
 
 function getToken(): string | null {
   return localStorage.getItem('petra_token');
@@ -37,7 +39,33 @@ export function isSessionActive(): boolean {
   return true;
 }
 
-async function request(path: string, options: RequestInit = {}) {
+// ── Request cache + in-flight deduplication ───────────────────────────────────
+// GET responses are cached for 15 s so polling intervals don't hammer the server.
+// Simultaneous identical GET requests share one in-flight Promise.
+// Mutation endpoints (POST/PUT/DELETE) auto-invalidate related cache keys.
+
+const _cache    = new Map<string, { data: any; exp: number }>();
+const _inflight = new Map<string, Promise<any>>();
+const CACHE_TTL = 15_000;
+
+const INVALIDATES: Record<string, string[]> = {
+  '/announcements/create.php':         ['/announcements/index.php'],
+  '/announcements/update.php':         ['/announcements/index.php'],
+  '/announcements/delete.php':         ['/announcements/index.php'],
+  '/events/create.php':                ['/events/index.php'],
+  '/events/update.php':                ['/events/index.php'],
+  '/events/delete.php':                ['/events/index.php'],
+  '/events/register.php':              ['/events/index.php'],
+  '/notifications/mark-read.php':      ['/notifications/index.php'],
+  '/notifications/mark-all-read.php':  ['/notifications/index.php'],
+  '/connections/send.php':             ['/connections/list.php'],
+  '/connections/respond.php':          ['/connections/list.php'],
+  '/connections/remove.php':           ['/connections/list.php'],
+  '/feed/posts.php':                   [],
+  '/feed/post.php':                    [],
+};
+
+async function _doFetch(path: string, options: RequestInit): Promise<any> {
   const token = getToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -45,18 +73,56 @@ async function request(path: string, options: RequestInit = {}) {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const res  = await fetch(`${API_BASE}${path}`, { ...options, headers });
   const data = await res.json();
 
-  // B — server said the token is invalid/expired; wipe the session and notify the app
   if (res.status === 401) {
     clearSession();
     window.dispatchEvent(new CustomEvent('petra:session-expired'));
     throw new Error(data.error || 'Session expired');
   }
-
   if (!res.ok) throw new Error(data.error || 'Request failed');
   return data;
+}
+
+async function request(path: string, options: RequestInit = {}) {
+  const method = (options.method ?? 'GET').toUpperCase();
+  const isGet  = method === 'GET';
+
+  if (isGet) {
+    // Return cached result if still fresh
+    const hit = _cache.get(path);
+    if (hit && Date.now() < hit.exp) return hit.data;
+
+    // Deduplicate concurrent requests for the same URL
+    const inFlight = _inflight.get(path);
+    if (inFlight) return inFlight;
+
+    const promise = _doFetch(path, options)
+      .then(data => {
+        _cache.set(path, { data, exp: Date.now() + CACHE_TTL });
+        _inflight.delete(path);
+        return data;
+      })
+      .catch(err => {
+        _inflight.delete(path);
+        throw err;
+      });
+
+    _inflight.set(path, promise);
+    return promise;
+  }
+
+  // Mutation: invalidate related GET caches immediately
+  const toInvalidate = INVALIDATES[path] ?? [];
+  toInvalidate.forEach(k => _cache.delete(k));
+  // Also bust any cache whose path starts with the same endpoint family
+  const family = path.replace(/\/[^/]+\.php$/, '');
+  for (const k of _cache.keys()) {
+    if (k.startsWith(family)) _cache.delete(k);
+  }
+
+  return _doFetch(path, options);
 }
 
 // ── Auth ──────────────────────────────────────────────
@@ -235,11 +301,16 @@ export async function updateProfile(data: {
   profession: string;
   bio: string;
   location: string;
+  username?: string;
 }) {
   return request('/users/update.php', {
     method: 'POST',
     body: JSON.stringify(data),
   });
+}
+
+export async function checkUsernameAvailability(username: string) {
+  return request(`/users/check-username.php?username=${encodeURIComponent(username)}`);
 }
 
 export async function fetchUserProfile(userId: string) {
@@ -323,6 +394,7 @@ export async function sendRichMessage(receiverId: string, payload: {
   question?: string;
   options?: string[];
   reply_to_id?: string | null;
+  view_once?: boolean;
 }) {
   return request('/messages/send.php', {
     method: 'POST',
@@ -334,19 +406,41 @@ export async function uploadFile(
   file: File | Blob,
   type: 'document' | 'image' | 'video' | 'audio',
   filename?: string,
-): Promise<{ url: string; name: string; size: number; mime: string }> {
-  const token = localStorage.getItem('petra_token');
-  const form  = new FormData();
-  form.append('file', file, filename ?? (file instanceof File ? file.name : 'upload'));
-  form.append('type', type);
-  const res  = await fetch(`${API_BASE}/messages/upload-file.php`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token || ''}` },
-    body: form,
+): Promise<{ url: string; name: string; size: number; mime: string; thumbnail_url?: string }> {
+  return uploadFileXHR(file, type, () => {}, filename);
+}
+
+export function uploadFileXHR(
+  file: File | Blob,
+  type: 'document' | 'image' | 'video' | 'audio',
+  onProgress: (pct: number) => void,
+  filename?: string,
+): Promise<{ url: string; name: string; size: number; mime: string; thumbnail_url?: string }> {
+  return new Promise((resolve, reject) => {
+    const token = localStorage.getItem('petra_token');
+    const form  = new FormData();
+    form.append('file', file, filename ?? (file instanceof File ? file.name : 'upload'));
+    form.append('type', type);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+    };
+    xhr.onload = () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) resolve(data);
+        else reject(new Error(data.error || 'Upload failed'));
+      } catch {
+        reject(new Error('Invalid server response'));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.onabort = () => reject(new Error('Upload cancelled'));
+    xhr.open('POST', `${API_BASE}/messages/upload-file.php`);
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(form);
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Upload failed');
-  return data;
 }
 
 export async function pollVote(messageId: string, optionIndex: number) {
@@ -395,6 +489,83 @@ export async function markAllDelivered() {
   }).catch(() => {});
 }
 
+export async function triggerTyping(receiverId: string): Promise<void> {
+  return request('/messages/typing.php', {
+    method: 'POST',
+    body: JSON.stringify({ receiver_id: receiverId }),
+  }).catch(() => {});
+}
+
+export async function reactToMessage(messageId: string, emoji: string) {
+  return request('/messages/react.php', {
+    method: 'POST',
+    body: JSON.stringify({ message_id: messageId, emoji }),
+  });
+}
+
+export async function editMessage(messageId: string, content: string) {
+  return request('/messages/edit.php', {
+    method: 'POST',
+    body: JSON.stringify({ message_id: messageId, content }),
+  });
+}
+
+export async function starMessage(messageId: string) {
+  return request('/messages/star.php', {
+    method: 'POST',
+    body: JSON.stringify({ message_id: messageId }),
+  });
+}
+
+export async function setDisappear(partnerId: string, disappearAfter: number | null) {
+  return request('/messages/set-disappear.php', {
+    method: 'POST',
+    body: JSON.stringify({ partner_id: partnerId, disappear_after: disappearAfter ?? 0 }),
+  });
+}
+
+export async function setLock(partnerId: string, pin: string | null) {
+  return request('/messages/set-lock.php', {
+    method: 'POST',
+    body: JSON.stringify(pin ? { partner_id: partnerId, action: 'set', pin } : { partner_id: partnerId, action: 'remove' }),
+  });
+}
+
+export async function verifyLock(partnerId: string, pin: string) {
+  return request('/messages/verify-lock.php', {
+    method: 'POST',
+    body: JSON.stringify({ partner_id: partnerId, pin }),
+  });
+}
+
+export async function registerPushToken(expoToken: string, platform: 'android' | 'ios' = 'android') {
+  return request('/notifications/register-token.php', {
+    method: 'POST',
+    body: JSON.stringify({ expo_token: expoToken, platform }),
+  }).catch(() => {});
+}
+
+export async function unregisterPushToken(expoToken: string) {
+  return request('/notifications/unregister-token.php', {
+    method: 'POST',
+    body: JSON.stringify({ expo_token: expoToken }),
+  }).catch(() => {});
+}
+
+export async function toggleMute(partnerId: string, action: 'mute' | 'unmute' | 'toggle' = 'toggle') {
+  return request('/messages/mute.php', {
+    method: 'POST',
+    body: JSON.stringify({ partner_id: partnerId, action }),
+  });
+}
+
+export async function markViewed(messageId: string) {
+  return request('/messages/mark-viewed.php', {
+    method: 'POST',
+    body: JSON.stringify({ message_id: messageId }),
+  });
+}
+
 export async function sendAudioMessage(receiverId: string, audioUrl: string, waveformData: number[], replyToId?: string) {
   return request('/messages/send.php', {
     method: 'POST',
@@ -420,4 +591,140 @@ export async function uploadAudio(blob: Blob): Promise<string> {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Upload failed');
   return data.url;
+}
+
+// ── Social Feed ───────────────────────────────────────
+
+export async function fetchFeedPosts(offset = 0, limit = 20) {
+  return request(`/feed/posts.php?offset=${offset}&limit=${limit}`);
+}
+
+export async function createFeedPost(data: {
+  post_type: 'text' | 'image' | 'video' | 'link' | 'poll' | 'audio';
+  visibility: 'hub' | 'global';
+  content?: string;
+  media?: Array<{ url: string; thumb_url: string | null; media_type: string; mime: string | null }>;
+  poll_options?: string[];
+  link_url?: string;
+  link_title?: string;
+  link_desc?: string;
+  link_image?: string;
+  link_domain?: string;
+  audio_url?: string;
+  audio_duration?: number;
+  audio_waveform?: number[];
+}) {
+  return request('/feed/posts.php', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function uploadFeedAudio(
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<{ url: string; duration: number; waveform: number[] }> {
+  const token = localStorage.getItem('petra_token') ?? '';
+  const form  = new FormData();
+  form.append('audio', file);
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100));
+    };
+    xhr.onload = () => {
+      try {
+        const d = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) resolve(d);
+        else reject(new Error(d.error || 'Upload failed'));
+      } catch { reject(new Error('Invalid server response')); }
+    };
+    xhr.onerror = () => reject(new Error('Network error'));
+    xhr.open('POST', `${API_BASE}/upload/feed_audio.php`);
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(form);
+  });
+}
+
+export async function fetchLinkPreview(url: string): Promise<{ title: string | null; description: string | null; image: string | null; domain: string | null }> {
+  return request(`/feed/link_preview.php?url=${encodeURIComponent(url)}`);
+}
+
+export async function deleteFeedPost(postId: string) {
+  return request('/feed/post.php', {
+    method: 'DELETE',
+    body: JSON.stringify({ post_id: postId }),
+  });
+}
+
+export async function fetchFeedComments(postId: string) {
+  return request(`/feed/comments.php?post_id=${encodeURIComponent(postId)}`);
+}
+
+export async function addFeedComment(postId: string, content: string) {
+  return request('/feed/comments.php', {
+    method: 'POST',
+    body: JSON.stringify({ post_id: postId, content }),
+  });
+}
+
+export async function deleteFeedComment(commentId: string) {
+  return request('/feed/comments.php', {
+    method: 'DELETE',
+    body: JSON.stringify({ comment_id: commentId }),
+  });
+}
+
+export async function voteFeedPoll(postId: string, optionId: string) {
+  return request('/feed/poll_vote.php', {
+    method: 'POST',
+    body: JSON.stringify({ post_id: postId, option_id: optionId }),
+  });
+}
+
+export async function pinFeedPost(postId: string) {
+  return request('/feed/pin.php', { method: 'POST', body: JSON.stringify({ post_id: postId }) });
+}
+
+export async function freezeFeedUser(targetUserId: string, hubId?: string | null, reason?: string) {
+  return request('/feed/freeze.php', {
+    method: 'POST',
+    body: JSON.stringify({ target_user_id: targetUserId, hub_id: hubId ?? null, reason: reason ?? '' }),
+  });
+}
+
+export async function unfreezeFeedUser(targetUserId: string, hubId?: string | null) {
+  return request('/feed/freeze.php', {
+    method: 'DELETE',
+    body: JSON.stringify({ target_user_id: targetUserId, hub_id: hubId ?? null }),
+  });
+}
+
+export async function getFrozenUsers(): Promise<{ frozen: any[] }> {
+  return request('/feed/freeze.php', { method: 'GET' });
+}
+
+export async function uploadFeedMedia(
+  file: File,
+  type: 'image' | 'video',
+  onProgress?: (pct: number) => void,
+): Promise<{ url: string; thumb_url: string | null; media_type: 'image' | 'video'; mime: string }> {
+  return new Promise((resolve, reject) => {
+    const token = localStorage.getItem('petra_token');
+    const form  = new FormData();
+    form.append('file', file);
+    form.append('type', type);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100));
+    };
+    xhr.onload = () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) resolve(data);
+        else reject(new Error(data.error || 'Upload failed'));
+      } catch { reject(new Error('Invalid server response')); }
+    };
+    xhr.onerror = () => reject(new Error('Network error'));
+    xhr.open('POST', `${API_BASE}/upload/feed_media.php`);
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(form);
+  });
 }

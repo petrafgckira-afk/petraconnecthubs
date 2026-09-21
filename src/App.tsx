@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
 import {
   clearSession, getSavedUser, isSessionActive,
   fetchDashboardStats, fetchAnnouncements, fetchEvents, fetchHubs, fetchOwnProfile,
@@ -19,19 +19,19 @@ import {
   PetraNotification,
 } from './types';
 
-// Component imports
-import LandingPage from './components/LandingPage';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-import Navigation from './components/Navigation';
-import Dashboard from './components/Dashboard';
-import MyHubPage from './components/MyHubPage';
-import MembersPage from './components/MembersPage';
-import MessagesPage from './components/MessagesPage';
-import NotificationsPage from './components/NotificationsPage';
-import HubLeaderPanel from './components/HubLeaderPanel';
-import AdminPanel from './components/AdminPanel';
-import ProfilePage from './components/ProfilePage';
+// Lazy-loaded pages — each is only downloaded when first visited
+const LandingPage      = lazy(() => import('./components/LandingPage'));
+const LoginPage        = lazy(() => import('./components/LoginPage'));
+const RegisterPage     = lazy(() => import('./components/RegisterPage'));
+const Navigation       = lazy(() => import('./components/Navigation'));
+const Dashboard        = lazy(() => import('./components/Dashboard'));
+const MyHubPage        = lazy(() => import('./components/MyHubPage'));
+const MembersPage      = lazy(() => import('./components/MembersPage'));
+const MessagesPage     = lazy(() => import('./components/MessagesPage'));
+const NotificationsPage= lazy(() => import('./components/NotificationsPage'));
+const HubLeaderPanel   = lazy(() => import('./components/HubLeaderPanel'));
+const AdminPanel       = lazy(() => import('./components/AdminPanel'));
+const ProfilePage      = lazy(() => import('./components/ProfilePage'));
 
 export default function App() {
 
@@ -172,35 +172,34 @@ export default function App() {
     fetchEvents().then(d => setEvents(d.events || [])).catch(console.error);
   }, [isLoggedIn, currentView]);
 
-  // Poll announcements and events every 5s while dashboard is open
+  // Poll announcements and events every 30s while dashboard is open
   useEffect(() => {
     if (!isLoggedIn || currentView !== 'dashboard') return;
     const interval = setInterval(() => {
       fetchAnnouncements().then(d => setAnnouncements(d.announcements || [])).catch(console.error);
       fetchEvents().then(d => setEvents(d.events || [])).catch(console.error);
-    }, 5000);
+    }, 30_000);
     return () => clearInterval(interval);
   }, [isLoggedIn, currentView]);
 
-  // Poll notifications every 5s while logged in so message/connection alerts appear promptly
+  // Poll notifications every 10s — responsive but not hammering the server
   useEffect(() => {
     if (!isLoggedIn) return;
     const interval = setInterval(() => {
       fetchNotifications().then(d => setNotifications(d.notifications || [])).catch(console.error);
-    }, 5000);
+    }, 10_000);
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  // Mark ALL incoming messages as delivered the moment the user is logged in anywhere in the app.
-  // Fires immediately on login, then every 3s — so senders see double-gray ticks within 2s.
+  // Mark all messages delivered every 10s (senders see gray ticks within ~10s)
   useEffect(() => {
     if (!isLoggedIn) return;
     markAllDelivered();
-    const interval = setInterval(markAllDelivered, 3_000);
+    const interval = setInterval(markAllDelivered, 10_000);
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  // Poll own profile every 5s so sidebar avatar updates when user changes their photo
+  // Poll own profile every 60s — avatars rarely change mid-session
   useEffect(() => {
     if (!isLoggedIn) return;
     const interval = setInterval(() => {
@@ -212,14 +211,14 @@ export default function App() {
           return { ...prev, avatarUrl: newUrl };
         });
       }).catch(() => {});
-    }, 5000);
+    }, 60_000);
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  const handleAdminHubScopeChange = (scope: { hubId: string | null; hubName: string | null }) => {
+  const handleAdminHubScopeChange = useCallback((scope: { hubId: string | null; hubName: string | null }) => {
     setAdminHubScope(scope);
     localStorage.setItem('petra_admin_hub_scope', JSON.stringify(scope));
-  };
+  }, []);
 
   // Map API user object → frontend User shape
   function mapApiUser(apiUser: any): User {
@@ -289,22 +288,18 @@ export default function App() {
   // --- INTERACTION HANDLERS ---
   
   // Like an Announcement
-  const handleLikeAnnouncement = (id: string) => {
+  const handleLikeAnnouncement = useCallback((id: string) => {
     setAnnouncements(prev => prev.map(ann => {
       if (ann.id === id) {
         const liked = !ann.likedByUser;
-        return {
-          ...ann,
-          likedByUser: liked,
-          likesCount: liked ? ann.likesCount + 1 : ann.likesCount - 1
-        };
+        return { ...ann, likedByUser: liked, likesCount: liked ? ann.likesCount + 1 : ann.likesCount - 1 };
       }
       return ann;
     }));
-  };
+  }, []);
 
   // Register / unregister for Event via real API
-  const handleRegisterEvent = (id: string) => {
+  const handleRegisterEvent = useCallback((id: string) => {
     toggleEventRegistration(id)
       .then(data => {
         setEvents(prev => prev.map(evt =>
@@ -314,9 +309,9 @@ export default function App() {
         ));
       })
       .catch(console.error);
-  };
+  }, []);
 
-  const handleEditEvent = (
+  const handleEditEvent = useCallback((
     id: string,
     data: { title: string; description: string; date: string; time: string; location: string }
   ): Promise<void> => {
@@ -328,13 +323,13 @@ export default function App() {
           : evt
       ));
     });
-  };
+  }, []);
 
-  const handleDeleteEvent = (id: string): Promise<void> => {
+  const handleDeleteEvent = useCallback((id: string): Promise<void> => {
     return deleteEvent(id).then(() =>
       setEvents(prev => prev.filter(evt => evt.id !== id))
     );
-  };
+  }, []);
 
   // Download Resource
   const handleDownloadResource = (id: string) => {
@@ -360,7 +355,7 @@ export default function App() {
     setNotifications(prev => [newAlert, ...prev]);
   };
 
-  const handleConnectMember = (mId: string) => {
+  const handleConnectMember = useCallback((mId: string) => {
     const currentStatus = connections[mId] || 'not_connected';
     if (currentStatus !== 'not_connected') return;
 
@@ -380,52 +375,50 @@ export default function App() {
       .catch(() => {
         setConnections(prev => ({ ...prev, [mId]: 'not_connected' }));
       });
-  };
+  }, [connections]);
 
-  const handleRemoveConnection = (mId: string) => {
+  const handleRemoveConnection = useCallback((mId: string) => {
     const prevStatus = connections[mId] || 'not_connected';
     setConnections(c => ({ ...c, [mId]: 'not_connected' }));
     removeConnection(mId).catch(() => {
       setConnections(c => ({ ...c, [mId]: prevStatus }));
     });
-  };
+  }, [connections]);
 
-  // Navigate to Messages and pre-open a conversation with the given user ID
-  const handleSendMessageToMember = (userId: string) => {
+  const handleSendMessageToMember = useCallback((userId: string) => {
     setActivePartnerId(userId);
     setCurrentView('messages');
-  };
+  }, []);
 
-  // Dismiss notification
-  const handleClearNotification = (id: string) => {
+  const handleClearNotification = useCallback((id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
-  };
+  }, []);
 
-  const handleMarkRead = (id: string) => {
+  const handleMarkRead = useCallback((id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     markNotificationRead(id).catch(() => {});
-  };
+  }, []);
 
-  const handleMarkAllRead = () => {
+  const handleMarkAllRead = useCallback(() => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     markAllNotificationsRead().catch(() => {});
-  };
+  }, []);
 
-  const handleEditAnnouncement = (id: string, title: string, content: string): Promise<void> => {
+  const handleEditAnnouncement = useCallback((id: string, title: string, content: string): Promise<void> => {
     return updateAnnouncement(id, title, content)
       .then(() => {
         setAnnouncements(prev =>
           prev.map(ann => ann.id === id ? { ...ann, title, content } : ann)
         );
       });
-  };
+  }, []);
 
-  const handleDeleteAnnouncement = (id: string): Promise<void> => {
+  const handleDeleteAnnouncement = useCallback((id: string): Promise<void> => {
     return deleteAnnouncement(id)
       .then(() => setAnnouncements(prev => prev.filter(ann => ann.id !== id)));
-  };
+  }, []);
 
-  const handleCreateAnnouncement = (annData: Partial<HubAnnouncement>): Promise<void> => {
+  const handleCreateAnnouncement = useCallback((annData: Partial<HubAnnouncement>): Promise<void> => {
     const hubId = currentUser.role === 'admin' ? adminHubScope.hubId : undefined;
     return createAnnouncement(annData.title || '', annData.content || '', hubId)
       .then(data => {
@@ -434,9 +427,9 @@ export default function App() {
         }
         setCurrentView('dashboard');
       });
-  };
+  }, [currentUser.role, adminHubScope.hubId]);
 
-  const handleCreateEvent = (evtData: Partial<HubEvent>) => {
+  const handleCreateEvent = useCallback((evtData: Partial<HubEvent>) => {
     createEvent({
       title:       evtData.title || '',
       description: evtData.description || '',
@@ -445,14 +438,12 @@ export default function App() {
       location:    evtData.location || 'Petra Full Gospel Church',
     })
       .then(data => {
-        if (data.event) {
-          setEvents(prev => [...prev, data.event]);
-        }
+        if (data.event) setEvents(prev => [...prev, data.event]);
       })
       .catch(() => {});
-  };
+  }, []);
 
-  const handleCreateResource = (resData: Partial<HubResource>) => {
+  const handleCreateResource = useCallback((resData: Partial<HubResource>) => {
     const fullRes: HubResource = {
       id: `res_created_${Date.now()}`,
       hubId: resData.hubId || 'Technology',
@@ -467,7 +458,13 @@ export default function App() {
     };
 
     setResources(prev => [fullRes, ...prev]);
-  };
+  }, [currentUser.name]);
+
+  // Memoised badge count — only recomputes when notifications array changes
+  const activeNotificationsCount = useMemo(
+    () => notifications.filter(n => !n.read).length,
+    [notifications],
+  );
 
   // --- CONDITIONAL PAGES RENDERER ---
   
@@ -479,6 +476,8 @@ export default function App() {
             userRole={currentUser.role}
             userHub={currentUser.profession}
             userName={currentUser.name}
+            userId={currentUser.id}
+            userImage={currentUser.avatarUrl ?? null}
             announcements={announcements}
             events={events}
             stats={dashboardStats}
@@ -571,6 +570,8 @@ export default function App() {
             userRole={currentUser.role}
             userHub={currentUser.profession}
             userName={currentUser.name}
+            userId={currentUser.id}
+            userImage={currentUser.avatarUrl ?? null}
             announcements={announcements}
             events={events}
             stats={dashboardStats}
@@ -592,29 +593,29 @@ export default function App() {
     }
   };
 
-  // Calculate badges counts
-  const unreadMessagesCount = 0; // fetched live inside MessagesPage
-  const activeNotificationsCount = notifications.filter(n => !n.read).length;
+  // unreadMessagesCount is fetched live inside MessagesPage
+  const unreadMessagesCount = 0;
 
   // 1. Unified Fixed Blurry Background + Layout rendering:
   return (
-    <>
-      {/* Dynamic Viewport-Fixed Atmospheric Background containing beautiful blurry orbs of the Petra brand */}
-      <div className="fixed inset-0 bg-[#0f132e] overflow-hidden pointer-events-none z-0">
-        {/* Glowing vibrant Petra Orange sphere (Uganda flame core) */}
-        <div
-          className="absolute top-[-10%] right-[-10%] w-[380px] h-[380px] md:w-[680px] md:h-[680px] bg-[#F37021]/15 rounded-full blur-[110px] md:blur-[160px] animate-pulse"
-          style={{ animationDuration: '8s' }}
-        />
-        {/* Glowing warm Golden Wheat sphere */}
-        <div
-          className="absolute bottom-[-10%] left-[-10%] w-[420px] h-[420px] md:w-[720px] md:h-[720px] bg-[#FAA61A]/12 rounded-full blur-[130px] md:blur-[180px] animate-pulse"
-          style={{ animationDuration: '10s' }}
-        />
-        {/* Deep Royal Petra Navy accents in the center and layout regions */}
-        <div className="absolute top-[35%] left-[20%] w-[300px] h-[300px] md:w-[550px] md:h-[550px] bg-[#394c8e]/40 rounded-full blur-[100px] md:blur-[150px]" />
-        <div className="absolute top-[70%] right-[15%] w-[320px] h-[320px] md:w-[480px] md:h-[480px] bg-[#1D2D5F]/35 rounded-full blur-[90px] md:blur-[140px]" />
-      </div>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0f132e' }} />}>
+      {/* Background: dark orbs for landing/auth pages, clean white for logged-in app */}
+      {isLoggedIn ? (
+        <div className="fixed inset-0 pointer-events-none z-0" style={{ backgroundColor: '#f9fafb' }} />
+      ) : (
+        <div className="fixed inset-0 bg-[#0f132e] overflow-hidden pointer-events-none z-0">
+          <div
+            className="absolute top-[-10%] right-[-10%] w-[380px] h-[380px] md:w-[680px] md:h-[680px] bg-[#F37021]/15 rounded-full blur-[110px] md:blur-[160px] animate-pulse"
+            style={{ animationDuration: '8s' }}
+          />
+          <div
+            className="absolute bottom-[-10%] left-[-10%] w-[420px] h-[420px] md:w-[720px] md:h-[720px] bg-[#FAA61A]/12 rounded-full blur-[130px] md:blur-[180px] animate-pulse"
+            style={{ animationDuration: '10s' }}
+          />
+          <div className="absolute top-[35%] left-[20%] w-[300px] h-[300px] md:w-[550px] md:h-[550px] bg-[#394c8e]/40 rounded-full blur-[100px] md:blur-[150px]" />
+          <div className="absolute top-[70%] right-[15%] w-[320px] h-[320px] md:w-[480px] md:h-[480px] bg-[#1D2D5F]/35 rounded-full blur-[90px] md:blur-[140px]" />
+        </div>
+      )}
 
       <div className="relative z-10 w-full min-h-screen">
         {!isLoggedIn ? (
@@ -640,7 +641,7 @@ export default function App() {
             )}
           </>
         ) : (
-          <div className="flex h-screen overflow-hidden bg-transparent text-[#f4f6fc] font-sans">
+          <div className="petra-app-interior flex h-screen overflow-hidden bg-gray-50 text-navy-950 font-sans">
             
             {/* Sidebar navigation on Desktop, standard floating bottom bar on mobile */}
             <Navigation
@@ -667,17 +668,16 @@ export default function App() {
             <main className="flex-1 p-4 md:p-8 md:max-w-[calc(100%-256px)] h-screen overflow-y-auto relative z-10">
               
               {/* Quick Header dashboard navigation pathing (Only visible on logged-in desktops) */}
-              <header className="hidden md:flex justify-between items-center mb-6 py-2 border-b border-navy-800 bg-[#0f132e]/60 backdrop-blur-md px-4 rounded-xl">
-                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-bold font-sans">
+              <header className="hidden md:flex justify-between items-center mb-6 py-2.5 border border-gray-200 bg-white px-4 rounded-xl shadow-sm">
+                <div className="flex items-center gap-1.5 text-xs text-gray-400 font-bold font-sans">
                   <span>Petra Connect Hubs</span>
                   <span>/</span>
                   <span className="text-brand-gold uppercase font-mono tracking-widest">{currentView}</span>
                 </div>
-                
+
                 <div className="flex gap-2.5 items-center">
-                  {/* Status alerts indicators */}
                   <span className="h-2 w-2 rounded-full bg-emerald-500 block inline shrink-0 animate-pulse" />
-                  <span className="text-[10px] text-gray-400 font-mono tracking-wider font-semibold">SECURE GATEWAY APPLICANT SESSION • STATUS ONLINE</span>
+                  <span className="text-[10px] text-gray-400 font-mono tracking-wider font-semibold">SECURE GATEWAY • STATUS ONLINE</span>
                 </div>
               </header>
 
@@ -688,6 +688,6 @@ export default function App() {
           </div>
         )}
       </div>
-    </>
+    </Suspense>
   );
 }

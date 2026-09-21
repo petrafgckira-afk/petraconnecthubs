@@ -4,11 +4,12 @@ import {
   Camera, Edit3, Check, X, MapPin, Briefcase, Calendar,
   Building2, User, Mail, Phone, Loader2, Eye, Pencil,
 } from 'lucide-react';
-import { fetchOwnProfile, updateProfile, uploadProfilePhoto } from '../services/api';
+import { fetchOwnProfile, updateProfile, uploadProfilePhoto, checkUsernameAvailability } from '../services/api';
 
 interface ProfileData {
   id: string;
   full_name: string;
+  username?: string | null;
   email: string;
   phone_number: string;
   profile_image: string | null;
@@ -50,7 +51,10 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
     profession: '',
     bio:        '',
     location:   '',
+    username:   '',
   });
+  const [usernameStatus, setUsernameStatus] = useState<'idle'|'checking'|'available'|'taken'>('idle');
+  const usernameTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fileInputRef   = useRef<HTMLInputElement>(null);
   const menuRef        = useRef<HTMLDivElement>(null);
@@ -65,6 +69,7 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
           profession: data.user.profession || '',
           bio:        data.user.bio        || '',
           location:   data.user.location   || '',
+          username:   data.user.username   || '',
         });
       })
       .catch(() => setError('Failed to load profile.'))
@@ -82,6 +87,21 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
     return () => document.removeEventListener('mousedown', handler);
   }, [photoMenu]);
 
+  useEffect(() => {
+    if (!editing) { setUsernameStatus('idle'); return; }
+    const u = form.username.trim();
+    if (!u || u === profile?.username) { setUsernameStatus('idle'); return; }
+    setUsernameStatus('checking');
+    if (usernameTimerRef.current) clearTimeout(usernameTimerRef.current);
+    usernameTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await checkUsernameAvailability(u);
+        setUsernameStatus(res.available ? 'available' : 'taken');
+      } catch { setUsernameStatus('idle'); }
+    }, 500);
+    return () => { if (usernameTimerRef.current) clearTimeout(usernameTimerRef.current); };
+  }, [form.username, editing, profile?.username]);
+
   const startEdit = () => {
     if (!profile) return;
     setForm({
@@ -89,7 +109,9 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
       profession: profile.profession || '',
       bio:        profile.bio        || '',
       location:   profile.location   || '',
+      username:   profile.username   || '',
     });
+    setUsernameStatus('idle');
     setEditing(true);
     setError('');
     setSuccess('');
@@ -102,10 +124,20 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
 
   const saveEdit = async () => {
     if (!form.full_name.trim()) { setError('Name is required.'); return; }
+    if (usernameStatus === 'checking') { setError('Please wait — checking username availability…'); return; }
+    if (usernameStatus === 'taken')    { setError('That username is already taken. Please choose another.'); return; }
     setSaving(true);
     setError('');
     try {
-      const data = await updateProfile(form);
+      // Only include username in payload when it actually changed
+      const payload: { full_name: string; profession: string; bio: string; location: string; username?: string } = {
+        full_name:  form.full_name,
+        profession: form.profession,
+        bio:        form.bio,
+        location:   form.location,
+      };
+      if (form.username && form.username !== profile?.username) payload.username = form.username;
+      const data = await updateProfile(payload);
       setProfile(prev => prev ? { ...prev, ...data.user } : data.user);
       onProfileUpdated({ name: data.user.full_name, profileImage: data.user.profile_image });
       setEditing(false);
@@ -303,9 +335,14 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
                   placeholder="Full name"
                 />
               ) : (
-                <h1 className="font-serif text-xl font-bold text-white leading-tight truncate">
-                  {profile.full_name}
-                </h1>
+                <>
+                  <h1 className="font-serif text-xl font-bold text-white leading-tight truncate">
+                    {profile.full_name}
+                  </h1>
+                  {profile.username && (
+                    <p className="text-[11px] text-brand-gold/80 font-mono mt-0.5">@{profile.username}</p>
+                  )}
+                </>
               )}
 
               <div className="flex flex-wrap items-center gap-2 mt-1.5">
@@ -406,6 +443,37 @@ export default function ProfilePage({ onProfileUpdated }: Props) {
               <div className="min-w-0">
                 <div className="text-[9.5px] text-gray-500 uppercase tracking-wider">Phone</div>
                 <div className="text-sm text-gray-200">{profile.phone_number || '—'}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-navy-800 flex items-center justify-center shrink-0">
+                <User size={13} className="text-brand-gold" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[9.5px] text-gray-500 uppercase tracking-wider">Username</div>
+                {editing ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      value={form.username}
+                      onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+                      placeholder="your_username"
+                      maxLength={20}
+                      className="flex-1 bg-navy-900 border border-navy-700 text-gray-200 text-sm rounded px-2 py-1 focus:outline-none focus:border-brand-gold font-mono min-w-0"
+                    />
+                    <span className={`text-[9px] shrink-0 ${
+                      usernameStatus === 'checking'  ? 'text-gray-400' :
+                      usernameStatus === 'available' ? 'text-emerald-400' :
+                      usernameStatus === 'taken'     ? 'text-rose-400' : 'hidden'
+                    }`}>
+                      {usernameStatus === 'checking'  && 'Checking…'}
+                      {usernameStatus === 'available' && '✓ Available'}
+                      {usernameStatus === 'taken'     && '✗ Taken'}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="text-sm font-mono text-brand-gold/80">{profile.username ? '@' + profile.username : '—'}</div>
+                )}
               </div>
             </div>
 

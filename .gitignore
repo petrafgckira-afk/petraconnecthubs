@@ -12,3 +12,5 @@ metadata.json
 assets/.aistudio/
 *.NEF
 *.nef
+.expo/
+*.zip

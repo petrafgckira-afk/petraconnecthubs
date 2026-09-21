@@ -5,6 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Relative asset URLs so the build works from any cPanel folder/subdomain
+    base: './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

@@ -11,26 +11,100 @@ interface RegisterPageProps {
   onCancel: () => void;
 }
 
+const ORANGE     = '#F37021';
+const NAVY       = '#0f132e';
+const NAVY_MID   = '#374151';
+const GRAY_SUB   = '#6b7280';
+const GRAY_LABEL = '#4b5563';
+
+const HUBS_DISPLAY = ['Business', 'Technology', 'Medical', 'Finance', 'Education', 'Media & Creative', 'Leadership'];
+const STEP_LABELS  = ['Personal & Professional', 'Choose Your Hub', 'Stewardship Pledge'];
+
+// ── Left brand panel (dark) ──────────────────────────────────────
+function LeftPanel() {
+  return (
+    <div className="hidden md:flex flex-col justify-between w-[42%] min-h-screen bg-navy-950 relative overflow-hidden px-10 py-12 shrink-0">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full" style={{ background: 'radial-gradient(ellipse at 25% 18%, rgba(243,112,33,0.14) 0%, transparent 52%)' }} />
+        <div className="absolute bottom-0 right-0 w-3/4 h-2/3" style={{ background: 'radial-gradient(ellipse at 80% 90%, rgba(250,166,26,0.07) 0%, transparent 50%)' }} />
+        <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'linear-gradient(to right, transparent, #F37021, transparent)', opacity: 0.45 }} />
+        <div className="absolute -bottom-28 -left-28 w-80 h-80 border border-brand-gold/5 rounded-full" />
+        <div className="absolute -bottom-14 -left-14 w-56 h-56 border border-brand-gold/9 rounded-full" />
+        <div className="absolute top-[35%] right-0 w-[2px] h-36" style={{ background: 'linear-gradient(to bottom, transparent, rgba(243,112,33,0.28), transparent)' }} />
+      </div>
+
+      <div className="relative z-10">
+        <div className="flex items-center gap-3 mb-12">
+          <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(243,112,33,0.1)', border: '1.5px solid rgba(243,112,33,0.32)' }}>
+            <img src={petraLogo} alt="Petra" className="w-9 h-9 object-contain" />
+          </div>
+          <div>
+            <p className="text-white font-bold text-sm tracking-tight leading-none">Petra Connect Hubs</p>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mt-0.5" style={{ color: ORANGE }}>Professional Fellowship</p>
+          </div>
+        </div>
+
+        <h1 className="text-[2rem] font-black text-white leading-[1.15] tracking-tight mb-3">
+          Join a community<br />
+          <span style={{ color: ORANGE }}>built on calling.</span>
+        </h1>
+        <p className="text-gray-400 text-[13px] leading-relaxed mb-8" style={{ maxWidth: 272 }}>
+          Connect with verified professionals from Petra Full Gospel Church across 7 vocational hubs.
+        </p>
+
+        <div className="mb-9">
+          <p className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.18em] mb-3">7 Vocational Hubs</p>
+          <div className="flex flex-wrap gap-2">
+            {HUBS_DISPLAY.map(h => (
+              <span key={h} className="text-[10px] font-semibold px-2.5 py-[5px] rounded-full" style={{ color: ORANGE, backgroundColor: 'rgba(243,112,33,0.08)', border: '1px solid rgba(243,112,33,0.2)' }}>
+                {h}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3.5">
+          {[
+            { icon: '🛡️', text: 'Verified professional directory' },
+            { icon: '💬', text: 'Peer messaging & collaboration' },
+            { icon: '📅', text: 'Hub events, meets & announcements' },
+          ].map(f => (
+            <div key={f.text} className="flex items-center gap-3">
+              <span className="text-sm">{f.icon}</span>
+              <span className="text-[12px] text-gray-400">{f.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative z-10">
+        <div className="pl-4" style={{ borderLeft: '2px solid rgba(243,112,33,0.38)' }}>
+          <p className="text-gray-400 text-[11px] italic leading-relaxed">
+            "Whatever you do, work at it with all your heart, as working for the Lord."
+          </p>
+          <p className="text-[9px] font-bold mt-1.5 uppercase tracking-widest" style={{ color: ORANGE }}>— Colossians 3:23</p>
+        </div>
+        <p className="text-gray-600 text-[9px] mt-5 uppercase tracking-widest">© 2026 Petra Full Gospel Church · Kira, Uganda</p>
+      </div>
+    </div>
+  );
+}
+
 export default function RegisterPage({ onRegisterSubmit, onCancel }: RegisterPageProps) {
   const [step, setStep] = useState<number>(1);
 
-  // Step 1 fields
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name,       setName]       = useState('');
+  const [email,      setEmail]      = useState('');
+  const [password,   setPassword]   = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [phone, setPhone] = useState('');
+  const [phone,      setPhone]      = useState('');
   const [profession, setProfession] = useState('');
-  const [bio, setBio] = useState('');
-
-  // Step 2 fields
+  const [bio,        setBio]        = useState('');
   const [selectedHub, setSelectedHub] = useState<HubType | null>(null);
-
-  // Step 3 fields
   const [contribution, setContribution] = useState('');
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
+  const [errors,   setErrors]   = useState<{ [key: string]: string }>({});
+  const [loading,  setLoading]  = useState(false);
   const [apiError, setApiError] = useState('');
   const [registered, setRegistered] = useState(false);
 
@@ -64,11 +138,8 @@ export default function RegisterPage({ onRegisterSubmit, onCancel }: RegisterPag
   };
 
   const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    } else {
-      onCancel();
-    }
+    if (step > 1) setStep(step - 1);
+    else onCancel();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +161,6 @@ export default function RegisterPage({ onRegisterSubmit, onCancel }: RegisterPag
         hub_name:              selectedHub,
         contribution_interest: contribution,
       });
-      // Account is pending — show waiting screen, do NOT start a session
       setRegistered(true);
     } catch (err: any) {
       setApiError(err.message || 'Registration failed. Please try again.');
@@ -99,299 +169,295 @@ export default function RegisterPage({ onRegisterSubmit, onCancel }: RegisterPag
     }
   };
 
-  // ── Pending approval screen ────────────────────────────────────
+  // Shared input className
+  const inputCls = (hasError?: boolean) =>
+    `w-full border rounded-xl p-3 text-sm transition-all duration-200 ${hasError ? 'border-rose-400' : ''}`;
+
+  // ── Pending screen ────────────────────────────────────────────
   if (registered) {
     return (
-      <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center px-4 font-sans text-white">
-        <div className="max-w-md w-full text-center space-y-6">
-          <div className="w-20 h-20 rounded-full bg-amber-500/15 border-2 border-amber-500/40 flex items-center justify-center mx-auto">
-            <Clock size={36} className="text-amber-400" />
+      <div className="min-h-screen flex font-sans">
+        <LeftPanel />
+        <div className="theme-light flex-1 flex items-center justify-center px-6 py-12" style={{ backgroundColor: '#f5f7fc' }}>
+          <div className="max-w-md w-full space-y-6">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor: '#fffbeb', border: '2px solid #fcd34d' }}>
+              <Clock size={36} style={{ color: '#d97706' }} />
+            </div>
+            <div className="space-y-2 text-center">
+              <h2 className="text-2xl font-bold tracking-tight" style={{ color: NAVY }}>Registration Submitted</h2>
+              <p className="text-sm leading-relaxed" style={{ color: GRAY_SUB }}>
+                Your account is now <span className="font-semibold" style={{ color: '#d97706' }}>pending admin approval</span>.
+                An administrator will review your profile and activate your account.
+              </p>
+            </div>
+            <div className="rounded-xl p-4 space-y-2" style={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+              <p className="text-[11px] uppercase tracking-wider font-bold" style={{ color: '#9ca3af' }}>Registered as</p>
+              <p className="font-semibold" style={{ color: NAVY }}>{name}</p>
+              <p className="text-xs font-mono" style={{ color: GRAY_SUB }}>{email}</p>
+              <p className="text-[11px] mt-1" style={{ color: GRAY_SUB }}>Hub applied: <span className="font-semibold" style={{ color: ORANGE }}>{selectedHub} Hub</span></p>
+            </div>
+            <button
+              onClick={onCancel}
+              className="w-full font-bold py-3 rounded-xl transition text-sm text-white"
+              style={{ backgroundColor: ORANGE }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#FAA61A')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = ORANGE)}
+            >
+              Back to Sign In
+            </button>
+            <p className="text-[10px] text-center" style={{ color: '#9ca3af' }}>Petra Full Gospel Church · Professional Connect Hubs</p>
           </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight">Registration Submitted</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Your account is now <span className="text-amber-400 font-semibold">pending admin approval</span>.
-              An administrator will review your profile and activate your account.
-              You will be able to log in once it has been approved.
-            </p>
-          </div>
-          <div className="bg-navy-900 border border-navy-800 rounded-xl p-4 text-left space-y-2">
-            <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Registered as</p>
-            <p className="font-semibold text-white">{name}</p>
-            <p className="text-gray-400 text-xs font-mono">{email}</p>
-            <p className="text-[11px] text-gray-500 mt-1">Hub applied: <span className="text-brand-gold font-medium">{selectedHub} Hub</span></p>
-          </div>
-          <button
-            onClick={onCancel}
-            className="w-full bg-brand-gold text-navy-950 font-bold py-3 rounded-xl hover:bg-amber-400 transition text-sm"
-          >
-            Back to Sign In
-          </button>
-          <p className="text-[10px] text-gray-600">Petra Full Gospel Church · Professional Connect Hubs</p>
         </div>
       </div>
     );
   }
 
+  // ── Main form ─────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-navy-50 flex flex-col justify-between py-8 px-4 font-sans">
-      {/* Header logo / back */}
-      <div className="max-w-3xl mx-auto w-full mb-6 flex justify-between items-center">
-        <button 
-          onClick={handleBack}
-          className="inline-flex items-center gap-1.5 text-navy-800 hover:text-brand-gold font-medium text-sm transition"
-        >
-          <ChevronLeft size={16} /> Back
-        </button>
-        <div className="flex items-center gap-2">
-          <img src={petraLogo} alt="Petra Connect Hubs" className="w-8 h-8 object-contain rounded-lg" />
-          <span className="font-bold text-navy-950 text-sm tracking-tight">Petra Connect Hubs</span>
-        </div>
-      </div>
+    <div className="min-h-screen flex font-sans">
+      <LeftPanel />
 
-      {/* Main card form container */}
-      <div className="max-w-2xl mx-auto w-full bg-white border border-navy-100 shadow-md rounded-2xl p-6 md:p-8 flex-1 flex flex-col justify-between">
-        
-        <div>
-          {/* Progress Indicator */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              <span>Step {step} of 3</span>
-              <span className="text-navy-900 font-bold">
-                {step === 1 && 'Personal & Professional'}
-                {step === 2 && 'Choose Guild / Hub'}
-                {step === 3 && 'Stewardship Contribution'}
-              </span>
-            </div>
-            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-brand-gold rounded-full transition-all duration-300"
-                style={{ width: `${(step / 3) * 100}%` }}
-              />
-            </div>
-          </div>
+      {/* Right panel — light theme */}
+      <div className="theme-light flex-1 flex flex-col min-h-screen" style={{ backgroundColor: '#f5f7fc' }}>
 
-          {/* STEP 1: Personal Info */}
-          {step === 1 && (
-            <div className="space-y-5 animate-fade-in">
-              <div className="space-y-1">
-                <h2 className="font-serif text-2xl font-black text-navy-900 tracking-tight">Professional Profile</h2>
-                <p className="text-gray-500 text-xs">Let peers know who you are. This information forms your local directory profile.</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Full Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Ndyamuhaki Abraham"
-                      className={`w-full bg-navy-50/50 border ${errors.name ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                    />
-                    {errors.name && <p className="text-rose-500 text-[11px] font-medium">{errors.name}</p>}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Phone Number</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="e.g. +256701234567"
-                      className={`w-full bg-navy-50/50 border ${errors.phone ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                    />
-                    {errors.phone && <p className="text-rose-500 text-[11px] font-medium">{errors.phone}</p>}
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Email Address</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. ndyamuhaki.abraham@company.com"
-                    className={`w-full bg-navy-50/50 border ${errors.email ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                  />
-                  {errors.email && <p className="text-rose-500 text-[11px] font-medium">{errors.email}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Profession / Job Title</label>
-                  <input
-                    type="text"
-                    value={profession}
-                    onChange={(e) => setProfession(e.target.value)}
-                    placeholder="e.g. Software Engineer, Accountant, Graphic Designer"
-                    className={`w-full bg-navy-50/50 border ${errors.profession ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                  />
-                  {errors.profession && <p className="text-rose-500 text-[11px] font-medium">{errors.profession}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Minimum 6 characters"
-                      className={`w-full bg-navy-50/50 border ${errors.password ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 pr-10 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(p => !p)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy-800 transition"
-                    >
-                      {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                    </button>
-                  </div>
-                  {errors.password && <p className="text-rose-500 text-[11px] font-medium">{errors.password}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Professional Bio</label>
-                  <textarea
-                    rows={3}
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    placeholder="Describe your current role, experience, and theological alignment..."
-                    className={`w-full bg-navy-50/50 border ${errors.bio ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-2.5 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                  />
-                  {errors.bio && <p className="text-rose-500 text-[11px] font-medium">{errors.bio}</p>}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: Choose Hub */}
-          {step === 2 && (
-            <div className="space-y-5 animate-fade-in">
-              <div className="space-y-1">
-                <h2 className="font-serif text-2xl font-black text-navy-900 tracking-tight">Select Your Professional Hub</h2>
-                <p className="text-gray-500 text-xs">Members join one primary Hub. Choose the one that matches your daily vocation.</p>
-              </div>
-
-              {errors.hub && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-lg p-3 text-xs font-medium">
-                  {errors.hub}
-                </div>
-              )}
-
-              <div className="grid gap-3 sm:grid-cols-2 max-h-[340px] overflow-y-auto pr-1 pad-custom-scroll">
-                {INITIAL_HUBS.map((hub) => {
-                  const isSelected = selectedHub === hub.id;
-                  return (
-                    <div
-                      key={hub.id}
-                      onClick={() => {
-                        setSelectedHub(hub.id);
-                        setErrors({});
-                      }}
-                      className={`p-4 rounded-xl border-2 text-left cursor-pointer transition-all duration-150 flex items-start gap-3 relative ${
-                        isSelected 
-                          ? 'border-brand-gold bg-brand-gold-light/40 shadow-sm' 
-                          : 'border-slate-100 bg-navy-50/30 hover:border-navy-200'
-                      }`}
-                    >
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${hub.colorClass}`}>
-                        <LucideIcon name={hub.icon} size={18} />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-bold text-sm text-navy-950 flex items-center gap-1.5">
-                          {hub.name}
-                          {isSelected && <Check size={14} className="text-amber-600 block shrink-0" />}
-                        </h4>
-                        <p className="text-gray-500 text-[11px] leading-tight line-clamp-2">{hub.description}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Contribution Details */}
-          {step === 3 && (
-            <div className="space-y-5 animate-fade-in">
-              <div className="space-y-1">
-                <h2 className="font-serif text-2xl font-black text-navy-900 tracking-tight">How Can You Support Peers?</h2>
-                <p className="text-gray-500 text-xs text-justify">Petra Connect is a collaborative steward workspace. Leadership requires us to assist or empower each other through mentorship, reviews, or counseling.</p>
-              </div>
-
-              <div className="p-4 bg-amber-50/50 border border-amber-200/50 rounded-xl space-y-2">
-                <div className="flex items-center gap-1.5 text-amber-800 text-xs font-bold tracking-wider uppercase">
-                  <Sparkles size={14} /> Guided Suggestions
-                </div>
-                <ul className="text-amber-900 text-xs space-y-1 block list-disc pl-4">
-                  <li>Can you offer 1-on-1 portfolio feedback for junior designers?</li>
-                  <li>Are you open to advising startup founders on tax/budget layouts?</li>
-                  <li>Can you help code portals or support physical church media desks?</li>
-                </ul>
-              </div>
-
-              <div className="space-y-2" id="reg-contribution-group">
-                <label htmlFor="reg-contribution" className="text-xs font-bold text-navy-900 uppercase tracking-wider block">Stewardship Proposal</label>
-                <textarea
-                  id="reg-contribution"
-                  rows={4}
-                  value={contribution}
-                  onChange={(e) => setContribution(e.target.value)}
-                  placeholder="e.g. I can offer 1 hour of website architectural advice every fortnight, and review portfolios for junior front-end graduates..."
-                  className={`w-full bg-navy-50/50 border ${errors.contribution ? 'border-rose-500' : 'border-gray-200'} rounded-lg p-3 text-sm text-navy-950 focus:outline-hidden focus:border-brand-gold transition`}
-                />
-                {errors.contribution && <p className="text-rose-500 text-[11px] font-medium">{errors.contribution}</p>}
-                <p className="text-[10px] text-gray-400">Note: Your proposal is reviewed by the appropriate leaders and approved inside the Lead Portal.</p>
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        {/* Buttons / Controls footer */}
-        {apiError && (
-          <div className="mx-0 mb-2 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg p-3 text-xs font-medium">
-            {apiError}
-          </div>
-        )}
-
-        <div className="pt-6 border-t border-gray-100 flex items-center justify-between mt-6">
+        {/* Top navigation bar */}
+        <div className="flex items-center px-6 md:px-10 py-4 shrink-0 bg-white" style={{ borderBottom: '1px solid #e5e7eb' }}>
+          {/* Back / Cancel */}
           <button
-            type="button"
             onClick={handleBack}
-            className="text-gray-500 font-medium text-sm hover:text-navy-950 px-3 py-2 rounded-lg transition"
+            className="flex items-center gap-1.5 font-semibold text-sm transition w-32"
+            style={{ color: ORANGE }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#FAA61A')}
+            onMouseLeave={e => (e.currentTarget.style.color = ORANGE)}
           >
+            <ChevronLeft size={16} />
             {step === 1 ? 'Cancel' : 'Back'}
           </button>
 
-          {step < 3 ? (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="bg-navy-900 text-white font-medium text-sm py-2.5 px-5 rounded-lg hover:bg-navy-800 shadow-sm transition flex items-center gap-1.5 cursor-pointer"
-            >
-              Continue
-              <ArrowRight size={14} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="bg-brand-gold text-navy-950 font-bold text-sm py-2.5 px-6 rounded-lg hover:bg-amber-400 shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Submitting...' : 'Submit Registration'}
-              {!loading && <Check size={14} />}
-            </button>
-          )}
+          {/* Step indicator — centre */}
+          <div className="flex-1 flex flex-col items-center gap-1.5">
+            <div className="flex items-center">
+              {[1, 2, 3].map((n, i) => (
+                <React.Fragment key={n}>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center border-2 text-xs font-bold transition-all duration-300"
+                    style={{
+                      backgroundColor: step > n ? ORANGE : step === n ? 'rgba(243,112,33,0.1)' : '#f3f4f6',
+                      borderColor: step > n ? ORANGE : step === n ? ORANGE : '#d1d5db',
+                      color: step > n ? '#ffffff' : step === n ? ORANGE : '#9ca3af',
+                    }}
+                  >
+                    {step > n ? <Check size={13} /> : n}
+                  </div>
+                  {i < 2 && (
+                    <div className="w-10 h-px mx-1 transition-all duration-300" style={{ backgroundColor: step > n ? ORANGE : '#d1d5db' }} />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: 'rgba(243,112,33,0.9)' }}>
+              {STEP_LABELS[step - 1]}
+            </p>
+          </div>
+
+          {/* Mobile logo (hidden on md+) */}
+          <div className="w-32 flex justify-end">
+            <div className="flex items-center gap-2 md:hidden">
+              <img src={petraLogo} alt="Petra" className="w-6 h-6 object-contain" />
+              <span className="text-sm font-bold" style={{ color: NAVY }}>Petra Hubs</span>
+            </div>
+          </div>
         </div>
 
-      </div>
+        {/* Scrollable form area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-xl mx-auto px-6 md:px-10 py-8">
 
-      <div className="text-center text-gray-400 text-[10px] uppercase tracking-widest font-mono mt-8">
-        Petra Full Gospel Church • Professional Connect Hubs
+            {/* ── STEP 1: Personal Info ── */}
+            {step === 1 && (
+              <div className="space-y-5 animate-fade-in">
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight" style={{ color: NAVY }}>Professional Profile</h2>
+                  <p className="text-xs mt-1" style={{ color: GRAY_SUB }}>Let peers know who you are. This information forms your local directory profile.</p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Full Name</label>
+                      <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ndyamuhaki Abraham" className={inputCls(!!errors.name)} />
+                      {errors.name && <p className="text-rose-500 text-[11px] font-medium">{errors.name}</p>}
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Phone Number</label>
+                      <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="e.g. +256701234567" className={inputCls(!!errors.phone)} />
+                      {errors.phone && <p className="text-rose-500 text-[11px] font-medium">{errors.phone}</p>}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Email Address</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g. ndyamuhaki.abraham@company.com" className={inputCls(!!errors.email)} />
+                    {errors.email && <p className="text-rose-500 text-[11px] font-medium">{errors.email}</p>}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Profession / Job Title</label>
+                    <input type="text" value={profession} onChange={e => setProfession(e.target.value)} placeholder="e.g. Software Engineer, Accountant, Graphic Designer" className={inputCls(!!errors.profession)} />
+                    {errors.profession && <p className="text-rose-500 text-[11px] font-medium">{errors.profession}</p>}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Password</label>
+                    <div className="relative">
+                      <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Minimum 6 characters" className={inputCls(!!errors.password) + ' pr-10'} />
+                      <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 transition" style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = ORANGE)}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}
+                      >
+                        {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                    </div>
+                    {errors.password && <p className="text-rose-500 text-[11px] font-medium">{errors.password}</p>}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Professional Bio</label>
+                    <textarea rows={3} value={bio} onChange={e => setBio(e.target.value)} placeholder="Describe your current role, experience, and theological alignment..." className={inputCls(!!errors.bio) + ' resize-none'} />
+                    {errors.bio && <p className="text-rose-500 text-[11px] font-medium">{errors.bio}</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 2: Choose Hub ── */}
+            {step === 2 && (
+              <div className="space-y-5 animate-fade-in">
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight" style={{ color: NAVY }}>Select Your Professional Hub</h2>
+                  <p className="text-xs mt-1" style={{ color: GRAY_SUB }}>Members join one primary Hub. Choose the one that matches your daily vocation.</p>
+                </div>
+
+                {errors.hub && (
+                  <div className="rounded-lg p-3 text-xs font-medium" style={{ backgroundColor: '#fff1f2', border: '1px solid #fecdd3', color: '#be123c' }}>
+                    {errors.hub}
+                  </div>
+                )}
+
+                <div className="grid gap-3 sm:grid-cols-2 max-h-[420px] overflow-y-auto pr-1 pad-custom-scroll">
+                  {INITIAL_HUBS.map(hub => {
+                    const isSelected = selectedHub === hub.id;
+                    return (
+                      <div
+                        key={hub.id}
+                        onClick={() => { setSelectedHub(hub.id); setErrors({}); }}
+                        className="p-4 rounded-xl border-2 cursor-pointer transition-all duration-150 flex items-start gap-3"
+                        style={{
+                          borderColor: isSelected ? ORANGE : '#e5e7eb',
+                          backgroundColor: isSelected ? 'rgba(243,112,33,0.04)' : '#ffffff',
+                          boxShadow: isSelected ? `0 0 0 1px rgba(243,112,33,0.2)` : '0 1px 3px rgba(0,0,0,0.05)',
+                        }}
+                        onMouseEnter={e => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.borderColor = '#d1d5db'; }}
+                        onMouseLeave={e => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.borderColor = '#e5e7eb'; }}
+                      >
+                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${hub.colorClass}`}>
+                          <LucideIcon name={hub.icon} size={18} />
+                        </div>
+                        <div className="space-y-1 flex-1 min-w-0">
+                          <h4 className="font-bold text-sm flex items-center gap-1.5" style={{ color: isSelected ? ORANGE : NAVY }}>
+                            {hub.name}
+                            {isSelected && <Check size={13} className="shrink-0" style={{ color: ORANGE }} />}
+                          </h4>
+                          <p className="text-[11px] leading-tight line-clamp-2" style={{ color: GRAY_SUB }}>{hub.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 3: Contribution ── */}
+            {step === 3 && (
+              <div className="space-y-5 animate-fade-in">
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight" style={{ color: NAVY }}>How Can You Support Peers?</h2>
+                  <p className="text-xs mt-1 text-justify" style={{ color: GRAY_SUB }}>
+                    Petra Connect is a collaborative steward workspace. Leadership requires us to assist or empower each other through mentorship, reviews, or counseling.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl space-y-2" style={{ backgroundColor: '#fffbf2', border: '1px solid #fde68a' }}>
+                  <div className="flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase" style={{ color: '#d97706' }}>
+                    <Sparkles size={14} /> Guided Suggestions
+                  </div>
+                  <ul className="text-xs space-y-1 list-disc pl-4" style={{ color: '#92400e' }}>
+                    <li>Can you offer 1-on-1 portfolio feedback for junior designers?</li>
+                    <li>Are you open to advising startup founders on tax/budget layouts?</li>
+                    <li>Can you help code portals or support physical church media desks?</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="reg-contribution" className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: GRAY_LABEL }}>Stewardship Proposal</label>
+                  <textarea
+                    id="reg-contribution" rows={4} value={contribution}
+                    onChange={e => setContribution(e.target.value)}
+                    placeholder="e.g. I can offer 1 hour of website architectural advice every fortnight, and review portfolios for junior front-end graduates..."
+                    className={inputCls(!!errors.contribution) + ' resize-none'}
+                  />
+                  {errors.contribution && <p className="text-rose-500 text-[11px] font-medium">{errors.contribution}</p>}
+                  <p className="text-[10px]" style={{ color: '#9ca3af' }}>Note: Your proposal is reviewed by the appropriate leaders and approved inside the Lead Portal.</p>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+
+        {/* Bottom button row */}
+        <div className="px-6 md:px-10 py-5 shrink-0 bg-white" style={{ borderTop: '1px solid #e5e7eb' }}>
+          {apiError && (
+            <div className="mb-3 rounded-lg p-3 text-xs font-medium" style={{ backgroundColor: '#fff1f2', border: '1px solid #fecdd3', color: '#be123c' }}>
+              {apiError}
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <button
+              type="button" onClick={handleBack}
+              className="font-medium text-sm px-4 py-2.5 rounded-xl transition"
+              style={{ color: GRAY_SUB }}
+              onMouseEnter={e => (e.currentTarget.style.color = NAVY)}
+              onMouseLeave={e => (e.currentTarget.style.color = GRAY_SUB)}
+            >
+              {step === 1 ? 'Cancel' : 'Back'}
+            </button>
+
+            {step < 3 ? (
+              <button
+                type="button" onClick={handleNext}
+                className="font-bold text-sm py-2.5 px-6 rounded-xl transition flex items-center gap-2 text-white"
+                style={{ backgroundColor: ORANGE }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#FAA61A')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = ORANGE)}
+              >
+                Continue <ArrowRight size={14} />
+              </button>
+            ) : (
+              <button
+                type="button" onClick={handleSubmit} disabled={loading}
+                className="font-bold text-sm py-2.5 px-6 rounded-xl transition flex items-center gap-2 text-white disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ backgroundColor: ORANGE }}
+                onMouseEnter={e => { if (!loading) (e.currentTarget.style.backgroundColor = '#FAA61A'); }}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = ORANGE)}
+              >
+                {loading ? 'Submitting...' : 'Submit Registration'}
+                {!loading && <Check size={14} />}
+              </button>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -3,9 +3,22 @@ import { HubType, HubAnnouncement, HubEvent, HubResource, UserRole } from '../ty
 import LucideIcon from './LucideIcon';
 import {
   Users, Check, X, Megaphone, Calendar, FilePlus,
-  Plus, CornerDownRight, ClipboardList
+  Plus, CornerDownRight, ClipboardList, UserX, ShieldCheck
 } from 'lucide-react';
-import { fetchPendingMembers, approveMember, rejectMember } from '../services/api';
+import { fetchPendingMembers, approveMember, rejectMember, getFrozenUsers, unfreezeFeedUser } from '../services/api';
+
+interface FrozenUser {
+  id: string;
+  user_id: string;
+  hub_id: string | null;
+  full_name: string;
+  email: string;
+  profile_image: string | null;
+  hub_name: string | null;
+  frozen_by_name: string;
+  reason: string | null;
+  created_at: string;
+}
 
 interface PendingApplicant {
   membership_id: string;
@@ -40,7 +53,10 @@ export default function HubLeaderPanel({
   userName
 }: HubLeaderPanelProps) {
 
-  const [activeLeaderTab, setActiveLeaderTab] = useState<'approvals' | 'announcements' | 'events' | 'resources'>('approvals');
+  const [activeLeaderTab, setActiveLeaderTab] = useState<'approvals' | 'announcements' | 'events' | 'resources' | 'suspended'>('approvals');
+  const [frozenUsers, setFrozenUsers]   = useState<FrozenUser[]>([]);
+  const [unfreezingId, setUnfreezingId] = useState<string | null>(null);
+  const [frozenAvatarFails, setFrozenAvatarFails] = useState<Set<string>>(new Set());
   const [pendingApplicants, setPendingApplicants] = useState<PendingApplicant[]>([]);
   const [failedApplicantAvatars, setFailedApplicantAvatars] = useState<Set<string>>(new Set());
   const markApplicantFailed = (id: string) => setFailedApplicantAvatars(prev => new Set([...prev, id]));
@@ -73,6 +89,9 @@ export default function HubLeaderPanel({
     fetchPendingMembers()
       .then(data => setPendingApplicants(data.pending || []))
       .catch(() => {});
+    getFrozenUsers()
+      .then(d => setFrozenUsers(d.frozen || []))
+      .catch(() => {});
   }, []);
 
   useEffect(() => { loadApplicants(); }, [loadApplicants]);
@@ -81,6 +100,16 @@ export default function HubLeaderPanel({
     const id = setInterval(() => loadApplicants(), 5_000);
     return () => clearInterval(id);
   }, [loadApplicants]);
+
+  const handleUnfreeze = (fu: FrozenUser) => {
+    setUnfreezingId(fu.user_id);
+    unfreezeFeedUser(fu.user_id, fu.hub_id)
+      .then(() => {
+        setFrozenUsers(prev => prev.filter(f => !(f.user_id === fu.user_id && f.hub_id === fu.hub_id)));
+      })
+      .catch(() => {})
+      .finally(() => setUnfreezingId(null));
+  };
 
   const handleApprove = (applicant: PendingApplicant) => {
     approveMember(applicant.membership_id)
@@ -276,6 +305,23 @@ export default function HubLeaderPanel({
           >
             <FilePlus size={14} />
             Share Resource File
+          </button>
+
+          <button
+            onClick={() => setActiveLeaderTab('suspended')}
+            className={`py-2 px-4 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              activeLeaderTab === 'suspended'
+                ? 'bg-rose-700 text-white'
+                : 'bg-slate-50 hover:bg-slate-100 text-gray-500'
+            }`}
+          >
+            <UserX size={14} />
+            Suspended Postings
+            {frozenUsers.length > 0 && (
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ml-0.5 ${
+                activeLeaderTab === 'suspended' ? 'bg-white text-rose-700' : 'bg-rose-500 text-white'
+              }`}>{frozenUsers.length}</span>
+            )}
           </button>
         </div>
       </div>
@@ -638,6 +684,100 @@ export default function HubLeaderPanel({
             </button>
           </fieldset>
         </form>
+      )}
+
+      {/* SUB-VIEW 5: SUSPENDED POSTINGS */}
+      {activeLeaderTab === 'suspended' && (
+        <section className="space-y-4 animate-fade-in">
+          <div className="space-y-0.5">
+            <h2 className="font-serif text-lg font-semibold text-navy-950 flex items-center gap-2">
+              <UserX size={18} className="text-rose-500" /> Suspended Postings
+            </h2>
+            <p className="text-xs text-gray-500">
+              {isAllHubs
+                ? 'All users suspended from posting across the platform.'
+                : `Members in the ${effectiveHub} Hub whose posting has been suspended.`}
+            </p>
+          </div>
+
+          {frozenUsers.length === 0 ? (
+            <div className="bg-white border rounded-xl p-10 text-center text-gray-400 space-y-2">
+              <div className="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center mx-auto">
+                <ShieldCheck size={20} className="text-emerald-500" />
+              </div>
+              <h3 className="font-bold text-navy-950 text-xs">No suspended members</h3>
+              <p className="text-[11px] max-w-sm mx-auto">
+                {isAllHubs ? 'All members have active posting access.' : `No members in the ${effectiveHub} Hub are currently suspended.`}
+              </p>
+            </div>
+          ) : (
+            <div className="bg-white border border-rose-100 rounded-xl overflow-hidden shadow-xs">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-rose-50 font-mono text-[10px] text-rose-700 uppercase tracking-wider border-b border-rose-100">
+                  <tr>
+                    <th className="p-3 pl-4">Member</th>
+                    <th className="p-3">Scope</th>
+                    <th className="p-3">Reason</th>
+                    <th className="p-3">Suspended By</th>
+                    <th className="p-3">Since</th>
+                    <th className="p-3 pr-4 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-rose-50">
+                  {frozenUsers.map(fu => (
+                    <tr key={fu.id} className="hover:bg-rose-50/40">
+                      <td className="p-3 pl-4">
+                        <div className="flex items-center gap-2">
+                          {fu.profile_image && !frozenAvatarFails.has(fu.user_id) ? (
+                            <img
+                              src={fu.profile_image}
+                              alt={fu.full_name}
+                              className="w-7 h-7 rounded-full object-cover border border-rose-200 shrink-0"
+                              onError={() => setFrozenAvatarFails(p => new Set([...p, fu.user_id]))}
+                            />
+                          ) : (
+                            <div className="w-7 h-7 rounded-full bg-navy-900 text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
+                              {getInitials(fu.full_name)}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-bold text-[11px] text-navy-950 truncate max-w-[120px]">{fu.full_name}</p>
+                            <p className="text-[9px] text-gray-400 font-mono truncate max-w-[120px]">{fu.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded border ${
+                          fu.hub_id
+                            ? 'bg-navy-50 text-navy-700 border-navy-100'
+                            : 'bg-rose-50 text-rose-700 border-rose-100'
+                        }`}>
+                          {fu.hub_id ? (fu.hub_name ?? 'Hub') : 'Platform-Wide'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-[10px] text-gray-500 max-w-[160px]">
+                        <span className="line-clamp-2">{fu.reason || '—'}</span>
+                      </td>
+                      <td className="p-3 text-[10px] text-gray-600 font-medium">{fu.frozen_by_name}</td>
+                      <td className="p-3 text-[10px] text-gray-400 font-mono whitespace-nowrap">
+                        {fu.created_at.slice(0, 10)}
+                      </td>
+                      <td className="p-3 pr-4 text-right">
+                        <button
+                          onClick={() => handleUnfreeze(fu)}
+                          disabled={unfreezingId === fu.user_id}
+                          className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-lg hover:bg-emerald-100 transition disabled:opacity-50 ml-auto"
+                        >
+                          <ShieldCheck size={11} /> Unsuspend
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       )}
 
     </div>

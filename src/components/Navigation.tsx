@@ -180,14 +180,14 @@ export default function Navigation({
   return (
     <>
       {/* 1. DESKTOP SIDEBAR: Hidden on mobile (md:flex) */}
-      <aside className="hidden md:flex md:flex-col justify-between w-64 bg-navy-950/20 backdrop-blur-xl text-white h-screen border-r border-navy-800/50 shadow-xl shrink-0">
-        
+      <aside className="hidden md:flex md:flex-col justify-between w-64 bg-white text-navy-950 h-screen border-r border-gray-200 shadow-sm shrink-0">
+
         {/* Sidebar Header Logo */}
-        <div className="p-4.5 border-b border-navy-900">
+        <div className="p-4.5 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <img src={petraLogo} alt="Petra Connect Hubs" className="w-10 h-10 object-contain rounded-xl" />
             <div>
-              <span className="font-sans font-bold text-sm tracking-tight block leading-tight text-white">Petra Connect</span>
+              <span className="font-sans font-bold text-sm tracking-tight block leading-tight text-navy-950">Petra Connect</span>
               <span className="text-brand-gold font-serif font-medium text-[10px] tracking-wider uppercase block -mt-0.5">Professional Hubs</span>
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function Navigation({
 
         {/* Dynamic Nav Items */}
         <div className="flex-1 py-4 px-3.5 space-y-1">
-          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2.5 block">
+          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-2.5 block">
             Navigation
           </div>
           <nav className="space-y-1 block">
@@ -209,10 +209,10 @@ export default function Navigation({
                   onClick={(e) => isNotif ? toggleNotifPanel(e.currentTarget) : setView(item.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-medium transition-all duration-150 cursor-pointer ${
                     isNotif && showNotifPanel
-                      ? 'bg-brand-gold/20 text-brand-gold'
+                      ? 'bg-brand-gold/15 text-brand-gold'
                       : isActive
-                        ? 'bg-brand-gold text-navy-950 font-bold shadow-md'
-                        : 'text-gray-400 hover:text-white hover:bg-navy-900/40'
+                        ? 'bg-brand-gold text-navy-950 font-bold shadow-sm'
+                        : 'text-gray-500 hover:text-navy-950 hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -234,14 +234,14 @@ export default function Navigation({
 
         {/* Admin Hub Scope Selector */}
         {userRole === 'admin' && hubs.length > 0 && (
-          <div className="px-3.5 pb-3 border-b border-navy-800/30">
-            <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2 block">
+          <div className="px-3.5 pb-3 border-b border-gray-200">
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-2 block">
               Hub Scope
             </div>
             <button
               ref={hubBtnRef}
               onClick={openHubDropdown}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-medium text-gray-300 hover:text-white hover:bg-navy-900/40 transition-all duration-150 cursor-pointer"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-medium text-gray-500 hover:text-navy-950 hover:bg-gray-100 transition-all duration-150 cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Globe size={14} className="text-brand-gold shrink-0" />
@@ -255,14 +255,16 @@ export default function Navigation({
         {/* Hub scope portal dropdown */}
         {hubDropdownOpen && dropdownPos && ReactDOM.createPortal(
           <div
-            ref={hubMenuRef}
+            className="petra-app-interior"
             style={{ position: 'fixed', bottom: dropdownPos.bottom, left: dropdownPos.left, width: dropdownPos.width, zIndex: 9999 }}
-            className="bg-navy-950 border border-navy-700 rounded-xl shadow-2xl overflow-hidden py-1"
           >
-            {/* All Hubs option */}
+          <div
+            ref={hubMenuRef}
+            className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden py-1"
+          >
             <button
               onClick={() => selectScope(null, null)}
-              className="w-full flex items-center justify-between px-3 py-2 text-xs text-left hover:bg-navy-800/60 transition text-gray-200 cursor-pointer"
+              className="w-full flex items-center justify-between px-3 py-2 text-xs text-left hover:bg-gray-50 transition text-gray-700 cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Globe size={13} className="text-brand-gold" />
@@ -270,30 +272,31 @@ export default function Navigation({
               </div>
               {!adminHubScope?.hubId && <Check size={12} className="text-brand-gold" />}
             </button>
-            <div className="mx-3 my-1 border-t border-navy-700/60" />
+            <div className="mx-3 my-1 border-t border-gray-100" />
             {hubs.map(hub => {
               const isSelected = adminHubScope?.hubId === hub.id;
               return (
                 <button
                   key={hub.id}
                   onClick={() => selectScope(hub.id, hub.name)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-xs text-left hover:bg-navy-800/60 transition text-gray-200 cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2 text-xs text-left hover:bg-gray-50 transition text-gray-700 cursor-pointer"
                 >
                   <span className="truncate">{hub.name}</span>
                   {isSelected && <Check size={12} className="text-brand-gold shrink-0" />}
                 </button>
               );
             })}
+          </div>
           </div>,
           document.body
         )}
 
         {/* Sidebar Footer User Section — click avatar/name to open Profile */}
-        <div className="p-4 pb-8 border-t border-navy-800/50 bg-navy-950/40">
+        <div className="p-4 pb-8 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center justify-between text-xs">
             <button
               onClick={() => setView('profile')}
-              className={`flex items-center gap-2.5 max-w-[150px] rounded-lg p-1 -m-1 transition hover:bg-navy-800/50 cursor-pointer text-left ${
+              className={`flex items-center gap-2.5 max-w-[150px] rounded-lg p-1 -m-1 transition hover:bg-gray-100 cursor-pointer text-left ${
                 currentView === 'profile' ? 'ring-1 ring-brand-gold/40' : ''
               }`}
               title="View my profile"
@@ -313,7 +316,7 @@ export default function Navigation({
                 )}
               </div>
               <div className="truncate">
-                <span className="font-bold text-white block leading-tight truncate">{userName}</span>
+                <span className="font-bold text-navy-950 block leading-tight truncate">{userName}</span>
                 <span className="text-brand-gold text-[9px] leading-none font-medium block mt-0.5">
                   View Profile
                 </span>
@@ -321,7 +324,7 @@ export default function Navigation({
             </button>
             <button
               onClick={onLogout}
-              className="text-gray-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-navy-900/60 transition shrink-0 cursor-pointer"
+              className="text-gray-400 hover:text-rose-500 p-1.5 rounded-lg hover:bg-gray-100 transition shrink-0 cursor-pointer"
               title="Logout"
             >
               <LogOut size={14} />
@@ -331,7 +334,7 @@ export default function Navigation({
       </aside>
 
       {/* 2. MOBILE BOTTOM NAVIGATION: Fixed to screen bottom, visible only on touch-size devices (md:hidden) */}
-      <nav className="md:hidden fixed bottom-1.5 left-2.5 right-2.5 bg-navy-950/95 text-white py-1 px-2.5 rounded-full z-50 flex items-center justify-between border border-navy-800 shadow-xl backdrop-blur-md">
+      <nav className="md:hidden fixed bottom-1.5 left-2.5 right-2.5 bg-white text-navy-950 py-1 px-2.5 rounded-full z-50 flex items-center justify-between border border-gray-200 shadow-lg">
         {navItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
@@ -341,12 +344,12 @@ export default function Navigation({
               key={item.id}
               onClick={(e) => isNotif ? toggleNotifPanel(e.currentTarget) : setView(item.id)}
               className={`p-2.5 rounded-full flex flex-col items-center relative ${
-                isActive || (isNotif && showNotifPanel) ? 'text-brand-gold' : 'text-gray-400 hover:text-white'
+                isActive || (isNotif && showNotifPanel) ? 'text-brand-gold' : 'text-gray-400 hover:text-navy-950'
               }`}
             >
               <Icon size={17} />
               {item.badge && (
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-amber-500 text-navy-950 text-[8px] font-black rounded-full flex items-center justify-center shadow-xs">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-brand-gold text-navy-950 text-[8px] font-black rounded-full flex items-center justify-center shadow-xs">
                   {item.badge}
                 </span>
               )}
@@ -365,15 +368,18 @@ export default function Navigation({
       {/* ── Global notification panel portal ── */}
       {showNotifPanel && notifPanelPos && ReactDOM.createPortal(
         <div
-          ref={notifPanelRef}
+          className="petra-app-interior"
           style={{ position: 'fixed', top: notifPanelPos.top, left: notifPanelPos.left, zIndex: 10001 }}
-          className="w-[400px] bg-[#0f1d2e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+        >
+        <div
+          ref={notifPanelRef}
+          className="w-[400px] bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
               <Bell size={14} className="text-brand-gold" />
-              <span className="text-[11px] font-black text-white">Notifications</span>
+              <span className="text-[11px] font-black text-navy-950">Notifications</span>
               {notifications.filter(n => !n.read).length > 0 && (
                 <span className="bg-rose-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full">
                   {notifications.filter(n => !n.read).length} new
@@ -384,12 +390,12 @@ export default function Navigation({
               {notifications.length > 0 && (
                 <button
                   onClick={() => { onClearAllNotifications(); setShowNotifPanel(false); }}
-                  className="text-[9px] text-gray-400 hover:text-rose-400 font-semibold transition"
+                  className="text-[9px] text-gray-400 hover:text-rose-500 font-semibold transition"
                 >
                   Clear all
                 </button>
               )}
-              <button onClick={() => setShowNotifPanel(false)} className="text-gray-500 hover:text-white transition p-0.5">
+              <button onClick={() => setShowNotifPanel(false)} className="text-gray-400 hover:text-navy-950 transition p-0.5">
                 <X size={14} />
               </button>
             </div>
@@ -399,29 +405,30 @@ export default function Navigation({
           <div className="overflow-y-auto max-h-[540px]">
             {notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 gap-2">
-                <BellOff size={22} className="text-gray-600" />
-                <p className="text-[11px] text-gray-500">You're all caught up!</p>
+                <BellOff size={22} className="text-gray-300" />
+                <p className="text-[11px] text-gray-400">You're all caught up!</p>
               </div>
             ) : (
               notifications.map(n => (
                 <button
                   key={n.id}
                   onClick={() => handleNotifClick(n)}
-                  className={`w-full text-left flex items-start gap-3 px-4 py-3 border-b border-white/5 transition hover:bg-white/5 ${!n.read ? 'bg-white/[0.03]' : ''}`}
+                  className={`w-full text-left flex items-start gap-3 px-4 py-3 border-b border-gray-100 transition hover:bg-gray-50 ${!n.read ? 'bg-brand-gold/[0.03]' : ''}`}
                 >
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${n.read ? 'bg-white/5' : 'bg-white/10'}`}>
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${n.read ? 'bg-gray-100' : 'bg-brand-gold/10'}`}>
                     {notifIcon(n.type)}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-[11px] font-bold leading-snug ${n.read ? 'text-gray-400' : 'text-white'}`}>{n.title}</p>
+                    <p className={`text-[11px] font-bold leading-snug ${n.read ? 'text-gray-400' : 'text-navy-950'}`}>{n.title}</p>
                     <p className="text-[9.5px] text-gray-500 leading-snug mt-0.5">{n.description}</p>
-                    <p className="text-[8.5px] text-gray-600 mt-1">{n.time}</p>
+                    <p className="text-[8.5px] text-gray-400 mt-1">{n.time}</p>
                   </div>
                   {!n.read && <span className="w-2 h-2 rounded-full bg-brand-gold shrink-0 mt-2" />}
                 </button>
               ))
             )}
           </div>
+        </div>
         </div>,
         document.body
       )}
