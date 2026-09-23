@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
+import LoadingSpinner from './components/LoadingSpinner';
 import {
   clearSession, getSavedUser, isSessionActive,
   fetchDashboardStats, fetchAnnouncements, fetchEvents, fetchHubs, fetchOwnProfile,
@@ -683,7 +684,7 @@ export default function App() {
 
   // 1. Unified Fixed Blurry Background + Layout rendering:
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0f132e' }} />}>
+    <Suspense fallback={<LoadingSpinner />}>
       {/* Background: dark orbs for landing/auth pages, clean white for logged-in app */}
       {isLoggedIn ? (
         <div className="fixed inset-0 pointer-events-none z-0" style={{ backgroundColor: '#f9fafb' }} />
