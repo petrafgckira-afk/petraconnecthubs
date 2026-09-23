@@ -33,4 +33,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: /public_html/connecthubs.petrafgc.org/
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
