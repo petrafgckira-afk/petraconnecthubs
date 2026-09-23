@@ -244,6 +244,28 @@ export default function App() {
     localStorage.setItem('petra_admin_hub_scope', JSON.stringify(scope));
   }, []);
 
+  // Resolve the correct HubType from whatever the API sends
+  function resolveHub(apiUser: any): HubType {
+    const VALID: HubType[] = ['Business', 'Technology', 'Medical', 'Finance', 'Education', 'Media & Creative', 'Leadership & Ministry'];
+    // 1. hub_name from hub_members join (profile + login endpoints)
+    if (apiUser.hub_name) {
+      const stripped = (apiUser.hub_name as string).replace(/ Hub$/i, '').trim();
+      if (VALID.includes(stripped as HubType)) return stripped as HubType;
+    }
+    // 2. profession already a valid HubType
+    if (VALID.includes(apiUser.profession as HubType)) return apiUser.profession as HubType;
+    // 3. Map free-text job title to nearest hub
+    const p = (apiUser.profession || '').toLowerCase();
+    if (/doctor|medic|nurs|health|pharm|dental|clinic|surgeon/.test(p)) return 'Medical';
+    if (/tech|engineer|software|developer|programmer|it |ict|cyber|web|data/.test(p)) return 'Technology';
+    if (/business|entrepreneur|market|sales|trade|commerce|manager/.test(p)) return 'Business';
+    if (/financ|account|bank|invest|audit|tax|econom/.test(p)) return 'Finance';
+    if (/teach|educat|professor|lecturer|school|tutor|instruct/.test(p)) return 'Education';
+    if (/media|creat|design|journal|film|music|art|photo|content|writer/.test(p)) return 'Media & Creative';
+    if (/leader|pastor|minister|church|mission|chaplain|bishop/.test(p)) return 'Leadership & Ministry';
+    return 'Technology';
+  }
+
   // Map API user object → frontend User shape
   function mapApiUser(apiUser: any): User {
     const nameParts = (apiUser.full_name || apiUser.name || 'User').split(' ');
@@ -253,7 +275,7 @@ export default function App() {
       name: apiUser.full_name || apiUser.name,
       email: apiUser.email,
       role: (apiUser.role as UserRole) || 'member',
-      profession: (apiUser.profession as HubType) || 'Technology',
+      profession: resolveHub(apiUser),
       initials,
       avatarUrl: apiUser.profile_image || undefined,
       bio: apiUser.bio || '',
