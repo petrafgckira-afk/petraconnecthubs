@@ -8,6 +8,7 @@ import {
   updateAnnouncement, deleteAnnouncement,
   updateEvent, deleteEvent,
   markAllDelivered,
+  fetchResources, createResource, incrementResourceDownload,
 } from './services/api';
 import {
   User,
@@ -169,6 +170,7 @@ export default function App() {
     }).catch(console.error);
     fetchNotifications().then(d => setNotifications(d.notifications || [])).catch(console.error);
     fetchHubs().then(d => setHubs((d.hubs || []).map((h: any) => ({ id: h.id, name: h.name })))).catch(console.error);
+    fetchResources().then(d => setResources((d.resources || []).map(mapResource))).catch(console.error);
   }, [isLoggedIn]);
 
   // Re-fetch announcements and events every time the dashboard is opened so
@@ -264,6 +266,23 @@ export default function App() {
     if (/media|creat|design|journal|film|music|art|photo|content|writer/.test(p)) return 'Media & Creative';
     if (/leader|pastor|minister|church|mission|chaplain|bishop/.test(p)) return 'Leadership & Ministry';
     return 'Technology';
+  }
+
+  // Map API resource object → frontend HubResource shape
+  function mapResource(r: any): HubResource {
+    const hubType = (r.hub_name || '').replace(/ Hub$/i, '').trim() as HubType;
+    return {
+      id: r.id,
+      hubId: hubType || 'Technology',
+      title: r.title,
+      description: r.description || '',
+      fileType: r.file_type || 'link',
+      fileSize: r.file_size || undefined,
+      downloadUrl: r.download_url || '#',
+      uploadedBy: r.uploaded_by_name || 'Unknown',
+      downloadCount: Number(r.download_count) || 0,
+      date: r.created_at ? new Date(r.created_at).toLocaleDateString('en-GB') : '',
+    };
   }
 
   // Map API user object → frontend User shape
@@ -382,8 +401,13 @@ export default function App() {
     );
   }, []);
 
-  // Download Resource
+  // Download Resource — open URL in new tab + increment server count
   const handleDownloadResource = (id: string) => {
+    const resource = resources.find(r => r.id === id);
+    if (resource?.downloadUrl && resource.downloadUrl !== '#') {
+      window.open(resource.downloadUrl, '_blank', 'noopener,noreferrer');
+      incrementResourceDownload(id).catch(() => {});
+    }
     setResources(prev => prev.map(res => {
       if (res.id === id) {
         return {
@@ -495,20 +519,30 @@ export default function App() {
   }, []);
 
   const handleCreateResource = useCallback((resData: Partial<HubResource>) => {
-    const fullRes: HubResource = {
-      id: `res_created_${Date.now()}`,
-      hubId: resData.hubId || 'Technology',
-      title: resData.title || 'Mentorship Handout',
+    createResource({
+      hub_type: resData.hubId || 'Technology',
+      title: resData.title || '',
       description: resData.description || '',
-      fileType: resData.fileType || 'pdf',
-      fileSize: resData.fileSize,
-      downloadUrl: '#',
-      uploadedBy: resData.uploadedBy || currentUser.name,
-      downloadCount: 0,
-      date: new Date().toISOString().substring(0, 10)
-    };
-
-    setResources(prev => [fullRes, ...prev]);
+      file_type: resData.fileType || 'link',
+      file_size: resData.fileSize,
+      download_url: resData.downloadUrl || '#',
+    }).then(data => {
+      if (data?.id) {
+        const fullRes: HubResource = {
+          id: data.id,
+          hubId: resData.hubId || 'Technology',
+          title: resData.title || '',
+          description: resData.description || '',
+          fileType: resData.fileType || 'link',
+          fileSize: resData.fileSize,
+          downloadUrl: resData.downloadUrl || '#',
+          uploadedBy: resData.uploadedBy || '',
+          downloadCount: 0,
+          date: new Date().toLocaleDateString('en-GB'),
+        };
+        setResources(prev => [fullRes, ...prev]);
+      }
+    }).catch(() => {});
   }, [currentUser.name]);
 
   // Memoised badge count — only recomputes when notifications array changes

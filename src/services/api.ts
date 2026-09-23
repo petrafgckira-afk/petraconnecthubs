@@ -168,6 +168,32 @@ export async function fetchMembers() {
   return request('/members/index.php');
 }
 
+// ── Resources ─────────────────────────────────────────
+export async function fetchResources() {
+  return request('/resources/index.php');
+}
+
+export async function createResource(data: {
+  hub_type: string;
+  title: string;
+  description: string;
+  file_type: 'pdf' | 'video' | 'link' | 'doc';
+  file_size?: string;
+  download_url: string;
+}) {
+  return request('/resources/create.php', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function incrementResourceDownload(resourceId: string) {
+  return request('/resources/download.php', {
+    method: 'POST',
+    body: JSON.stringify({ resource_id: resourceId }),
+  });
+}
+
 // ── Hub Leader ────────────────────────────────────────
 export async function fetchPendingMembers() {
   return request('/hub-members/pending.php');

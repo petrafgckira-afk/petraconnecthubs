@@ -81,6 +81,7 @@ export default function HubLeaderPanel({
   // Form states: Resources
   const [resTitle, setResTitle] = useState('');
   const [resDesc, setResDesc]   = useState('');
+  const [resUrl, setResUrl]     = useState('');
   const [resType, setResType]   = useState<'pdf' | 'doc' | 'link' | 'video'>('pdf');
   const [resSize, setResSize]   = useState('1.5 MB');
   const [resSuccess, setResSuccess] = useState(false);
@@ -209,19 +210,21 @@ export default function HubLeaderPanel({
 
   const handleResSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resTitle.trim() || !resDesc.trim()) return;
+    if (!resTitle.trim() || !resDesc.trim() || !resUrl.trim()) return;
 
     onCreateResource({
       title: resTitle,
       description: resDesc,
       fileType: resType,
       fileSize: resType !== 'link' ? resSize : undefined,
+      downloadUrl: resUrl,
       uploadedBy: userName,
       hubId: effectiveHub
     });
 
     setResTitle('');
     setResDesc('');
+    setResUrl('');
     setResType('pdf');
     setResSize('1.5 MB');
     setResSuccess(true);
@@ -640,6 +643,19 @@ export default function HubLeaderPanel({
                 value={resDesc}
                 onChange={(e) => setResDesc(e.target.value)}
                 placeholder="Give peers precise guidance on how to utility structure this template document..."
+                className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
+                required={!isAllHubs}
+              />
+            </div>
+
+            <div className="space-y-1.5" id="res-url-group">
+              <label htmlFor="res-url" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Resource URL / Link</label>
+              <input
+                id="res-url"
+                type="url"
+                value={resUrl}
+                onChange={(e) => setResUrl(e.target.value)}
+                placeholder="https://drive.google.com/... or https://github.com/..."
                 className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
                 required={!isAllHubs}
               />
