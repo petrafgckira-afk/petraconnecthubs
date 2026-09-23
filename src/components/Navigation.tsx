@@ -164,7 +164,7 @@ export default function Navigation({
       { id: 'notifications', label: 'Notifications', icon: Bell, badge: activeNotificationsCount > 0 ? activeNotificationsCount : undefined },
     ];
 
-    if (userRole === 'leader' || userRole === 'admin') {
+    if (userRole === 'hub_leader' || userRole === 'admin') {
       items.push({ id: 'leader-panel', label: 'Leader Panel', icon: BookOpen });
     }
 

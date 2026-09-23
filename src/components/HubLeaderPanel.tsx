@@ -97,7 +97,7 @@ export default function HubLeaderPanel({
   useEffect(() => { loadApplicants(); }, [loadApplicants]);
 
   useEffect(() => {
-    const id = setInterval(() => loadApplicants(), 5_000);
+    const id = setInterval(() => loadApplicants(), 30_000);
     return () => clearInterval(id);
   }, [loadApplicants]);
 

@@ -106,7 +106,7 @@ export default function AdminPanel() {
   useEffect(() => { loadAll(); }, [loadAll]);
 
   useEffect(() => {
-    const id = setInterval(() => loadAll(), 5_000);
+    const id = setInterval(() => loadAll(), 30_000);
     return () => clearInterval(id);
   }, [loadAll]);
 

@@ -717,7 +717,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
     return () => clearInterval(interval);
   }, []); // mount-once — reads refs only
 
-  /* ── Poll conversation list every 5 s ─ */
+  /* ── Poll conversation list every 15 s ─ */
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -727,7 +727,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
           unread_count: c.partner.id === activePartnerRef.current ? 0 : c.unread_count,
         })));
       } catch {}
-    }, 5000);
+    }, 15_000);
     return () => clearInterval(interval);
   }, []); // mount-once
 

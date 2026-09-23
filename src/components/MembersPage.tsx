@@ -46,7 +46,7 @@ export default function MembersPage({
   useEffect(() => { loadMembers(); }, [loadMembers]);
 
   useEffect(() => {
-    const interval = setInterval(loadMembers, 5_000);
+    const interval = setInterval(loadMembers, 30_000);
     return () => clearInterval(interval);
   }, [loadMembers]);
 

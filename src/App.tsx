@@ -85,18 +85,25 @@ export default function App() {
     if (isSessionActive()) {
       const saved = getSavedUser();
       if (saved) {
-        setCurrentUser(mapApiUser(saved));
-        setIsLoggedIn(true);
-        setCurrentView('dashboard');
-        // Silently refresh own profile so the avatar is always up to date after a page reload
+        // Verify with server — catches pending accounts and stale tokens
         fetchOwnProfile().then(data => {
           if (!data?.user) return;
-          setCurrentUser(mapApiUser(data.user));
-          const latest = getSavedUser();
-          if (latest) {
-            localStorage.setItem('petra_user', JSON.stringify({ ...latest, ...data.user }));
+          if (data.user.status === 'pending') {
+            clearSession();
+            setCurrentView('pending-approval');
+            return;
           }
-        }).catch(() => {});
+          const mapped = mapApiUser(data.user);
+          setCurrentUser(mapped);
+          setIsLoggedIn(true);
+          setCurrentView('dashboard');
+          localStorage.setItem('petra_user', JSON.stringify({ ...saved, ...data.user }));
+        }).catch(() => {
+          // Network error — fall back to cached data so the app still loads offline
+          setCurrentUser(mapApiUser(saved));
+          setIsLoggedIn(true);
+          setCurrentView('dashboard');
+        });
       }
     }
   }, []);
@@ -182,34 +189,51 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isLoggedIn, currentView]);
 
-  // Poll notifications every 10s — responsive but not hammering the server
+  // Poll notifications every 30s
   useEffect(() => {
     if (!isLoggedIn) return;
     const interval = setInterval(() => {
       fetchNotifications().then(d => setNotifications(d.notifications || [])).catch(console.error);
-    }, 10_000);
+    }, 30_000);
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  // Mark all messages delivered every 10s (senders see gray ticks within ~10s)
+  // Mark all messages delivered every 20s (senders see ticks within ~20s)
   useEffect(() => {
     if (!isLoggedIn) return;
     markAllDelivered();
-    const interval = setInterval(markAllDelivered, 10_000);
+    const interval = setInterval(markAllDelivered, 20_000);
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  // Poll own profile every 60s — avatars rarely change mid-session
+  // Poll own profile every 60s — picks up role changes assigned by an admin mid-session
   useEffect(() => {
     if (!isLoggedIn) return;
     const interval = setInterval(() => {
       fetchOwnProfile().then(data => {
         if (!data?.user) return;
+        // If an admin has set this account to pending/deleted, force logout
+        if (data.user.status === 'pending') {
+          clearSession();
+          setIsLoggedIn(false);
+          setCurrentView('pending-approval');
+          return;
+        }
+        const updated = mapApiUser(data.user);
         setCurrentUser(prev => {
-          const newUrl = data.user.profile_image || undefined;
-          if (prev.avatarUrl === newUrl) return prev;
-          return { ...prev, avatarUrl: newUrl };
+          const changed =
+            prev.role !== updated.role ||
+            prev.avatarUrl !== updated.avatarUrl ||
+            prev.name !== updated.name ||
+            prev.profession !== updated.profession;
+          if (!changed) return prev;
+          return { ...prev, ...updated };
         });
+        // Keep localStorage in sync so a page refresh carries the latest role
+        const saved = getSavedUser();
+        if (saved) {
+          localStorage.setItem('petra_user', JSON.stringify({ ...saved, ...data.user }));
+        }
       }).catch(() => {});
     }, 60_000);
     return () => clearInterval(interval);
@@ -228,7 +252,7 @@ export default function App() {
       id: apiUser.id,
       name: apiUser.full_name || apiUser.name,
       email: apiUser.email,
-      role: apiUser.role === 'hub_leader' ? 'leader' : (apiUser.role as UserRole) || 'member',
+      role: (apiUser.role as UserRole) || 'member',
       profession: (apiUser.profession as HubType) || 'Technology',
       initials,
       avatarUrl: apiUser.profile_image || undefined,
@@ -237,7 +261,7 @@ export default function App() {
       connectionsCount: 0,
       hubsCount: 0,
       joinedAt: (apiUser.created_at || new Date().toISOString()).substring(0, 10),
-      status: 'approved',
+      status: (apiUser.status as 'pending' | 'approved' | 'rejected') || 'approved',
     };
   }
 
@@ -280,6 +304,11 @@ export default function App() {
 
   // Register success — called by RegisterPage after real API success
   const handleRegisterSubmitInApp = (apiUser: any) => {
+    if (apiUser.status === 'pending') {
+      // Account created but awaiting admin approval — do not grant dashboard access
+      setCurrentView('pending-approval');
+      return;
+    }
     setCurrentUser(mapApiUser(apiUser));
     setIsLoggedIn(true);
     setCurrentView('dashboard');
@@ -621,7 +650,7 @@ export default function App() {
         {!isLoggedIn ? (
           <>
             {currentView === 'register' && (
-              <RegisterPage 
+              <RegisterPage
                 onRegisterSubmit={handleRegisterSubmitInApp}
                 onCancel={handleLoggedOut}
               />
@@ -632,7 +661,31 @@ export default function App() {
                 onRegister={handleStartRegister}
               />
             )}
-            {currentView !== 'register' && currentView !== 'login' && (
+            {currentView === 'pending-approval' && (
+              <div className="min-h-screen flex items-center justify-center p-6">
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 max-w-md w-full text-center space-y-5 shadow-2xl">
+                  <div className="w-16 h-16 rounded-full bg-amber-500/15 border border-amber-400/30 flex items-center justify-center mx-auto">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </div>
+                  <div>
+                    <h2 className="text-white font-serif text-xl font-bold tracking-tight">Account Pending Approval</h2>
+                    <p className="text-gray-300 text-sm mt-2 leading-relaxed">
+                      Your registration has been received. A Petra Connect administrator will review and approve your account shortly. You will be able to log in once approved.
+                    </p>
+                  </div>
+                  <div className="bg-amber-500/10 border border-amber-400/20 rounded-xl p-4">
+                    <p className="text-amber-300 text-xs font-medium">If you were already approved, please log in with your credentials.</p>
+                  </div>
+                  <button
+                    onClick={() => setCurrentView('login')}
+                    className="w-full py-2.5 rounded-xl bg-brand-gold text-navy-950 font-bold text-sm hover:bg-amber-400 transition"
+                  >
+                    Go to Login
+                  </button>
+                </div>
+              </div>
+            )}
+            {currentView !== 'register' && currentView !== 'login' && currentView !== 'pending-approval' && (
               <LandingPage
                 onRegister={handleStartRegister}
                 onLogin={handleStartLogin}

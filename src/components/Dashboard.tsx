@@ -287,14 +287,14 @@ export default function Dashboard({
         <div className="absolute right-0 bottom-0 top-0 w-1/4 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-brand-gold/5 to-transparent pointer-events-none" />
         <div className="relative z-10 space-y-2">
           <span className="inline-block text-[9px] font-bold uppercase tracking-widest bg-brand-gold/10 text-brand-gold border border-brand-gold/30 px-2.5 py-1 rounded-full mb-1">
-            {userRole === 'admin' ? 'Admin Panel' : userRole === 'leader' ? 'Leader Panel' : 'Member Panel'}
+            {userRole === 'admin' ? 'Admin Panel' : userRole === 'hub_leader' ? 'Leader Panel' : 'Member Panel'}
           </span>
           <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-navy-950">
             {getGreeting()}, <span className="text-brand-gold font-normal italic">{userName}</span>
           </h1>
           <p className="text-gray-500 text-sm max-w-2xl leading-normal">
             {userRole === 'member' && `Welcome to your vocation community. You belong to the Petra ${userHub} Hub. Connect with fellow members and support church outreaches today.`}
-            {userRole === 'leader' && `Under your lead stewardship, there are ${myHubMembersCount} verified professionals and ${pendingApprovalsCount} pending applicants in the ${userHub} Hub.`}
+            {userRole === 'hub_leader' && `Under your lead stewardship, there are ${myHubMembersCount} verified professionals and ${pendingApprovalsCount} pending applicants in the ${userHub} Hub.`}
             {userRole === 'admin' && 'You have global administrator clearance. You can manage system-wide activities, register announcements, alter user roles, and monitor logs.'}
           </p>
         </div>
@@ -350,7 +350,7 @@ export default function Dashboard({
           </div>
         </div>
 
-        {userRole === 'leader' || userRole === 'admin' ? (
+        {userRole === 'hub_leader' || userRole === 'admin' ? (
           <div 
             onClick={() => setView('leader-panel')}
             className="bg-brand-gold-light p-5 rounded-xl border-2 border-brand-gold/25 shadow-xs shrink-0 flex flex-col justify-between cursor-pointer hover:border-brand-gold transition duration-200"
@@ -401,7 +401,7 @@ export default function Dashboard({
           </div>
           <SocialFeed
             currentUserId={userId}
-            currentUserRole={currentUserRole === 'leader' ? 'leader' : currentUserRole === 'admin' ? 'admin' : 'member'}
+            currentUserRole={currentUserRole === 'hub_leader' ? 'hub_leader' : currentUserRole === 'admin' ? 'admin' : 'member'}
             currentUserName={userName}
             currentUserImage={userImage ?? null}
           />

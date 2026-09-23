@@ -58,7 +58,7 @@ export default function MyHubPage({
   useEffect(() => { loadMembers(); }, [loadMembers]);
 
   useEffect(() => {
-    const id = setInterval(() => loadMembers(), 5_000);
+    const id = setInterval(() => loadMembers(), 30_000);
     return () => clearInterval(id);
   }, [loadMembers]);
 
@@ -245,7 +245,7 @@ export default function MyHubPage({
               <p className="text-[11px] text-gray-500">Curated guidelines, schemas, and templates approved by Hub organizers.</p>
             </div>
             
-            {userRole === 'leader' && (
+            {userRole === 'hub_leader' && (
               <button 
                 onClick={() => setView('leader-panel')}
                 className="inline-flex items-center gap-1 btn-gold shadow-xs py-1.5 px-3 rounded-lg text-xs font-bold font-sans cursor-pointer bg-brand-gold text-navy-950 hover:bg-amber-400 transition"

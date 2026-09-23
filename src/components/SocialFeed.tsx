@@ -76,7 +76,7 @@ interface FeedComment {
 
 interface SocialFeedProps {
   currentUserId: string;
-  currentUserRole: 'member' | 'leader' | 'admin';
+  currentUserRole: 'member' | 'hub_leader' | 'admin';
   currentUserName: string;
   currentUserImage: string | null;
 }
@@ -903,7 +903,7 @@ function FeedCard({
   currentUserId: string;
   currentUserName: string;
   currentUserImage: string | null;
-  currentUserRole: 'member' | 'leader' | 'admin';
+  currentUserRole: 'member' | 'hub_leader' | 'admin';
   onDelete: (id: string) => void;
 }) {
   const [post,           setPost]           = useState(initialPost);
