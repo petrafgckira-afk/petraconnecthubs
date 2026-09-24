@@ -2,7 +2,7 @@ import React from 'react';
 
 const DOT_COUNT = 8;
 const DOT_SIZE = 10;
-const ORBIT_RADIUS = 68; // half of 170px container minus dot half-size margin
+const ORBIT_RADIUS = 68;
 
 export default function LoadingSpinner() {
   return (
@@ -14,9 +14,8 @@ export default function LoadingSpinner() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backdropFilter: 'blur(18px)',
-        WebkitBackdropFilter: 'blur(18px)',
-        backgroundColor: 'rgba(15, 19, 46, 0.68)',
+        background: 'transparent',
+        pointerEvents: 'none',
       }}
     >
       <div style={{ position: 'relative', width: 170, height: 170 }}>

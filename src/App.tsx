@@ -103,15 +103,20 @@ export default function App() {
             return;
           }
           const mapped = mapApiUser(data.user);
-          setCurrentUser(mapped);
-          setIsLoggedIn(true);
-          setCurrentView('dashboard');
           localStorage.setItem('petra_user', JSON.stringify({ ...saved, ...data.user }));
+          startTransition(() => {
+            setCurrentUser(mapped);
+            setIsLoggedIn(true);
+            setCurrentView('dashboard');
+          });
         }).catch(() => {
           // Network error — fall back to cached data so the app still loads offline
-          setCurrentUser(mapApiUser(saved));
-          setIsLoggedIn(true);
-          setCurrentView('dashboard');
+          const mapped = mapApiUser(saved);
+          startTransition(() => {
+            setCurrentUser(mapped);
+            setIsLoggedIn(true);
+            setCurrentView('dashboard');
+          });
         });
       }
     }
@@ -330,9 +335,12 @@ export default function App() {
 
   // Real login success handler (called by LoginPage after API success)
   const handleRealLoginSuccess = (apiUser: any) => {
-    setCurrentUser(mapApiUser(apiUser));
-    setIsLoggedIn(true);
-    setCurrentView('dashboard');
+    const mapped = mapApiUser(apiUser);
+    startTransition(() => {
+      setCurrentUser(mapped);
+      setIsLoggedIn(true);
+      setCurrentView('dashboard');
+    });
   };
 
   // Fast level-clear trigger helper
@@ -354,13 +362,15 @@ export default function App() {
   // Register success — called by RegisterPage after real API success
   const handleRegisterSubmitInApp = (apiUser: any) => {
     if (apiUser.status === 'pending') {
-      // Account created but awaiting admin approval — do not grant dashboard access
       setCurrentView('pending-approval');
       return;
     }
-    setCurrentUser(mapApiUser(apiUser));
-    setIsLoggedIn(true);
-    setCurrentView('dashboard');
+    const mapped = mapApiUser(apiUser);
+    startTransition(() => {
+      setCurrentUser(mapped);
+      setIsLoggedIn(true);
+      setCurrentView('dashboard');
+    });
   };
 
   // --- INTERACTION HANDLERS ---
