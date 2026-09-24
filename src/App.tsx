@@ -42,8 +42,18 @@ export default function App() {
   const [currentView, setCurrentView] = useState<string>('landing'); // 'landing' | 'register' | 'login' | dashboard...
   const [isPending, startTransition] = useTransition();
 
+  // Only show the spinner if the transition takes longer than 50 ms.
+  // Sub-50ms switches are already-loaded pages — spinner never appears.
+  // Genuine first-visit lazy loads take 100ms+ — spinner appears after the delay.
+  const [showSpinner, setShowSpinner] = useState(false);
+  useEffect(() => {
+    if (!isPending) { setShowSpinner(false); return; }
+    const t = setTimeout(() => setShowSpinner(true), 50);
+    return () => clearTimeout(t);
+  }, [isPending]);
+
   // Wrap user-initiated navigation in a transition so the old page stays
-  // rendered (and blurable) while the next lazy component loads.
+  // rendered while the next lazy component loads.
   const navigateTo = useCallback((view: string) => {
     startTransition(() => setCurrentView(view));
   }, [startTransition]);
@@ -816,8 +826,8 @@ export default function App() {
         )}
       </div>
 
-      {/* Transition overlay — old page stays rendered underneath for blur to work */}
-      {isPending && <LoadingSpinner />}
+      {/* Spinner only when transition takes >50ms — instant cached-page switches never trigger it */}
+      {showSpinner && <LoadingSpinner />}
     </Suspense>
   );
 }
