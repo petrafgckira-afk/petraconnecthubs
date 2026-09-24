@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo, useTransition } from 'react';
 import LoadingSpinner from './components/LoadingSpinner';
 import {
   clearSession, getSavedUser, isSessionActive,
@@ -40,6 +40,13 @@ export default function App() {
   // Log-in flow states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<string>('landing'); // 'landing' | 'register' | 'login' | dashboard...
+  const [isPending, startTransition] = useTransition();
+
+  // Wrap user-initiated navigation in a transition so the old page stays
+  // rendered (and blurable) while the next lazy component loads.
+  const navigateTo = useCallback((view: string) => {
+    startTransition(() => setCurrentView(view));
+  }, [startTransition]);
 
   // Auth User state
   const [currentUser, setCurrentUser] = useState<User>({
@@ -330,11 +337,11 @@ export default function App() {
 
   // Fast level-clear trigger helper
   const handleStartRegister = () => {
-    setCurrentView('register');
+    navigateTo('register');
   };
 
   const handleStartLogin = () => {
-    setCurrentView('login');
+    navigateTo('login');
   };
 
   const handleLoggedOut = () => {
@@ -463,8 +470,8 @@ export default function App() {
 
   const handleSendMessageToMember = useCallback((userId: string) => {
     setActivePartnerId(userId);
-    setCurrentView('messages');
-  }, []);
+    navigateTo('messages');
+  }, [navigateTo]);
 
   const handleClearNotification = useCallback((id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
@@ -574,7 +581,7 @@ export default function App() {
             onEditAnnouncement={handleEditAnnouncement}
             onDeleteAnnouncement={handleDeleteAnnouncement}
             currentUserRole={currentUser.role}
-            setView={setCurrentView}
+            setView={navigateTo}
             adminHubScope={adminHubScope}
             notifications={notifications}
             onMarkNotificationRead={handleMarkRead}
@@ -599,7 +606,7 @@ export default function App() {
             onConnectMember={handleConnectMember}
             onRemoveConnection={handleRemoveConnection}
             userRole={currentUser.role}
-            setView={setCurrentView}
+            setView={navigateTo}
             hubDisplayName={currentUser.role === 'admin' ? (adminHubScope.hubName ?? 'All Hubs') : undefined}
             isAllHubs={isAdminAllHubs}
           />
@@ -668,7 +675,7 @@ export default function App() {
             onEditAnnouncement={handleEditAnnouncement}
             onDeleteAnnouncement={handleDeleteAnnouncement}
             currentUserRole={currentUser.role}
-            setView={setCurrentView}
+            setView={navigateTo}
             adminHubScope={adminHubScope}
             notifications={notifications}
             onMarkNotificationRead={handleMarkRead}
@@ -684,7 +691,7 @@ export default function App() {
 
   // 1. Unified Fixed Blurry Background + Layout rendering:
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0f132e' }} />}>
       {/* Background: dark orbs for landing/auth pages, clean white for logged-in app */}
       {isLoggedIn ? (
         <div className="fixed inset-0 pointer-events-none z-0" style={{ backgroundColor: '#f9fafb' }} />
@@ -734,7 +741,7 @@ export default function App() {
                     <p className="text-amber-300 text-xs font-medium">If you were already approved, please log in with your credentials.</p>
                   </div>
                   <button
-                    onClick={() => setCurrentView('login')}
+                    onClick={() => navigateTo('login')}
                     className="w-full py-2.5 rounded-xl bg-brand-gold text-navy-950 font-bold text-sm hover:bg-amber-400 transition"
                   >
                     Go to Login
@@ -756,7 +763,7 @@ export default function App() {
             {/* Sidebar navigation on Desktop, standard floating bottom bar on mobile */}
             <Navigation
               currentView={currentView}
-              setView={setCurrentView}
+              setView={navigateTo}
               userRole={currentUser.role}
               userHub={currentUser.profession}
               userName={currentUser.name}
@@ -798,6 +805,9 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Transition overlay — old page stays rendered underneath for blur to work */}
+      {isPending && <LoadingSpinner />}
     </Suspense>
   );
 }
