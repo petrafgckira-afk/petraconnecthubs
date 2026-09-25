@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { HubType, HubAnnouncement, HubEvent, HubResource, UserRole } from '../types';
 import LucideIcon from './LucideIcon';
 import {
   Users, Check, X, Megaphone, Calendar, FilePlus,
-  Plus, CornerDownRight, ClipboardList, UserX, ShieldCheck
+  Plus, CornerDownRight, ClipboardList, UserX, ShieldCheck,
+  Clock, CheckCircle, XCircle, FileText, BookOpen, Link as LinkIcon, Video, Music, Image,
+  Upload, FolderOpen,
 } from 'lucide-react';
-import { fetchPendingMembers, approveMember, rejectMember, getFrozenUsers, unfreezeFeedUser } from '../services/api';
+import { fetchPendingMembers, approveMember, rejectMember, getFrozenUsers, unfreezeFeedUser, fetchPendingResources, approveResource, uploadResourceFile } from '../services/api';
 
 interface FrozenUser {
   id: string;
@@ -33,6 +35,20 @@ interface PendingApplicant {
   profile_image: string | null;
 }
 
+interface PendingResource {
+  id: string;
+  hub_id: string;
+  hub_name: string;
+  title: string;
+  description: string;
+  file_type: HubResource['fileType'];
+  file_size: string | null;
+  download_url: string;
+  uploaded_by_name: string;
+  uploaded_by_id: string;
+  created_at: string;
+}
+
 interface HubLeaderPanelProps {
   userHub: HubType;
   userRole: UserRole;
@@ -40,6 +56,9 @@ interface HubLeaderPanelProps {
   onCreateAnnouncement: (ann: Partial<HubAnnouncement>) => Promise<void>;
   onCreateEvent: (evt: Partial<HubEvent>) => void;
   onCreateResource: (res: Partial<HubResource>) => void;
+  onResourcesChanged?: () => void;
+  onUploadComplete?: () => void;
+  initialTab?: 'approvals' | 'announcements' | 'events' | 'resources' | 'suspended';
   userName: string;
 }
 
@@ -50,10 +69,13 @@ export default function HubLeaderPanel({
   onCreateAnnouncement,
   onCreateEvent,
   onCreateResource,
+  onResourcesChanged,
+  onUploadComplete,
+  initialTab = 'approvals',
   userName
 }: HubLeaderPanelProps) {
 
-  const [activeLeaderTab, setActiveLeaderTab] = useState<'approvals' | 'announcements' | 'events' | 'resources' | 'suspended'>('approvals');
+  const [activeLeaderTab, setActiveLeaderTab] = useState<'approvals' | 'announcements' | 'events' | 'resources' | 'suspended'>(initialTab);
   const [frozenUsers, setFrozenUsers]   = useState<FrozenUser[]>([]);
   const [unfreezingId, setUnfreezingId] = useState<string | null>(null);
   const [frozenAvatarFails, setFrozenAvatarFails] = useState<Set<string>>(new Set());
@@ -81,10 +103,21 @@ export default function HubLeaderPanel({
   // Form states: Resources
   const [resTitle, setResTitle] = useState('');
   const [resDesc, setResDesc]   = useState('');
-  const [resUrl, setResUrl]     = useState('');
-  const [resType, setResType]   = useState<'pdf' | 'doc' | 'link' | 'video'>('pdf');
-  const [resSize, setResSize]   = useState('1.5 MB');
+  const [resType, setResType]   = useState<HubResource['fileType']>('pdf');
   const [resSuccess, setResSuccess] = useState(false);
+
+  // Pending resources (member submissions)
+  const [pendingResources, setPendingResources] = useState<PendingResource[]>([]);
+  const [approvingResId, setApprovingResId]     = useState<string | null>(null);
+
+  // File upload state
+  const fileInputRef                            = useRef<HTMLInputElement>(null);
+  const [uploadFile, setUploadFile]             = useState<File | null>(null);
+  const [uploadTitle, setUploadTitle]           = useState('');
+  const [uploadDesc, setUploadDesc]             = useState('');
+  const [uploadProgress, setUploadProgress]     = useState<number | null>(null);
+  const [uploadDone, setUploadDone]             = useState(false);
+  const [uploadError, setUploadError]           = useState('');
 
   const loadApplicants = useCallback(() => {
     fetchPendingMembers()
@@ -92,6 +125,9 @@ export default function HubLeaderPanel({
       .catch(() => {});
     getFrozenUsers()
       .then(d => setFrozenUsers(d.frozen || []))
+      .catch(() => {});
+    fetchPendingResources()
+      .then(d => setPendingResources(d.pending || []))
       .catch(() => {});
   }, []);
 
@@ -122,6 +158,54 @@ export default function HubLeaderPanel({
     rejectMember(applicant.membership_id)
       .then(() => setPendingApplicants(prev => prev.filter(a => a.membership_id !== applicant.membership_id)))
       .catch(() => {});
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadFile(file);
+    setUploadTitle(file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' '));
+    setUploadDesc('');
+    setUploadProgress(null);
+    setUploadDone(false);
+    setUploadError('');
+    // reset input so same file can be re-selected
+    e.target.value = '';
+  };
+
+  const handleStartUpload = () => {
+    if (!uploadFile || isAllHubs) return;
+    const formData = new FormData();
+    formData.append('file', uploadFile);
+    formData.append('title', uploadTitle || uploadFile.name);
+    formData.append('description', uploadDesc);
+    formData.append('hub_type', effectiveHub);
+
+    setUploadProgress(0);
+    setUploadError('');
+
+    uploadResourceFile(formData, (pct) => setUploadProgress(pct))
+      .then(() => {
+        setUploadProgress(100);
+        setUploadDone(true);
+        onResourcesChanged?.();
+        setTimeout(() => { onUploadComplete?.(); }, 2000);
+      })
+      .catch((err: Error) => {
+        setUploadProgress(null);
+        setUploadError(err.message || 'Upload failed — check your connection and try again.');
+      });
+  };
+
+  const handleApproveResource = async (id: string, action: 'approved' | 'rejected') => {
+    setApprovingResId(id);
+    try {
+      await approveResource(id, action);
+      setPendingResources(prev => prev.filter(r => r.id !== id));
+      onResourcesChanged?.();
+    } catch { /* silent */ } finally {
+      setApprovingResId(null);
+    }
   };
 
   const getInitials = (name: string) =>
@@ -210,23 +294,21 @@ export default function HubLeaderPanel({
 
   const handleResSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resTitle.trim() || !resDesc.trim() || !resUrl.trim()) return;
+    if (!resTitle.trim() || !resDesc.trim()) return;
 
     onCreateResource({
       title: resTitle,
       description: resDesc,
       fileType: resType,
-      fileSize: resType !== 'link' ? resSize : undefined,
-      downloadUrl: resUrl,
+      fileSize: undefined,
+      downloadUrl: '#',
       uploadedBy: userName,
       hubId: effectiveHub
     });
 
     setResTitle('');
     setResDesc('');
-    setResUrl('');
     setResType('pdf');
-    setResSize('1.5 MB');
     setResSuccess(true);
     setTimeout(() => setResSuccess(false), 4000);
   };
@@ -595,7 +677,62 @@ export default function HubLeaderPanel({
 
       {/* SUB-VIEW 4: SHARE RESOURCES */}
       {activeLeaderTab === 'resources' && (
-        <form onSubmit={handleResSubmit} className="bg-white border rounded-xl p-6 md:p-8 shadow-xs max-w-2xl space-y-4 animate-fade-in border-slate-100">
+        <div className="flex flex-col lg:flex-row gap-6 animate-fade-in">
+
+        {/* ── Pending submissions side panel ── */}
+        {pendingResources.length > 0 && (
+          <aside className="lg:w-80 xl:w-96 shrink-0 space-y-3">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl overflow-hidden shadow-xs">
+              <div className="px-4 py-3 border-b border-amber-200 flex items-center gap-2">
+                <Clock size={14} className="text-amber-600" />
+                <span className="text-xs font-bold text-amber-900">Pending Submissions ({pendingResources.length})</span>
+              </div>
+              <div className="divide-y divide-amber-100 max-h-[520px] overflow-y-auto">
+                {pendingResources.map(pr => {
+                  const iconMap: Record<string, React.ReactNode> = {
+                    pdf: <FileText size={14} />, doc: <FileText size={14} />, epub: <BookOpen size={14} />,
+                    link: <LinkIcon size={14} />, video: <Video size={14} />, audio: <Music size={14} />, image: <Image size={14} />,
+                  };
+                  return (
+                    <div key={pr.id} className="p-3.5 space-y-2 hover:bg-amber-50/70 transition">
+                      <div className="flex items-start gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 border border-amber-200">
+                          {iconMap[pr.file_type] ?? <FileText size={14} />}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-bold text-[11px] text-navy-950 leading-tight truncate">{pr.title}</p>
+                          <p className="text-[10px] text-gray-500 truncate">By {pr.uploaded_by_name} · {pr.hub_name}</p>
+                          {pr.description && (
+                            <p className="text-[10px] text-gray-400 line-clamp-2 mt-0.5">{pr.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      <a href={pr.download_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-brand-gold hover:underline block truncate">{pr.download_url}</a>
+                      <div className="flex gap-1.5">
+                        <button
+                          onClick={() => handleApproveResource(pr.id, 'approved')}
+                          disabled={approvingResId === pr.id}
+                          className="flex-1 flex items-center justify-center gap-1 text-[10px] font-bold bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                        >
+                          <CheckCircle size={11} /> Approve
+                        </button>
+                        <button
+                          onClick={() => handleApproveResource(pr.id, 'rejected')}
+                          disabled={approvingResId === pr.id}
+                          className="flex-1 flex items-center justify-center gap-1 text-[10px] font-bold border border-rose-200 text-rose-600 hover:bg-rose-50 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                        >
+                          <XCircle size={11} /> Reject
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </aside>
+        )}
+
+        <form onSubmit={handleResSubmit} className="bg-white border rounded-xl p-6 md:p-8 shadow-xs flex-1 space-y-4 border-slate-100">
           <div className="space-y-1">
             <h2 className="font-serif text-lg font-semibold text-navy-950 flex items-center gap-1.5">
               <ClipboardList size={18} className="text-brand-gold" />
@@ -621,85 +758,136 @@ export default function HubLeaderPanel({
             </div>
           )}
 
+          {/* Hidden native file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.epub,.mp4,.mov,.avi,.webm,.mkv,.mp3,.wav,.ogg,.m4a,.aac,.jpg,.jpeg,.png,.gif,.webp,.svg"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+
           <fieldset disabled={isAllHubs} className="space-y-4 disabled:opacity-40 disabled:pointer-events-none">
-            <div className="space-y-1.5" id="res-title-group">
-              <label htmlFor="res-title" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Document Title</label>
-              <input
-                id="res-title"
-                type="text"
-                value={resTitle}
-                onChange={(e) => setResTitle(e.target.value)}
-                placeholder="e.g. 2026 SME Charity Tax Shield Checklist"
-                className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
-                required={!isAllHubs}
-              />
-            </div>
 
-            <div className="space-y-1.5" id="res-desc-group">
-              <label htmlFor="res-desc" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block text-sans">File Description / Explainer</label>
-              <textarea
-                id="res-desc"
-                rows={3}
-                value={resDesc}
-                onChange={(e) => setResDesc(e.target.value)}
-                placeholder="Give peers precise guidance on how to utility structure this template document..."
-                className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
-                required={!isAllHubs}
-              />
-            </div>
-
-            <div className="space-y-1.5" id="res-url-group">
-              <label htmlFor="res-url" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Resource URL / Link</label>
-              <input
-                id="res-url"
-                type="url"
-                value={resUrl}
-                onChange={(e) => setResUrl(e.target.value)}
-                placeholder="https://drive.google.com/... or https://github.com/..."
-                className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
-                required={!isAllHubs}
-              />
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5" id="res-type-group">
-                <label htmlFor="res-type" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Asset Type</label>
-                <select
-                  id="res-type"
-                  value={resType}
-                  onChange={(e) => setResType(e.target.value as any)}
-                  className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-900 focus:outline-hidden"
-                >
-                  <option value="pdf">Acrobat PDF File</option>
-                  <option value="doc">Word / Excel Sheet</option>
-                  <option value="link">Github Repo / Web link</option>
-                  <option value="video">Vimeo / Video presentation</option>
-                </select>
+            {/* Step 1 — no file selected yet */}
+            {!uploadFile && !uploadDone && (
+              <div
+                onClick={() => !isAllHubs && fileInputRef.current?.click()}
+                className="border-2 border-dashed border-slate-200 hover:border-brand-gold rounded-xl p-10 text-center cursor-pointer transition group"
+              >
+                <div className="w-12 h-12 rounded-full bg-brand-gold-light border border-brand-gold/30 flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                  <FolderOpen size={20} className="text-brand-gold" />
+                </div>
+                <p className="text-xs font-bold text-navy-950">Click to choose a file from your device</p>
+                <p className="text-[11px] text-gray-400 mt-1">PDF, Word, Excel, EPUB, Video, Audio, Image — up to 50 MB</p>
               </div>
+            )}
 
-              {resType !== 'link' && (
-                <div className="space-y-1.5" id="res-size-group">
-                  <label htmlFor="res-size" className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Simulated Size</label>
+            {/* Step 2 — file selected, ready to upload */}
+            {uploadFile && uploadProgress === null && !uploadDone && (
+              <div className="space-y-4 animate-fade-in">
+                {/* File badge */}
+                <div className="flex items-center gap-3 bg-navy-50/60 border border-slate-200 rounded-lg px-4 py-3">
+                  <FileText size={16} className="text-brand-gold shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-navy-950 truncate">{uploadFile.name}</p>
+                    <p className="text-[10px] text-gray-400 font-mono">
+                      {uploadFile.size >= 1048576
+                        ? (uploadFile.size / 1048576).toFixed(1) + ' MB'
+                        : (uploadFile.size / 1024).toFixed(1) + ' KB'}
+                    </p>
+                  </div>
+                  <button onClick={() => { setUploadFile(null); setUploadError(''); }} className="text-gray-400 hover:text-rose-500 transition cursor-pointer shrink-0"><X size={14} /></button>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Title</label>
                   <input
-                    id="res-size"
-                    type="text"
-                    value={resSize}
-                    onChange={(e) => setResSize(e.target.value)}
-                    placeholder="e.g. 2.4 MB"
-                    className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-900 focus:outline-hidden"
+                    value={uploadTitle}
+                    onChange={e => setUploadTitle(e.target.value)}
+                    placeholder="Resource title…"
+                    className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
                   />
                 </div>
-              )}
-            </div>
 
-            <button
-              type="submit"
-              className="bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer"
-            >
-              <Plus size={14} /> Catalog Asset File
-            </button>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider block">Description <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
+                  <textarea
+                    rows={2}
+                    value={uploadDesc}
+                    onChange={e => setUploadDesc(e.target.value)}
+                    placeholder="Brief description of what this file contains…"
+                    className="w-full bg-navy-50/50 border border-slate-200 rounded-lg p-2.5 text-xs text-navy-950 focus:outline-hidden focus:border-brand-gold transition"
+                  />
+                </div>
+
+                {uploadError && (
+                  <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-lg text-xs">{uploadError}</div>
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleStartUpload}
+                    className="bg-brand-gold hover:bg-amber-400 text-navy-950 font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Upload size={14} /> Upload Asset File
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border border-slate-200 text-gray-500 font-medium text-xs py-2.5 px-4 rounded-lg hover:bg-gray-50 transition cursor-pointer"
+                  >
+                    Change File
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3 — uploading: progress bar */}
+            {uploadFile && uploadProgress !== null && !uploadDone && (
+              <div className="space-y-3 animate-fade-in">
+                <div className="flex items-center gap-3 bg-navy-50/60 border border-slate-200 rounded-lg px-4 py-3">
+                  <FileText size={16} className="text-brand-gold shrink-0" />
+                  <p className="text-xs font-bold text-navy-950 truncate flex-1">{uploadFile.name}</p>
+                  <span className="text-xs font-black text-brand-gold font-mono tabular-nums">{uploadProgress}%</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[10px] font-bold text-navy-900 uppercase tracking-wider">
+                    <span>Uploading…</span>
+                    <span className="text-brand-gold font-mono">{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div
+                      className="h-full bg-brand-gold rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-400">Please keep this tab open until the upload completes.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4 — upload complete */}
+            {uploadDone && (
+              <div className="animate-fade-in space-y-3">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center space-y-2">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle size={20} className="text-emerald-600" />
+                  </div>
+                  <p className="text-xs font-bold text-emerald-900">File uploaded successfully!</p>
+                  <p className="text-[11px] text-emerald-700">Now live in the hub. Returning you to the hub page…</p>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="h-full bg-brand-gold rounded-full w-full" />
+                </div>
+              </div>
+            )}
+
           </fieldset>
         </form>
+        </div>
       )}
 
       {/* SUB-VIEW 5: SUSPENDED POSTINGS */}

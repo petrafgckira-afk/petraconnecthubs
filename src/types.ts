@@ -76,12 +76,14 @@ export interface HubResource {
   hubId: HubType;
   title: string;
   description: string;
-  fileType: 'pdf' | 'video' | 'link' | 'doc';
+  fileType: 'pdf' | 'video' | 'link' | 'doc' | 'audio' | 'image' | 'epub';
   fileSize?: string;
   downloadUrl: string;
   uploadedBy: string;
+  uploadedById?: string;
   downloadCount: number;
   date: string;
+  status?: 'pending' | 'approved' | 'rejected';
 }
 
 export interface Connection {

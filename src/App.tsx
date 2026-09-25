@@ -96,6 +96,12 @@ export default function App() {
   // ID of the user whose chat thread to open when navigating to Messages
   const [activePartnerId, setActivePartnerId] = useState<string | null>(null);
 
+  // Which tab to open when navigating to the leader panel
+  const [leaderPanelInitialTab, setLeaderPanelInitialTab] = useState<'approvals' | 'announcements' | 'events' | 'resources' | 'suspended'>('approvals');
+
+  // Which tab to open when navigating to the hub page
+  const [hubInitialTab, setHubInitialTab] = useState<'members' | 'resources'>('members');
+
   // Quick state dictionary for active connect actions: ID -> state
   const [connections, setConnections] = useState<{ [key: string]: 'connected' | 'pending_sent' | 'not_connected' }>({});
 
@@ -294,17 +300,21 @@ export default function App() {
   // Map API resource object → frontend HubResource shape
   function mapResource(r: any): HubResource {
     const hubType = (r.hub_name || '').replace(/ Hub$/i, '').trim() as HubType;
+    const validTypes = ['pdf', 'video', 'link', 'doc', 'audio', 'image', 'epub'] as const;
+    const ft = validTypes.includes(r.file_type) ? r.file_type : 'link';
     return {
       id: r.id,
       hubId: hubType || 'Technology',
       title: r.title,
       description: r.description || '',
-      fileType: r.file_type || 'link',
+      fileType: ft,
       fileSize: r.file_size || undefined,
       downloadUrl: r.download_url || '#',
       uploadedBy: r.uploaded_by_name || 'Unknown',
+      uploadedById: r.uploaded_by_id || undefined,
       downloadCount: Number(r.download_count) || 0,
       date: r.created_at ? new Date(r.created_at).toLocaleDateString('en-GB') : '',
+      status: r.status || 'approved',
     };
   }
 
@@ -573,6 +583,10 @@ export default function App() {
     }).catch(() => {});
   }, [currentUser.name]);
 
+  const handleResourcesChanged = useCallback(() => {
+    fetchResources().then(d => setResources((d.resources || []).map(mapResource))).catch(() => {});
+  }, []);
+
   // Memoised badge count — only recomputes when notifications array changes
   const activeNotificationsCount = useMemo(
     () => notifications.filter(n => !n.read).length,
@@ -629,6 +643,11 @@ export default function App() {
             setView={navigateTo}
             hubDisplayName={currentUser.role === 'admin' ? (adminHubScope.hubName ?? 'All Hubs') : undefined}
             isAllHubs={isAdminAllHubs}
+            onShareResource={() => {
+              setLeaderPanelInitialTab('resources');
+              navigateTo('leader-panel');
+            }}
+            initialTab={hubInitialTab}
           />
         );
       }
@@ -666,6 +685,15 @@ export default function App() {
             onCreateAnnouncement={handleCreateAnnouncement}
             onCreateEvent={handleCreateEvent}
             onCreateResource={handleCreateResource}
+            onResourcesChanged={handleResourcesChanged}
+            onUploadComplete={() => {
+              setLeaderPanelInitialTab('approvals');
+              setHubInitialTab('resources');
+              navigateTo('hub');
+              // Reset so the next manual hub visit opens on Members
+              setTimeout(() => setHubInitialTab('members'), 500);
+            }}
+            initialTab={leaderPanelInitialTab}
             userName={currentUser.name}
           />
         );

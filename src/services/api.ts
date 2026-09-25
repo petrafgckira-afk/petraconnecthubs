@@ -177,13 +177,50 @@ export async function createResource(data: {
   hub_type: string;
   title: string;
   description: string;
-  file_type: 'pdf' | 'video' | 'link' | 'doc';
+  file_type: 'pdf' | 'video' | 'link' | 'doc' | 'audio' | 'image' | 'epub';
   file_size?: string;
   download_url: string;
 }) {
   return request('/resources/create.php', {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+}
+
+export async function fetchPendingResources() {
+  return request('/resources/pending.php');
+}
+
+export async function approveResource(resourceId: string, action: 'approved' | 'rejected') {
+  return request('/resources/approve.php', {
+    method: 'POST',
+    body: JSON.stringify({ resource_id: resourceId, action }),
+  });
+}
+
+export function uploadResourceFile(
+  formData: FormData,
+  onProgress: (pct: number) => void,
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+    });
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(JSON.parse(xhr.responseText)); }
+        catch { resolve({}); }
+      } else {
+        try { reject(new Error(JSON.parse(xhr.responseText)?.error || `Upload failed (HTTP ${xhr.status})`)); }
+        catch { reject(new Error(`Upload failed (HTTP ${xhr.status})`)); }
+      }
+    });
+    xhr.addEventListener('error', () => reject(new Error('Network error — check your connection')));
+    const token = localStorage.getItem('petra_token');
+    xhr.open('POST', `${API_BASE}resources/upload.php`);
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(formData);
   });
 }
 
