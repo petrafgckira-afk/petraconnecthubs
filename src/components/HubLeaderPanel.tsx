@@ -348,7 +348,7 @@ export default function HubLeaderPanel({
             onClick={() => setActiveLeaderTab('approvals')}
             className={`py-2 px-4 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeLeaderTab === 'approvals'
-                ? 'bg-navy-900 text-white'
+                ? 'bg-brand-gold text-white'
                 : 'bg-slate-50 hover:bg-slate-100 text-gray-500'
             }`}
           >
@@ -360,7 +360,7 @@ export default function HubLeaderPanel({
             onClick={() => setActiveLeaderTab('announcements')}
             className={`py-2 px-4 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeLeaderTab === 'announcements'
-                ? 'bg-navy-900 text-white'
+                ? 'bg-brand-gold text-white'
                 : 'bg-slate-50 hover:bg-slate-100 text-gray-500'
             }`}
           >
@@ -372,7 +372,7 @@ export default function HubLeaderPanel({
             onClick={() => setActiveLeaderTab('events')}
             className={`py-2 px-4 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeLeaderTab === 'events'
-                ? 'bg-navy-900 text-white'
+                ? 'bg-brand-gold text-white'
                 : 'bg-slate-50 hover:bg-slate-100 text-gray-500'
             }`}
           >
@@ -384,7 +384,7 @@ export default function HubLeaderPanel({
             onClick={() => setActiveLeaderTab('resources')}
             className={`py-2 px-4 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeLeaderTab === 'resources'
-                ? 'bg-navy-900 text-white'
+                ? 'bg-brand-gold text-white'
                 : 'bg-slate-50 hover:bg-slate-100 text-gray-500'
             }`}
           >
@@ -553,7 +553,7 @@ export default function HubLeaderPanel({
             <button
               type="submit"
               disabled={annSubmitting}
-              className="bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="bg-brand-gold hover:bg-amber-500 text-white font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <Plus size={14} /> {annSubmitting ? 'Posting…' : 'Distribute Bulletin'}
             </button>
@@ -668,7 +668,7 @@ export default function HubLeaderPanel({
 
           <button
             type="submit"
-            className="bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer mt-2"
+            className="bg-brand-gold hover:bg-amber-500 text-white font-bold text-xs py-2.5 px-5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer mt-2"
           >
             <Plus size={14} /> Commit Fellowship agenda
           </button>
@@ -940,7 +940,7 @@ export default function HubLeaderPanel({
                               onError={() => setFrozenAvatarFails(p => new Set([...p, fu.user_id]))}
                             />
                           ) : (
-                            <div className="w-7 h-7 rounded-full bg-navy-900 text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
+                            <div className="w-7 h-7 rounded-full bg-brand-gold text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
                               {getInitials(fu.full_name)}
                             </div>
                           )}

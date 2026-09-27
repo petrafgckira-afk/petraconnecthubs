@@ -14,3 +14,6 @@ assets/.aistudio/
 *.nef
 .expo/
 *.zip
+
+# DB credentials — keep on server only, never commit
+petra-api/config/database.php

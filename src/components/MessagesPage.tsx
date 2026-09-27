@@ -1505,7 +1505,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
                       ) : (
                         <div
                           onClick={e => handlePartnerAvatarClick(e, null, convo.partner.full_name)}
-                          className="w-11 h-11 rounded-full bg-navy-950 border-2 border-brand-gold text-white font-bold font-serif text-xs flex items-center justify-center shadow-sm cursor-pointer"
+                          className="w-11 h-11 rounded-full bg-brand-gold border-2 border-brand-gold text-white font-bold font-serif text-xs flex items-center justify-center shadow-sm cursor-pointer"
                         >
                           {getInitials(convo.partner.full_name)}
                         </div>
@@ -1576,7 +1576,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
                     ) : (
                       <div
                         onClick={e => handlePartnerAvatarClick(e, null, member.full_name)}
-                        className="w-11 h-11 rounded-full bg-navy-950 border border-brand-gold/50 text-white font-bold font-serif text-xs flex items-center justify-center shrink-0 cursor-pointer"
+                        className="w-11 h-11 rounded-full bg-brand-gold border border-brand-gold/50 text-white font-bold font-serif text-xs flex items-center justify-center shrink-0 cursor-pointer"
                       >
                         {getInitials(member.full_name)}
                       </div>
@@ -1627,12 +1627,12 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
         {activePartnerId && displayPartner ? (
           <>
             {/* Chat header */}
-            <div className="bg-navy-950 px-4 py-3 flex justify-between items-center shrink-0 border-b border-navy-900">
+            <div className="bg-white px-4 py-3 flex justify-between items-center shrink-0 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 {/* Mobile back */}
                 <button
                   onClick={() => setActivePartnerId(null)}
-                  className="md:hidden text-gray-400 hover:text-white transition p-1 -ml-1"
+                  className="md:hidden text-gray-400 hover:text-navy-950 transition p-1 -ml-1"
                 >
                   <ArrowLeft size={18} />
                 </button>
@@ -1654,11 +1654,11 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
                       {getInitials(displayPartner.full_name)}
                     </div>
                   )}
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-navy-950" />
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white" />
                 </div>
                 {/* Name & status */}
                 <div>
-                  <h4 className="font-bold text-sm text-white leading-tight">{displayPartner.full_name}</h4>
+                  <h4 className="font-bold text-sm text-navy-950 leading-tight">{displayPartner.full_name}</h4>
                   {displayPartner.username && (
                     <p className="text-[9px] text-brand-gold/80 font-mono leading-none mb-0.5">@{displayPartner.username}</p>
                   )}
@@ -2311,7 +2311,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
                   {messageText.trim() ? (
                     <button
                       type="submit"
-                      className="p-2.5 bg-navy-950 text-brand-gold hover:bg-navy-800 rounded-full transition shrink-0 shadow-sm cursor-pointer"
+                      className="p-2.5 bg-brand-gold text-white hover:bg-amber-500 rounded-full transition shrink-0 shadow-sm cursor-pointer"
                       title="Send"
                     >
                       <Send size={17} />
@@ -2321,7 +2321,7 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
                       type="button"
                       onClick={startRecording}
                       disabled={uploadingAudio || uploadProgress !== null}
-                      className="p-2.5 bg-navy-950 text-brand-gold hover:bg-navy-800 disabled:opacity-50 rounded-full transition shrink-0 shadow-sm cursor-pointer"
+                      className="p-2.5 bg-brand-gold text-white hover:bg-amber-500 disabled:opacity-50 rounded-full transition shrink-0 shadow-sm cursor-pointer"
                       title={uploadProgress !== null ? 'Uploading…' : 'Record voice message'}
                     >
                       {(uploadingAudio || uploadProgress !== null) ? (
@@ -2360,9 +2360,9 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
         <aside className="w-64 flex flex-col border-l border-slate-100 shrink-0 bg-white overflow-y-auto">
 
           {/* Header */}
-          <div className="bg-navy-950 px-4 py-3.5 flex justify-between items-center shrink-0">
-            <h3 className="text-white font-bold text-sm tracking-tight">Contact Info</h3>
-            <button onClick={() => setShowInfoPane(false)} className="text-gray-400 hover:text-white transition p-1 rounded-lg">
+          <div className="bg-white px-4 py-3.5 flex justify-between items-center shrink-0 border-b border-gray-100">
+            <h3 className="text-navy-950 font-bold text-sm tracking-tight">Contact Info</h3>
+            <button onClick={() => setShowInfoPane(false)} className="text-gray-400 hover:text-navy-950 transition p-1 rounded-lg">
               <X size={14} />
             </button>
           </div>
@@ -3234,9 +3234,9 @@ export default function MessagesPage({ currentUserId, initialPartnerId }: Messag
             className="relative w-full max-w-[360px] mx-4 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
             onMouseDown={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-navy-950">
-              <h3 className="font-bold text-white text-sm tracking-tight">Keyboard Shortcuts</h3>
-              <button onClick={() => setShowShortcutsHelp(false)} className="text-gray-400 hover:text-white transition">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white">
+              <h3 className="font-bold text-navy-950 text-sm tracking-tight">Keyboard Shortcuts</h3>
+              <button onClick={() => setShowShortcutsHelp(false)} className="text-gray-400 hover:text-navy-950 transition">
                 <X size={15} />
               </button>
             </div>

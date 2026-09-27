@@ -313,17 +313,17 @@ export default function AdminPanel() {
     <div className="space-y-6 pb-24 md:pb-8 animate-fade-in font-sans text-navy-950">
 
       {/* Header banner */}
-      <div className="bg-navy-950 p-6 rounded-2xl border-l-4 border-amber-500 text-white shadow-md relative overflow-hidden">
-        <div className="absolute right-0 bottom-0 top-0 w-1/4 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-amber-500/10 to-transparent pointer-events-none" />
+      <div className="bg-white p-6 rounded-2xl border-l-4 border-brand-gold shadow-md relative overflow-hidden">
+        <div className="absolute right-0 bottom-0 top-0 w-1/4 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-brand-gold/8 to-transparent pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1 bg-navy-900 border border-navy-800 text-amber-500 py-1 px-2 rounded font-mono text-[9px] uppercase tracking-wider w-fit">
+            <div className="inline-flex items-center gap-1 bg-orange-50 border border-orange-200 text-brand-gold py-1 px-2 rounded font-mono text-[9px] uppercase tracking-wider w-fit">
               <Lock size={10} /> Sovereign Systems Level Clearance
             </div>
-            <h1 className="font-serif text-2xl font-bold tracking-tight text-white mb-1">Petra Connect Systems Core</h1>
-            <p className="text-gray-300 text-xs">Monitor user directory, manage role clearances, approve hub memberships, and inspect audit logs.</p>
+            <h1 className="font-serif text-2xl font-bold tracking-tight text-navy-950 mb-1">Petra Connect Systems Core</h1>
+            <p className="text-gray-500 text-xs">Monitor user directory, manage role clearances, approve hub memberships, and inspect audit logs.</p>
           </div>
-          <span className="px-3 py-1 bg-amber-500 text-navy-950 text-xs font-black rounded uppercase font-mono tracking-widest block h-fit shrink-0">Platform Admin Panel</span>
+          <span className="px-3 py-1 bg-brand-gold text-white text-xs font-black rounded uppercase font-mono tracking-widest block h-fit shrink-0">Platform Admin Panel</span>
         </div>
       </div>
 
@@ -406,7 +406,7 @@ export default function AdminPanel() {
                         {u.profile_image && !failedAvatars.has(u.id) ? (
                           <img src={u.profile_image} alt={u.full_name} className="w-7 h-7 rounded-full object-cover border border-rose-200 shrink-0" onError={() => markFailed(u.id)} />
                         ) : (
-                          <div className="w-7 h-7 rounded-full bg-navy-900 text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
+                          <div className="w-7 h-7 rounded-full bg-brand-gold text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
                             {getInitials(u.full_name)}
                           </div>
                         )}
@@ -514,7 +514,7 @@ export default function AdminPanel() {
                           {u.profile_image && !failedAvatars.has(u.id) ? (
                             <img src={u.profile_image} alt={u.full_name} className="w-8 h-8 rounded-full object-cover border border-rose-200 shrink-0" onError={() => markFailed(u.id)} />
                           ) : (
-                            <div className="w-8 h-8 rounded-full bg-navy-900 text-white text-[10px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
+                            <div className="w-8 h-8 rounded-full bg-brand-gold text-white text-[10px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
                               {getInitials(u.full_name)}
                             </div>
                           )}
@@ -594,7 +594,7 @@ export default function AdminPanel() {
                   {m.profile_image && !failedAvatars.has(m.user_id) ? (
                     <img src={m.profile_image} alt={m.full_name} className="w-9 h-9 rounded-full object-cover border border-brand-gold shrink-0" onError={() => markFailed(m.user_id)} />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-navy-900 text-white text-[10px] font-bold font-serif flex items-center justify-center shrink-0 border border-brand-gold">
+                    <div className="w-9 h-9 rounded-full bg-brand-gold text-white text-[10px] font-bold font-serif flex items-center justify-center shrink-0 border border-brand-gold">
                       {getInitials(m.full_name)}
                     </div>
                   )}
@@ -669,7 +669,7 @@ export default function AdminPanel() {
                         {user.profile_image && !failedAvatars.has(user.id) ? (
                           <img src={user.profile_image} alt={user.full_name} className="w-8 h-8 rounded-full border border-brand-gold object-cover shrink-0" onError={() => markFailed(user.id)} />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-navy-900 border border-brand-gold text-white font-bold font-serif text-[10px] flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-brand-gold border border-brand-gold text-white font-bold font-serif text-[10px] flex items-center justify-center shrink-0">
                             {getInitials(user.full_name)}
                           </div>
                         )}
@@ -729,7 +729,7 @@ export default function AdminPanel() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Users2 size={16} className="text-navy-700" />
                   <h3 className="font-serif text-base font-bold text-navy-950">Full Directory</h3>
-                  <span className="bg-navy-900 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">{usersList.length}</span>
+                  <span className="bg-brand-gold text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">{usersList.length}</span>
                 </div>
                 <div className="relative flex-1 max-w-xs">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={12} />
@@ -771,7 +771,7 @@ export default function AdminPanel() {
                             {user.profile_image && !failedAvatars.has(user.id) ? (
                               <img src={user.profile_image} alt={user.full_name} className="w-8 h-8 rounded-full border border-brand-gold object-cover shrink-0" onError={() => markFailed(user.id)} />
                             ) : (
-                              <div className="w-8 h-8 rounded-full bg-navy-900 border border-brand-gold text-white font-bold font-serif text-[10px] flex items-center justify-center shrink-0">
+                              <div className="w-8 h-8 rounded-full bg-brand-gold border border-brand-gold text-white font-bold font-serif text-[10px] flex items-center justify-center shrink-0">
                                 {getInitials(user.full_name)}
                               </div>
                             )}
@@ -880,19 +880,19 @@ export default function AdminPanel() {
             </button>
           </div>
 
-          <div className="bg-navy-950 p-4 rounded-xl border border-navy-900 text-white space-y-3 font-mono text-[10.5px]">
+          <div className="bg-white p-4 rounded-xl border border-gray-200 text-navy-950 space-y-3 font-mono text-[10.5px]">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={adminLogSearch}
                 onChange={(e) => setAdminLogSearch(e.target.value)}
                 placeholder="Search actions..."
-                className="bg-navy-900 border border-navy-800 rounded px-2 py-1 text-[10px] text-white flex-1 focus:outline-none focus:border-brand-gold"
+                className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] text-navy-950 flex-1 focus:outline-none focus:border-brand-gold"
               />
               <select
                 value={logFilterStatus}
                 onChange={(e) => setLogFilterStatus(e.target.value as any)}
-                className="bg-navy-900 border border-navy-800 rounded px-2 py-1 text-[10px] focus:outline-none"
+                className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] text-navy-950 focus:outline-none"
               >
                 <option value="All">All</option>
                 <option value="success">Success</option>
@@ -975,7 +975,7 @@ export default function AdminPanel() {
                         {fu.profile_image && !failedAvatars.has(fu.user_id) ? (
                           <img src={fu.profile_image} alt={fu.full_name} className="w-7 h-7 rounded-full object-cover border border-rose-200 shrink-0" onError={() => markFailed(fu.user_id)} />
                         ) : (
-                          <div className="w-7 h-7 rounded-full bg-navy-900 text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
+                          <div className="w-7 h-7 rounded-full bg-brand-gold text-white text-[9px] font-bold font-serif flex items-center justify-center shrink-0 border border-rose-200">
                             {getInitials(fu.full_name)}
                           </div>
                         )}

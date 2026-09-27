@@ -7,14 +7,15 @@ on:
       - master
 
 jobs:
-  deploy:
+
+  # ── Job 1: Build React app and deploy frontend ─────────────────────
+  deploy-frontend:
+    name: Deploy Frontend
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
@@ -25,7 +26,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to cPanel via FTP
+      - name: Upload dist/ to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -34,3 +35,25 @@ jobs:
           local-dir: ./dist/
           server-dir: /public_html/connecthubs.petrafgc.org/
           dangerous-clean-slate: true
+
+  # ── Job 2: Deploy PHP backend (runs in parallel with Job 1) ────────
+  deploy-backend:
+    name: Deploy PHP Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload petra-api/ to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./petra-api/
+          server-dir: ${{ secrets.FTP_SERVER_DIR_API }}
+          # Never upload or delete config/database.php — it lives on the server only
+          exclude: |
+            **/.git*
+            **/.git*/**
+            config/database.php
+          dangerous-clean-slate: false

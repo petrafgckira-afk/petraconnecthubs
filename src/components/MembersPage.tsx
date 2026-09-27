@@ -114,7 +114,7 @@ export default function MembersPage({
                 onClick={() => setSelectedHubFilter(pill)}
                 className={`px-3 py-1.5 rounded-full text-[11px] font-bold border Transition cursor-pointer ${
                   isActive
-                    ? 'bg-navy-900 border-navy-950 text-white shadow-xs'
+                    ? 'bg-brand-gold border-brand-gold text-white shadow-xs'
                     : 'bg-navy-50/50 border-slate-100 text-gray-500 hover:bg-slate-100'
                 }`}
               >
@@ -159,7 +159,7 @@ export default function MembersPage({
                         onError={() => markFailed(member.id)}
                       />
                     ) : (
-                      <div className="w-11 h-11 rounded-full bg-navy-900 font-serif border-2 border-brand-gold text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                      <div className="w-11 h-11 rounded-full bg-brand-gold font-serif border-2 border-brand-gold text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
                         {initials}
                       </div>
                     )}
@@ -182,7 +182,7 @@ export default function MembersPage({
                 <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-50 mt-5">
                   <button
                     onClick={() => onSendMessage(member.id)}
-                    className="w-full text-navy-900 border border-navy-900 hover:bg-navy-900 hover:text-white transition py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                    className="w-full text-brand-gold border border-brand-gold hover:bg-brand-gold hover:text-white transition py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <MessageSquare size={12} /> Chat
                   </button>
@@ -220,7 +220,7 @@ export default function MembersPage({
                   ) : (
                     <button
                       onClick={() => onConnectMember(member.id)}
-                      className="w-full py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer bg-navy-900 text-white hover:bg-navy-800"
+                      className="w-full py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer bg-brand-gold text-white hover:bg-amber-500"
                     >
                       <UserPlus size={11} /> Connect
                     </button>
