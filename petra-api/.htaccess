@@ -1,0 +1,2 @@
+# No limit on request body size (Apache level — works with all PHP SAPI including FPM)
+LimitRequestBody 0

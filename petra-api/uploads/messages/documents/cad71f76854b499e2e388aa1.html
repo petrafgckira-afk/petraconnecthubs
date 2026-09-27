@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layer 1 Genius — Business Cycle Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070d;--bg2:#080b14;--bg3:#0d1220;--bg4:#121929;--bg5:#192035;
+--g:#c8960c;--g2:#e8b832;--gd:rgba(200,150,12,.13);--b:rgba(200,150,12,.18);
+--b2:rgba(255,255,255,.06);--b3:rgba(255,255,255,.03);
+--w:#eef2ff;--gr:#566076;--gr2:#252f42;
+--green:#10b981;--gnbg:rgba(16,185,129,.1);--gnb:rgba(16,185,129,.25);
+--red:#ef4444;--rdbg:rgba(239,68,68,.09);--rdb:rgba(239,68,68,.25);
+--blue:#60a5fa;--blbg:rgba(96,165,250,.09);--blb:rgba(96,165,250,.25);
+--purp:#a78bfa;--prbg:rgba(167,139,250,.09);
+--teal:#2dd4bf;--tlbg:rgba(45,212,191,.09);
+--ambr:#fbbf24;--ambg:rgba(251,191,36,.1);--ambb:rgba(251,191,36,.25);
+--rose:#fb7185;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--w);font-family:'Syne',sans-serif;overflow-x:hidden;font-size:14px;line-height:1.65}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+background:radial-gradient(ellipse 80% 50% at 8% 0%,rgba(200,150,12,.07) 0%,transparent 55%),
+radial-gradient(ellipse 60% 40% at 92% 100%,rgba(96,165,250,.04) 0%,transparent 55%),
+repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.01) 59px,rgba(255,255,255,.01) 60px),
+repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.01) 59px,rgba(255,255,255,.01) 60px);}
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:rgba(5,7,13,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
+.tb-l{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g2);display:flex;align-items:center;gap:8px;}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--g2);animation:pulse 2.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.tb-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--g);display:flex;align-items:center;gap:4px;}
+.tb-score span{color:var(--w);font-weight:600;}
+/* SIDENAV */
+.sidenav{position:fixed;left:0;top:54px;bottom:0;width:216px;z-index:200;background:var(--bg2);border-right:1px solid var(--b2);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--gr2) transparent;padding:14px 0 40px;}
+.sn-lbl{font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gr);padding:12px 18px 4px;display:block;}
+.sn-a{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:11.5px;color:var(--gr);text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+.sn-a:hover,.sn-a.active{color:var(--g2);border-left-color:var(--g);background:var(--bg3);}
+.sn-n{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--g);min-width:16px;}
+/* MAIN */
+.main{margin-left:216px;padding-top:54px;position:relative;z-index:1;}
+/* HERO */
+.hero{padding:56px 52px 50px;border-bottom:1px solid var(--b);background:linear-gradient(180deg,rgba(200,150,12,.04) 0%,transparent 100%);}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';width:28px;height:1px;background:var(--g);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,56px);font-weight:900;line-height:1;color:var(--w);}
+.hero h1 em{font-style:italic;color:var(--g2);}
+.hero-sub{margin-top:14px;font-size:14px;line-height:1.8;color:var(--gr);max-width:650px;}
+.hstats{display:flex;gap:2px;margin-top:28px;flex-wrap:wrap;}
+.hs{background:var(--bg3);border:1px solid var(--b2);padding:14px 20px;flex:1;min-width:90px;}
+.hs:first-child{border-left:3px solid var(--g);}
+.hsv{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--g2);display:block;line-height:1;}
+.hsl{font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gr2);margin-top:4px;display:block;}
+/* SECTIONS */
+.ps{padding:46px 52px 68px;border-bottom:1px solid var(--b2);}
+.stag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:8px;}
+.sh{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,38px);font-weight:700;color:var(--w);line-height:1.1;margin-bottom:12px;}
+.sd{font-size:14px;line-height:1.8;color:var(--gr);max-width:700px;margin-bottom:28px;}
+/* MENTOR BOX */
+.mentor{background:var(--gd);border:1px solid var(--b);border-left:4px solid var(--g);padding:16px 20px;margin-bottom:22px;}
+.mhd{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:6px;}
+.mentor p{font-size:13px;line-height:1.8;color:var(--w);}
+.mentor strong{color:var(--g2);}
+/* INFO BOXES */
+.ib{background:var(--bg3);border:1px solid var(--b2);padding:16px 18px;margin-bottom:14px;}
+.ib.rule{border-left:4px solid var(--g2);}
+.ib.warn{border-left:4px solid var(--red);}
+.ib.tip{border-left:4px solid var(--green);}
+.ib.key{border-left:4px solid var(--purp);}
+.ibh{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.ib.rule .ibh{color:var(--g2);}  .ib.warn .ibh{color:var(--red);}
+.ib.tip .ibh{color:var(--green);} .ib.key .ibh{color:var(--purp);}
+.ib p,.ib li{font-size:13px;line-height:1.75;color:var(--gr);}
+.ib ul{padding-left:16px;} .ib li{margin-bottom:4px;} .ib strong{color:var(--w);}
+/* PHASE GRID */
+.phase-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-bottom:0;}
+.pc{background:var(--bg3);border:1px solid var(--b2);padding:16px 14px;cursor:pointer;transition:all .2s;border-top:3px solid transparent;}
+.pc:hover{background:var(--bg4);}
+.pcn{font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.pch{font-size:12.5px;font-weight:700;color:var(--w);margin-bottom:5px;line-height:1.2;}
+.pcs{font-size:11px;color:var(--gr);line-height:1.45;}
+.ph1{border-top-color:var(--teal);} .ph1 .pcn{color:var(--teal);}
+.ph2{border-top-color:var(--green);} .ph2 .pcn{color:var(--green);}
+.ph3{border-top-color:var(--ambr);} .ph3 .pcn{color:var(--ambr);}
+.ph4{border-top-color:var(--red);} .ph4 .pcn{color:var(--red);}
+.ph5{border-top-color:var(--purp);} .ph5 .pcn{color:var(--purp);}
+/* PHASE TABS */
+.ptabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--b2);}
+.ptabs::-webkit-scrollbar{display:none;}
+.ptab{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;padding:11px 16px;cursor:pointer;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--gr);white-space:nowrap;transition:all .2s;}
+.ptab:hover{color:var(--g2);}
+.ptab.active{color:var(--g2);border-bottom-color:var(--g);}
+.ppanel{display:none;background:var(--bg3);border:1px solid var(--b2);border-top:none;padding:22px;}
+.ppanel.active{display:block;}
+.ppg{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.ppc h4{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:10px;}
+.ppc ul{list-style:none;padding:0;}
+.ppc li{font-size:12.5px;color:var(--gr);padding:5px 0;border-bottom:1px solid var(--b3);display:flex;align-items:flex-start;gap:8px;line-height:1.55;}
+.ppc li::before{content:'\u2192';color:var(--g);flex-shrink:0;font-size:11px;margin-top:1px;}
+.ppc li strong{color:var(--w);}  .ppc li em{color:var(--teal);font-style:normal;}
+/* INDICATOR CARDS */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px;}
+.ic{background:var(--bg3);border:1px solid var(--b2);overflow:hidden;}
+.ictop{padding:13px 15px;border-bottom:1px solid var(--b2);display:flex;align-items:flex-start;gap:12px;}
+.ico{width:34px;height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;flex-shrink:0;}
+.icname{font-size:13px;font-weight:700;color:var(--w);margin-bottom:2px;}
+.ictype{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;}
+.icbody{padding:13px 15px;}
+.ir{display:flex;gap:12px;margin-bottom:9px;font-size:12px;}
+.irl{color:var(--gr2);min-width:82px;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding-top:1px;}
+.irv{color:var(--w);line-height:1.6;}
+.irv strong{color:var(--g2);}  .irv em{color:var(--teal);font-style:normal;}
+.isrc{font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--bg4);padding:6px 10px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.isrc .tk{color:var(--g);font-weight:500;}  .isrc .ss{color:var(--gr2);}
+.li .ico{background:rgba(16,185,129,.15);color:var(--green);}
+.li .ictype{color:var(--green);}
+.ci .ico{background:var(--blbg);color:var(--blue);}
+.ci .ictype{color:var(--blue);}
+.lai .ico{background:var(--rdbg);color:var(--red);}
+.lai .ictype{color:var(--red);}
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:22px;}
+.dt th{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g2);padding:10px 11px;background:var(--bg4);border-bottom:2px solid var(--g);text-align:left;}
+.dt td{padding:9px 11px;border-bottom:1px solid var(--b2);color:var(--gr);vertical-align:top;line-height:1.55;}
+.dt tr:hover td{background:var(--bg3);}
+.dt td:first-child{color:var(--w);font-weight:600;}
+.bull{color:var(--green)!important;font-weight:600;}
+.bear{color:var(--red)!important;font-weight:600;}
+.warn2{color:var(--ambr)!important;font-weight:600;}
+.neut{color:var(--blue)!important;font-weight:600;}
+.pur{color:var(--purp)!important;font-weight:600;}
+/* STEP CARDS */
+.sc-grid{display:grid;gap:10px;margin-bottom:22px;}
+.sc-card{background:var(--bg3);border:1px solid var(--b2);padding:18px 20px;display:flex;gap:16px;align-items:flex-start;}
+.sc-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--g2);flex-shrink:0;line-height:1;margin-top:-2px;opacity:.65;}
+.sc-body h4{font-size:13.5px;font-weight:700;color:var(--w);margin-bottom:6px;}
+.sc-body p{font-size:12.5px;color:var(--gr);line-height:1.75;}
+.sc-body p strong{color:var(--w);}
+.sc-body .tk{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--g);background:var(--bg4);padding:2px 6px;border-radius:2px;display:inline-block;margin:1px;}
+/* TWO COL */
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.cb{background:var(--bg3);border:1px solid var(--b2);padding:16px;}
+.cbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:10px;}
+.cb p{font-size:12.5px;color:var(--gr);line-height:1.75;}
+.cb strong{color:var(--w);}
+/* LANGUAGE SCALE */
+.lscale{display:flex;gap:2px;margin:14px 0;}
+.ls{flex:1;padding:10px 8px;text-align:center;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
+.ls1{background:rgba(16,185,129,.15);color:var(--green);}
+.ls2{background:rgba(16,185,129,.07);color:rgba(16,185,129,.7);}
+.ls3{background:var(--bg4);color:var(--gr);}
+.ls4{background:rgba(239,68,68,.07);color:rgba(239,68,68,.7);}
+.ls5{background:rgba(239,68,68,.15);color:var(--red);}
+/* CHECKLIST */
+.cl{list-style:none;padding:0;margin-bottom:18px;}
+.cl li{font-size:12.5px;color:var(--gr);padding:10px 14px;border:1px solid var(--b2);margin-bottom:5px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:all .18s;background:var(--bg3);}
+.cl li:hover{border-color:var(--b);}
+.cl li.done{border-color:var(--green);background:var(--gnbg);}
+.cl li.done .chb::after{content:'\u2713';color:#fff;font-size:9px;}
+.cl li.done .chb{background:var(--green);border-color:var(--green);}
+.chb{width:17px;height:17px;border:1px solid var(--b2);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.cht{line-height:1.6;}  .cht strong{color:var(--w);}
+/* PROGRESS */
+.pb{height:3px;background:var(--b2);margin-bottom:28px;}
+.pf{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));transition:width .5s ease;width:0%;}
+/* EXERCISES */
+.ex-card{background:var(--bg3);border:1px solid var(--b2);margin-bottom:16px;overflow:hidden;}
+.ex-hdr{padding:13px 17px;border-bottom:1px solid var(--b2);display:flex;align-items:flex-start;gap:13px;}
+.ex-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;line-height:1;background:linear-gradient(180deg,var(--g2) 0%,rgba(200,150,12,.2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0;}
+.ex-t{font-size:13px;font-weight:700;color:var(--w);margin-bottom:2px;}
+.ex-s{font-size:10.5px;color:var(--gr);}
+.ex-body{padding:17px;}
+.scb{background:var(--bg4);border-left:3px solid var(--g);padding:12px 14px;margin-bottom:13px;font-size:12px;line-height:1.8;color:var(--w);}
+.scb strong{color:var(--g2);}
+.qtxt{font-size:13px;font-weight:700;color:var(--w);margin-bottom:12px;line-height:1.5;}
+.opts{display:grid;gap:5px;}
+.opt{background:var(--bg4);border:1px solid var(--b2);padding:10px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;transition:all .18s;font-family:'Syne',sans-serif;}
+.opt:hover:not(.D){border-color:var(--b);background:var(--bg3);}
+.ol{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--g);flex-shrink:0;margin-top:1px;}
+.ot{font-size:12px;color:var(--gr);line-height:1.5;}
+.opt.C{border-color:var(--green)!important;background:var(--gnbg)!important;}
+.opt.C .ol{color:var(--green);}  .opt.C .ot{color:var(--w);}
+.opt.W{border-color:var(--red)!important;background:var(--rdbg)!important;}
+.opt.D{cursor:default;}
+.fb{display:none;margin-top:11px;padding:12px 14px;font-size:12px;line-height:1.75;}
+.fb.show{display:block;}
+.fb.ok{background:var(--gnbg);border-left:4px solid var(--green);}
+.fb.no{background:var(--rdbg);border-left:4px solid var(--red);}
+.fbh{font-weight:700;font-size:12.5px;margin-bottom:4px;}
+.fb.ok .fbh{color:var(--green);}  .fb.no .fbh{color:var(--red);}
+.oe textarea{width:100%;background:var(--bg4);border:1px solid var(--b2);color:var(--w);font-family:'Syne',sans-serif;font-size:12px;padding:11px 13px;resize:vertical;min-height:75px;outline:none;transition:border-color .2s;margin-bottom:9px;}
+.oe textarea:focus{border-color:var(--b);}
+.oe textarea::placeholder{color:var(--gr2);}
+.brv{background:transparent;color:var(--g);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;border:1px solid var(--b);padding:8px 16px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.brv:hover{background:var(--gd);color:var(--g2);}
+.ma{display:none;margin-top:11px;padding:13px 15px;background:var(--bg4);border-left:4px solid var(--g);font-size:12px;line-height:1.8;color:var(--w);}
+.ma.show{display:block;}  .ma strong{color:var(--g2);}
+/* FOOTER */
+footer{position:relative;z-index:1;padding:24px 52px;border-top:1px solid var(--b2);background:var(--bg2);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;}
+footer span{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gr2);}
+footer .hl{color:var(--g2);}
+@media(max-width:900px){
+.sidenav{display:none;} .main{margin-left:0;}
+.hero,.ps{padding-left:20px;padding-right:20px;}
+.phase-grid,.ig,.ppg,.tc{grid-template-columns:1fr;}
+}
+</style></head><body>
+
+<div class="topbar">
+<div class="tb-l"><div class="tb-dot"></div>Layer 1 Genius &mdash; Business Cycle Mastery</div>
+<div class="tb-score">Score: <span id="sc">0</span>/<span id="sp">0</span>&nbsp;<span id="pct" style="color:var(--gr)"></span></div>
+</div>
+<nav class="sidenav">
+<span class="sn-lbl">Foundation</span>
+<a class="sn-a" href="#s1"><span class="sn-n">01</span>What Is a Business Cycle</a>
+<a class="sn-a" href="#s2"><span class="sn-n">02</span>The 5 Phases Deep Dive</a>
+<a class="sn-a" href="#s3"><span class="sn-n">03</span>Currency Implications</a>
+<span class="sn-lbl">The 20 Indicators</span>
+<a class="sn-a" href="#s4"><span class="sn-n">04</span>7 Leading Indicators</a>
+<a class="sn-a" href="#s5"><span class="sn-n">05</span>6 Coincident Indicators</a>
+<a class="sn-a" href="#s6"><span class="sn-n">06</span>7 Lagging Indicators</a>
+<span class="sn-lbl">Skill Building</span>
+<a class="sn-a" href="#s7"><span class="sn-n">07</span>8 Trend-Reading Rules</a>
+<a class="sn-a" href="#s8"><span class="sn-n">08</span>Phase Transition Signals</a>
+<a class="sn-a" href="#s9"><span class="sn-n">09</span>Multi-Economy Framework</a>
+<a class="sn-a" href="#s10"><span class="sn-n">10</span>CB Language Decoder</a>
+<a class="sn-a" href="#s11"><span class="sn-n">11</span>Sunday Cycle Scan</a>
+<a class="sn-a" href="#s12"><span class="sn-n">12</span>Special Regimes</a>
+<span class="sn-lbl">Mastery Exercises</span>
+<a class="sn-a" href="#s13"><span class="sn-n">13</span>Phase ID Drills</a>
+<a class="sn-a" href="#s14"><span class="sn-n">14</span>Indicator Reading</a>
+<a class="sn-a" href="#s15"><span class="sn-n">15</span>Transition &amp; CB Language</a>
+<a class="sn-a" href="#s16"><span class="sn-n">16</span>Expert Synthesis</a>
+<span class="sn-lbl">Reference</span>
+<a class="sn-a" href="#s17"><span class="sn-n">17</span>Master Reference Cards</a>
+</nav>
+<div class="main">
+<div class="hero">
+<div class="hero-tag">Abraham &middot; Kampala &middot; Fundamental Macro Mastery</div>
+<h1>Layer 1:<br><em>Business Cycle Genius</em></h1>
+<p class="hero-sub">Every professional macro analysis starts here. This is the most complete Layer 1 reference and training system you will ever use. Master this and you have the foundation that 95% of retail traders never build. Work every section. Do every exercise. Own this.</p>
+<div class="hstats">
+<div class="hs"><span class="hsv">20</span><span class="hsl">Indicators</span></div>
+<div class="hs"><span class="hsv">5</span><span class="hsl">Cycle Phases</span></div>
+<div class="hs"><span class="hsv">12</span><span class="hsl">Skill Modules</span></div>
+<div class="hs"><span class="hsv">40+</span><span class="hsl">Exercises</span></div>
+<div class="hs"><span class="hsv">&infin;</span><span class="hsl">Edge</span></div>
+</div>
+</div>
+
+<!-- S1: FOUNDATION -->
+<div class="ps" id="s1">
+<div class="stag">Module 01 &middot; Foundation</div>
+<h2 class="sh">What Is a Business Cycle &amp; Why It Drives Currencies</h2>
+<p class="sd">Before you read a single indicator, you must understand what you are actually looking at and why business cycle divergence generates the largest, most sustained currency moves in the entire market.</p>
+<div class="mentor"><div class="mhd">Mentor</div>
+<p>A business cycle is the economy's natural rhythm of expansion and contraction. It is not random. It has identifiable phases, identifiable signals, and identifiable turning points. <strong>Every major multi-month currency move in history was driven by a business cycle divergence.</strong> The 2022 USD surge (Fed hiking into EZ stagflation), the 2013 JPY collapse (BoJ regime change), the 2020 risk-off and subsequent AUD recovery &mdash; all of it traces back to cycle analysis. This is not one tool among many. It is the engine that powers every sustained trade.</p></div>
+<div class="ib rule"><div class="ibh">The Core Mechanism</div>
+<p>Business cycle &rarr; Central bank response &rarr; Interest rate change &rarr; Real yield differential &rarr; Capital flows &rarr; Currency direction. <strong>The cycle is Step 1. Everything else is downstream of it.</strong> When two economies are at different phases, their CBs set rates at different levels and in different directions. Capital flows from the low-yield, late-cycle economy into the high-yield, expanding economy. That capital flow IS the currency move.</p></div>
+<div class="ib tip"><div class="ibh">Why Leading Indicators Give You the Edge</div>
+<p>Leading indicators move <strong>3&ndash;12 months before the economy turns.</strong> CBs react to lagging data. The financial press reacts to coincident data. <strong>You read leading data.</strong> This means you see the cycle turning before the CB acts on it, before headlines confirm it, and before the crowd positions for it. That structural time advantage is the edge Layer 1 gives you over everyone who reads only the GDP headline.</p></div>
+</div>
+
+<!-- S2: 5 PHASES -->
+<div class="ps" id="s2">
+<div class="stag">Module 02 &middot; Foundation</div>
+<h2 class="sh">The 5 Phases &mdash; Complete Data Fingerprints</h2>
+<p class="sd">Every economy is always in one of these phases. Your first job every Sunday is to place each economy on this clock. The phase determines your directional bias. Click each tab for the complete data fingerprint, CB behaviour, and currency action.</p>
+<div class="phase-grid">
+<div class="pc ph1" onclick="showP('rec',this)"><div class="pcn">Phase 01</div><div class="pch">Recovery / Trough</div><div class="pcs">Post-recession bottom. Best long entry in the entire cycle.</div></div>
+<div class="pc ph2" onclick="showP('exp',this)"><div class="pcn">Phase 02</div><div class="pch">Mid Expansion</div><div class="pcs">Strongest growth. CB hiking. Currency bull run.</div></div>
+<div class="pc ph3" onclick="showP('peak',this)"><div class="pcn">Phase 03</div><div class="pch">Late Expansion / Peak</div><div class="pcs">Growth topping out. Highest R:R short entry.</div></div>
+<div class="pc ph4" onclick="showP('con',this)"><div class="pcn">Phase 04</div><div class="pch">Contraction</div><div class="pcs">GDP falling. CB cutting. Ride the short.</div></div>
+<div class="pc ph5" onclick="showP('stag',this)"><div class="pcn">Phase 05</div><div class="pch">Stagflation</div><div class="pcs">Contraction + rising inflation. No clean trade.</div></div>
+</div>
+<div class="ptabs">
+<button class="ptab active" onclick="showP('rec',this)">Recovery</button>
+<button class="ptab" onclick="showP('exp',this)">Mid Expansion</button>
+<button class="ptab" onclick="showP('peak',this)">Peak</button>
+<button class="ptab" onclick="showP('con',this)">Contraction</button>
+<button class="ptab" onclick="showP('stag',this)">Stagflation</button>
+</div>
+<div class="ppanel active" id="ph-rec">
+<div class="ppg">
+<div class="ppc"><h4>Data Fingerprint</h4><ul>
+<li><strong>PMI:</strong> Just crossed above 50 from deep lows (e.g. 43&rarr;51). New Orders sub-index rising fastest.</li>
+<li><strong>GDP:</strong> First positive quarter, or losses sharply decelerating (&minus;1.4%, &minus;0.7%, &minus;0.1%).</li>
+<li><strong>Unemployment:</strong> Still very high (6&ndash;10%) but <em>stabilising</em> &mdash; rate of increase stopping.</li>
+<li><strong>CPI:</strong> Below target (0.5&ndash;1.5%), no inflation pressure whatsoever.</li>
+<li><strong>CB Rate:</strong> At the floor (0&ndash;0.5%). QE still possibly active or just ended.</li>
+<li><strong>Consumer Confidence:</strong> Still low but rising from the absolute bottom.</li>
+<li><strong>Building Permits:</strong> First positive month after prolonged collapse.</li>
+<li><strong>Credit Spreads:</strong> Tightening from extreme wides. Financial stress easing.</li>
+</ul></div>
+<div class="ppc"><h4>CB Behaviour &amp; Currency Action</h4><ul>
+<li><strong>CB stance:</strong> Still on hold at floor. First hike 6&ndash;18 months away. Language turns cautiously optimistic.</li>
+<li><strong>Currency direction:</strong> <em>BULLISH &mdash; ACCUMULATE LONGS.</em> Best entry in the entire cycle before the crowd recognises it.</li>
+<li><strong>Why it works:</strong> Market begins pricing FUTURE hike expectations. Currency appreciates before CB moves.</li>
+<li><strong>Build position:</strong> Start small. Add as each confirming print arrives. 2&ndash;3 months of PMI above 50 = add.</li>
+<li><strong>Exit signal:</strong> PMI peaks and falls for 3 months. Confidence falls from high. Yield curve flattens.</li>
+<li><strong>Historical:</strong> US April&ndash;Dec 2020. EZ early 2024. Japan 2013 (Abenomics start).</li>
+</ul></div></div></div>
+
+<div class="ppanel" id="ph-exp">
+<div class="ppg">
+<div class="ppc"><h4>Data Fingerprint</h4><ul>
+<li><strong>PMI:</strong> 53&ndash;58 and rising, or elevated for 3+ consecutive months.</li>
+<li><strong>GDP:</strong> Above trend (+2.5&ndash;4%+). Consistent for 2+ quarters.</li>
+<li><strong>Unemployment:</strong> Falling steadily from cycle high. Approaching but not yet at historic lows.</li>
+<li><strong>CPI:</strong> Rising but manageable (2&ndash;3.5%). Building but not yet a crisis.</li>
+<li><strong>CB Rate:</strong> <em>Actively hiking</em> &mdash; multiple consecutive meetings.</li>
+<li><strong>Consumer Confidence:</strong> High and still rising or stable at high level.</li>
+<li><strong>Building Permits:</strong> Elevated. Consistent construction activity.</li>
+<li><strong>Credit Spreads:</strong> Tight. No financial system stress whatsoever.</li>
+</ul></div>
+<div class="ppc"><h4>CB Behaviour &amp; Currency Action</h4><ul>
+<li><strong>CB stance:</strong> Actively hiking. Language strongly hawkish. "Committed to returning inflation to target."</li>
+<li><strong>Currency direction:</strong> <em>STRONGLY BULLISH &mdash; FULL SIZE.</em> This is the trend phase. Ride it.</li>
+<li><strong>Why it works:</strong> Rising real yield differential attracts persistent capital inflows. Every hike strengthens the case.</li>
+<li><strong>Trade management:</strong> Trail stop below recent swing lows. Add on pullbacks that hold structure.</li>
+<li><strong>Exit signal:</strong> PMI falls for 3 consecutive months from its peak. CB goes on hold for 2+ meetings.</li>
+<li><strong>Historical:</strong> US 2022 (DXY 89&rarr;115). EZ mid-2023. Australia 2022. UK 2022&ndash;2023.</li>
+</ul></div></div></div>
+
+<div class="ppanel" id="ph-peak">
+<div class="ppg">
+<div class="ppc"><h4>Data Fingerprint</h4><ul>
+<li><strong>PMI:</strong> Still above 50 but <em>falling for 3+ consecutive months</em> from its peak (58&rarr;54&rarr;51).</li>
+<li><strong>GDP:</strong> Still positive but decelerating each quarter (+4%&rarr;+2.8%&rarr;+1.6%).</li>
+<li><strong>Unemployment:</strong> At record or near-record low. <em>First tick up</em> is the most important signal.</li>
+<li><strong>CPI:</strong> At or near peak. Starting to decelerate or plateau.</li>
+<li><strong>CB Rate:</strong> At cycle high. <em>ON HOLD for 2+ consecutive meetings.</em></li>
+<li><strong>Consumer Confidence:</strong> High level but <em>falling from all-time high.</em></li>
+<li><strong>Yield Curve:</strong> Flat to slightly inverted (&minus;0.2% range).</li>
+<li><strong>Credit Spreads:</strong> Drifting wider from tight levels.</li>
+</ul></div>
+<div class="ppc"><h4>CB Behaviour &amp; Currency Action</h4><ul>
+<li><strong>CB stance:</strong> On hold. Language shifting hawkish&rarr;neutral. "Balanced risks." Monitoring data carefully.</li>
+<li><strong>Currency direction:</strong> <em>AT PEAK &mdash; REDUCE LONGS, BUILD SHORTS.</em> Highest R:R short entry in the entire cycle.</li>
+<li><strong>Why it works:</strong> Market prices future cuts before they happen. Real yield differential peaks and narrows.</li>
+<li><strong>Entry:</strong> Short when PMI falling 3+ months AND confidence falling AND yield curve flat/inverted. 3 of 5 peak signals = initiate.</li>
+<li><strong>Risk:</strong> Currency can stay near peak 3&ndash;6 months. Size accordingly and be patient.</li>
+<li><strong>Historical:</strong> US mid-2023. UK 2022. EZ late 2023. Canada 2023.</li>
+</ul></div></div></div>
+
+<div class="ppanel" id="ph-con">
+<div class="ppg">
+<div class="ppc"><h4>Data Fingerprint</h4><ul>
+<li><strong>PMI:</strong> Below 50, falling or stuck below 48 for multiple months.</li>
+<li><strong>GDP:</strong> Negative. Two consecutive negative quarters = technical recession.</li>
+<li><strong>Unemployment:</strong> Rising visibly (lags 2&ndash;4 months after recession starts).</li>
+<li><strong>CPI:</strong> Falling sharply as demand collapses. Moving below CB target.</li>
+<li><strong>CB Rate:</strong> <em>Actively cutting</em> &mdash; multiple consecutive meetings.</li>
+<li><strong>Consumer Confidence:</strong> Low and still falling.</li>
+<li><strong>Building Permits:</strong> Down significantly from peak.</li>
+<li><strong>Credit Spreads:</strong> Wide and widening. Financial stress elevated.</li>
+</ul></div>
+<div class="ppc"><h4>CB Behaviour &amp; Currency Action</h4><ul>
+<li><strong>CB stance:</strong> Aggressively cutting. Fully dovish. Discussing QE or other unconventional tools.</li>
+<li><strong>Currency direction:</strong> <em>STRONGLY BEARISH &mdash; FULL SHORT SIZE.</em> Short vs. currencies in expansion.</li>
+<li><strong>Hold criteria:</strong> Keep the short while: (a) PMI still below 50, (b) CB still cutting, (c) confidence still falling.</li>
+<li><strong>Trough watch:</strong> GDP losses decelerating + PMI rising from low for 3 months = cover shorts, build longs.</li>
+<li><strong>Duration:</strong> Typically 6&ndash;18 months sustained weakness. Do not exit on one good print.</li>
+<li><strong>Historical:</strong> US 2008&ndash;2009. EZ 2022&ndash;2023 (mild). UK 2023. Germany 2023&ndash;2024.</li>
+</ul></div></div></div>
+
+<div class="ppanel" id="ph-stag">
+<div class="ppg">
+<div class="ppc"><h4>Data Fingerprint</h4><ul>
+<li><strong>PMI:</strong> Below 50 (contracting economy).</li>
+<li><strong>GDP:</strong> Negative or near-zero.</li>
+<li><strong>Unemployment:</strong> Rising.</li>
+<li><strong>CPI:</strong> <em>Above target DESPITE contraction</em> (typically supply-shock driven: energy, food, logistics).</li>
+<li><strong>CB Rate:</strong> Hiking DESPITE recession, or frozen in impossible position.</li>
+<li><strong>Cause:</strong> Almost always a supply shock &mdash; oil crisis, energy war, supply chain collapse.</li>
+<li><strong>Examples:</strong> US 1973&ndash;1975. EZ 2022 (energy). UK 2022&ndash;2023. Germany 2023.</li>
+</ul></div>
+<div class="ppc"><h4>CB Behaviour &amp; Currency Action</h4><ul>
+<li><strong>CB dilemma:</strong> Cutting helps growth but worsens inflation. Hiking helps inflation but deepens recession. Most CBs hike slowly or hold, prioritising inflation credibility.</li>
+<li><strong>Currency direction:</strong> <em>NO CLEAN DIRECTIONAL TRADE.</em> Conflicting forces create erratic volatility with no sustained trend.</li>
+<li><strong>Reduce all sizes by 50%+.</strong> Do not force a directional thesis.</li>
+<li><strong>What DOES work:</strong> Long Gold (real yields crushed). Long energy exporters (NOK, CAD) if energy-driven stagflation.</li>
+<li><strong>Exit signal:</strong> Supply shock resolves AND inflation falls convincingly back to target zone.</li>
+<li><strong>Never:</strong> Use standard cycle framework in stagflation. Identify the regime first, then adapt.</li>
+</ul></div></div></div>
+</div>
+
+<!-- S3: CURRENCY IMPLICATIONS -->
+<div class="ps" id="s3">
+<div class="stag">Module 03 &middot; Foundation</div>
+<h2 class="sh">Currency Implications by Phase &mdash; Master Table</h2>
+<table class="dt">
+<tr><th>Phase</th><th>PMI Signal</th><th>CB Action</th><th>Real Yield Trend</th><th>Currency Direction</th><th>Trade</th></tr>
+<tr><td>Recovery/Trough</td><td class="bull">Crossing above 50 &uarr;</td><td class="neut">On hold, QE ending</td><td class="bull">Rising from floor</td><td class="bull">BULLISH &mdash; accumulate longs</td><td>Long vs contraction pair</td></tr>
+<tr><td>Mid Expansion</td><td class="bull">53&ndash;58, rising &uarr;</td><td class="bull">Actively hiking</td><td class="bull">Rising strongly</td><td class="bull">STRONGLY BULLISH &mdash; full size</td><td>Long, ride the hiking cycle</td></tr>
+<tr><td>Late Expansion/Peak</td><td class="warn2">Above 50 but falling &darr;</td><td class="warn2">On hold, peak rate</td><td class="warn2">Peaking, narrowing</td><td class="warn2">AT PEAK &mdash; reduce longs, build shorts</td><td>Short entry, highest R:R</td></tr>
+<tr><td>Contraction</td><td class="bear">Below 50, falling &darr;</td><td class="bear">Actively cutting</td><td class="bear">Falling sharply</td><td class="bear">STRONGLY BEARISH &mdash; full short</td><td>Short vs expansion pair</td></tr>
+<tr><td>Stagflation</td><td class="bear">Below 50 &darr;</td><td class="pur">Forced hike or hold</td><td class="pur">Deeply negative</td><td class="pur">NO CLEAN TRADE &mdash; 50% size</td><td>Long Gold, Long NOK/CAD</td></tr>
+</table>
+<div class="ib rule"><div class="ibh">The Maximum Divergence Rule</div>
+<p>Always find the pair with the <strong>greatest cycle phase separation.</strong> Mid Expansion vs. Contraction is the cleanest, highest-conviction bilateral trade available. Never trade two economies both at Late Expansion &mdash; the divergence is thin, the noise large, the move small. The wider the phase gap, the stronger the signal, the larger the appropriate position size.</p></div>
+</div>
+
+<!-- S4: LEADING INDICATORS -->
+<div class="ps" id="s4">
+<div class="stag">Module 04 &middot; The 20 Indicators</div>
+<h2 class="sh">The 7 Leading Indicators &mdash; Your Primary Trading Signals</h2>
+<p class="sd">Leading indicators move 3&ndash;12 months before the economy. These tell you where the cycle is going. You position on leading indicators. Coincident indicators merely confirm what you already knew. The crowd reacts to coincident data &mdash; you were already in.</p>
+<div class="mentor"><div class="mhd">Mentor</div>
+<p>The most important rule about leading indicators: <strong>direction beats level, always.</strong> A PMI of 49.2 rising from 43 is more bullish than a PMI of 55 falling from 60. The direction tells you where the economy is going. The level tells you where it is. You are trading the future, not the present. Read the direction first. Every time.</p></div>
+<div class="ig">
+
+<div class="ic li">
+<div class="ictop"><div class="ico">PMI</div><div><div class="icname">PMI Composite &amp; New Orders Sub-index</div><div class="ictype">Leading &middot; 1&ndash;3 Month Lead &middot; Priority #1</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Business survey diffusion index. Above 50 = expansion. Below 50 = contraction. <strong>The New Orders sub-index is the most forward-looking component of any PMI</strong> &mdash; it shows future production demand before it appears anywhere else in the data.</div></div>
+<div class="ir"><div class="irl">Thresholds</div><div class="irv"><em>50</em> = crossover. <em>Above 55</em> = strong expansion. <em>Below 45</em> = meaningful contraction. A 49 rising from 44 beats a 54 falling from 60.</div></div>
+<div class="ir"><div class="irl">Reading rule</div><div class="irv">Require <strong>2&ndash;3 consecutive months</strong> before calling a trend. Always check New Orders vs. Headline: if New Orders is below 50 while headline is above 50, the headline will follow lower within 2&ndash;3 months.</div></div>
+<div class="ir"><div class="irl">CB implication</div><div class="irv">PMI below 50 for 3 months = CB will discuss rate cuts within 2 meetings. PMI above 55 for 3 months = CB thinking about hiking pace.</div></div>
+<div class="isrc"><span class="tk">TradingEconomics.com (all countries) &middot; FRED:ISM_MAN_PMI (US)</span><span class="ss">Released: 1st business day each month</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">YC</div><div><div class="icname">Yield Curve (2yr/10yr Spread)</div><div class="ictype">Leading &middot; 12&ndash;18 Month Lead &middot; Priority #2</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">The 2yr minus 10yr government yield spread. The bond market's collective forecast of future conditions and CB rate path. <strong>Inversion = bond market pricing recession and aggressive cuts within 12&ndash;18 months.</strong> Has predicted every US recession since 1970.</div></div>
+<div class="ir"><div class="irl">Thresholds</div><div class="irv"><em>Steep +1.5%+</em> = healthy expansion. <em>Flat 0&ndash;+0.5%</em> = late cycle. <em>Inverted (negative)</em> = recession signal. <em>How it uninverts matters:</em> bull steepening (short end falling) = Fed cutting aggressively = bear USD.</div></div>
+<div class="ir"><div class="irl">Build it</div><div class="irv">Type <strong>TVC:US02Y-TVC:US10Y</strong> directly into TradingView search bar for a live spread chart. Repeat for any country using country code prefix.</div></div>
+<div class="isrc"><span class="tk">TVC:US02Y&minus;TVC:US10Y &middot; TVC:DE02Y&minus;TVC:DE10Y &middot; TVC:GB02Y&minus;TVC:GB10Y</span><span class="ss">Live on TradingView</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">CS</div><div><div class="icname">HY &amp; IG Credit Spreads</div><div class="ictype">Leading &middot; 3&ndash;6 Month Lead &middot; Earliest Financial Stress Signal</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Yield premium corporate bonds pay over government bonds. Compensates investors for default risk. <strong>Rising spreads = financial system pricing increased corporate default probability.</strong> Real money, real risk &mdash; not a survey.</div></div>
+<div class="ir"><div class="irl">Thresholds</div><div class="irv"><em>HY below 350bp</em> = healthy. <em>350&ndash;500bp</em> = stress building. <em>500&ndash;700bp</em> = contraction signal. <em>Above 800bp</em> = crisis. 2008 peak: 1,800bp. COVID peak: 1,100bp.</div></div>
+<div class="ir"><div class="irl">Why it leads</div><div class="irv">Wider borrowing costs &rarr; companies cut capex and hiring immediately &rarr; employment falls in 2&ndash;4 months &rarr; GDP falls in 3&ndash;6 months. Credit moves faster than any government data release.</div></div>
+<div class="isrc"><span class="tk">FRED:BAMLH0A0HYM2 (US HY) &middot; FRED:BAMLC0A0CM (US IG) &middot; FRED:BAMLHE00EHYIOAS (EZ HY)</span><span class="ss">Free via TradingView FRED prefix</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">CC</div><div><div class="icname">Consumer Confidence Index</div><div class="ictype">Leading &middot; 3&ndash;6 Month Lead on Spending</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Survey of household expectations about personal finances and economy. Changes in sentiment <strong>lead actual consumer spending by 3&ndash;6 months.</strong> Consumer spending = 65&ndash;70% of GDP in most developed economies.</div></div>
+<div class="ir"><div class="irl">Thresholds</div><div class="irv">Rate of change more important than level. A 35-point fall in 6 months = spending contraction signal regardless of absolute level. Conference Board (US): above 100 = optimistic. GfK (UK/EZ): negative readings are common, watch direction.</div></div>
+<div class="ir"><div class="irl">Lead-lag</div><div class="irv">Confidence falls &rarr; Retail sales falls 2&ndash;3 months later &rarr; GDP falls 3&ndash;6 months later. You have a 6-month GDP forecast the moment confidence data drops.</div></div>
+<div class="isrc"><span class="tk">FRED:UMCSENT (UMich) &middot; FRED:CONCCONF (Conference Board) &middot; TradingEconomics (global)</span><span class="ss">Monthly</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">BP</div><div><div class="icname">Building Permits &amp; Housing Starts</div><div class="ictype">Leading &middot; 6&ndash;18 Month Lead on GDP</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Construction permits issued and housing starts. Mortgage-rate sensitive &mdash; responds immediately to rate hike impact. <strong>Each permit represents 6&ndash;18 months of future employment, materials demand, and income.</strong> A 12&ndash;18 month GDP forecast in a single number.</div></div>
+<div class="ir"><div class="irl">Cascade</div><div class="irv">Rate hike &rarr; Mortgage rates rise &rarr; Permits fall (Month 2&ndash;3) &rarr; Starts fall (Month 4&ndash;6) &rarr; Construction jobs fall (Month 7&ndash;9) &rarr; Materials demand fall (Month 10&ndash;12) &rarr; GDP falls (Month 15&ndash;18).</div></div>
+<div class="ir"><div class="irl">Signal threshold</div><div class="irv">A 20%+ decline from peak over 6 months = significant GDP headwind in 9&ndash;18 months. The 2006 US permits collapse (&minus;30% YoY) predicted the 2008 crisis two years in advance.</div></div>
+<div class="isrc"><span class="tk">FRED:PERMIT (US Building Permits) &middot; FRED:HOUST (Housing Starts)</span><span class="ss">Released: ~3rd week each month</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">M2</div><div><div class="icname">Money Supply Growth (M2)</div><div class="ictype">Leading &middot; 6&ndash;18 Month Lead on Inflation</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Total money supply: cash, demand deposits, savings, money market funds. Rapid M2 growth = future inflation and activity surge. The 2021 US M2 surge (+27% YoY) predicted the 2022 inflation crisis 12&ndash;18 months ahead.</div></div>
+<div class="ir"><div class="irl">Threshold</div><div class="irv">Above 10% YoY sustained for 6+ months = inflation risk building materially. M2 contracting (rare) = deflationary pressure, CB likely behind the curve on cuts. Most useful at extremes.</div></div>
+<div class="ir"><div class="irl">Currency</div><div class="irv">Rapid M2 expansion = currency debasement = bearish in real terms despite possible nominal rate support. Especially critical during QE programs which expand M2 rapidly.</div></div>
+<div class="isrc"><span class="tk">FRED:M2SL (US M2) &middot; ECB SDW for EZ M3</span><span class="ss">Released monthly</span></div>
+</div></div>
+
+<div class="ic li">
+<div class="ictop"><div class="ico">EQ</div><div><div class="icname">Equity Market &amp; Breadth</div><div class="ictype">Leading &middot; 3&ndash;9 Month Lead &middot; Use with Caution</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Equity markets price economic conditions 6&ndash;9 months ahead. Sustained bear market (&minus;20%+) historically precedes recessions. <strong>Breadth (% stocks above 200-day MA, advance-decline line) more reliable than headline index alone.</strong></div></div>
+<div class="ir"><div class="irl">Be cautious</div><div class="irv">Markets have predicted 9 of the last 5 recessions. Equities can fall 20% for non-economic reasons. <strong>Always confirm equity signals with PMI and credit spreads before treating as economic signals.</strong></div></div>
+<div class="ir"><div class="irl">Sector rotation</div><div class="irv">Defensives (utilities, staples, healthcare) outperforming cyclicals (discretionary, tech, materials) = institutional money repositioning for slowdown even before the index falls.</div></div>
+<div class="isrc"><span class="tk">TradingView: SPX, VIX, sector ETFs &middot; Stockcharts.com for breadth data</span><span class="ss">Real-time</span></div>
+</div></div>
+
+</div><!-- end ig -->
+</div><!-- s4 -->
+
+<!-- S5: COINCIDENT INDICATORS -->
+<div class="ps" id="s5">
+<div class="stag">Module 05 &middot; The 20 Indicators</div>
+<h2 class="sh">The 6 Coincident Indicators &mdash; Confirmation Layer</h2>
+<p class="sd">Coincident indicators tell you where the economy is right now. They confirm your leading read was correct. You already positioned on leading indicators. The coincident data gives you conviction to hold and justifies your thesis to any doubter.</p>
+<div class="ig">
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">GDP</div><div><div class="icname">Gross Domestic Product</div><div class="ictype">Coincident &middot; Most Watched &middot; Quarterly</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Total output: C (Consumer) + I (Investment) + G (Government) + NX (Net Exports). <strong>Always read composition, not just the headline.</strong> Who drove the growth tells you if it is sustainable.</div></div>
+<div class="ir"><div class="irl">Composition rules</div><div class="irv">GDP beat driven by inventory build = <strong>fade it</strong> (next quarter will drag). Beat driven by consumer + investment = sustain. Miss where consumer spending held = less bad than the headline implies.</div></div>
+<div class="ir"><div class="irl">Rate of change</div><div class="irv">&minus;0.2%, &minus;0.9%, &minus;1.4% (worsening) = stay short aggressively. &minus;1.4%, &minus;0.9%, &minus;0.2% (decelerating losses) = begin covering shorts. The second-order trend is the most actionable signal.</div></div>
+<div class="isrc"><span class="tk">BEA.gov (US) &middot; Eurostat (EZ) &middot; TradingEconomics.com (all countries)</span><span class="ss">Quarterly: Advance, Preliminary, Final</span></div>
+</div></div>
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">NFP</div><div><div class="icname">Non-Farm Payrolls &amp; Employment</div><div class="ictype">Coincident &middot; Highest Single-Event Market Impact</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Jobs added or lost excluding agricultural. US NFP = single highest market-impact data release in global macro. Major miss or beat = 100&ndash;200 pip moves in minutes.</div></div>
+<div class="ir"><div class="irl">How to read</div><div class="irv"><strong>Use 3-month moving average.</strong> Single months are routinely revised by 50&ndash;100K+. Three consecutive misses &gt; any single print. Always check participation rate and hours worked alongside the headline job count.</div></div>
+<div class="ir"><div class="irl">Cycle signal</div><div class="irv">200K+/month consistently = mid expansion. 100&ndash;200K = slowing. Below 100K = late cycle. Negative = recession confirmed. Compare vs. expectation &mdash; the surprise direction matters as much as the absolute number.</div></div>
+<div class="isrc"><span class="tk">FRED:PAYEMS &middot; BLS.gov for full detail</span><span class="ss">1st Friday each month, 8:30 AM EST</span></div>
+</div></div>
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">IP</div><div><div class="icname">Industrial Production &amp; Capacity Utilisation</div><div class="ictype">Coincident &middot; Key for Manufacturing Economies</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Output of factories, mines, and utilities. Critical for Germany, Japan, South Korea where IP is a direct GDP proxy. Germany's industrial production is practically a leading indicator for EZ-wide GDP.</div></div>
+<div class="ir"><div class="irl">Reading rule</div><div class="irv">9+ consecutive months of declining IP with worsening rate = structural manufacturing recession. YoY above +3% = robust. YoY negative for 6+ months = recession confirmed.</div></div>
+<div class="ir"><div class="irl">Capacity utilisation</div><div class="irv">Above 80% = near-maximum capacity = inflationary = CB will hike. Below 75% = significant slack = CB can hold or cut. Released alongside IP most economies.</div></div>
+<div class="isrc"><span class="tk">FRED:INDPRO (US) &middot; FRED:CAPUTLB50001SQ (US Capacity Util) &middot; Eurostat for EZ</span><span class="ss">~15th of each month</span></div>
+</div></div>
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">RS</div><div><div class="icname">Retail Sales</div><div class="ictype">Coincident &middot; Consumer Demand Proxy</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Monthly change in retail store sales. Consumer spending = 65&ndash;70% of GDP, making this one of the most direct GDP proxies available. Use core (ex-autos, ex-gas) to remove volatile categories.</div></div>
+<div class="ir"><div class="irl">Lead-lag</div><div class="irv">Retail sales lags consumer confidence by 2&ndash;3 months. You got the signal from confidence weeks ago. This either confirms (hold) or contradicts (reassess). Rare for it to contradict a sustained confidence signal.</div></div>
+<div class="ir"><div class="irl">Revisions</div><div class="irv">Three consecutive downward revisions = the data is softer than initial prints suggest, even if each revised number is still positive. Watch revision direction across 3 months.</div></div>
+<div class="isrc"><span class="tk">FRED:RSAFS (Advance Retail Sales, US)</span><span class="ss">~2nd week of each month</span></div>
+</div></div>
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">PCE</div><div><div class="icname">Personal Income, Spending &amp; PCE Deflator</div><div class="ictype">Coincident &middot; Fed&apos;s Preferred Inflation Gauge</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Personal income = what households earn. Personal spending = what they spend. <strong>PCE deflator = Fed's preferred inflation gauge.</strong> Core PCE 2% is the Fed's explicit target. Most important single release for Fed policy forecasting.</div></div>
+<div class="ir"><div class="irl">PCE rule</div><div class="irv">Core PCE above 2% and rising = hawkish. At 2% stable = neutral. Falling below 2% = CB discusses cuts. Core PCE above 3.5% = Fed must hike more than priced = USD bullish surprise risk.</div></div>
+<div class="ir"><div class="irl">Income vs spending</div><div class="irv">Income rising but spending falling = households saving, cautious = bearish growth outlook. Income flat but spending rising = savings drawdown = unsustainable consumption boom.</div></div>
+<div class="isrc"><span class="tk">FRED:PCE &middot; FRED:DPCCRG3M086SBEA (Core PCE YoY)</span><span class="ss">Last business day each month</span></div>
+</div></div>
+
+<div class="ic ci">
+<div class="ictop"><div class="ico">TB</div><div><div class="icname">Trade Balance &amp; Current Account</div><div class="ictype">Coincident &middot; Structural Currency Pressure</div></div></div>
+<div class="icbody">
+<div class="ir"><div class="irl">Measures</div><div class="irv">Difference between exports and imports (trade balance) and the broader flow including investment income (current account). Widening deficit = country spending more than it earns abroad = structural demand for foreign currency = structural headwind.</div></div>
+<div class="ir"><div class="irl">Cycle connection</div><div class="irv">Mid expansion = imports surge (consumers buying foreign goods) = trade deficit widens. Contraction = imports fall = deficit narrows. A widening deficit AND currency above PPP = doubly vulnerable to reversion.</div></div>
+<div class="ir"><div class="irl">Commodity FX</div><div class="irv">For AUD, CAD, NOK: current account is commodity-price driven. China PMI + iron ore moves AUD's current account more than RBA decisions on many months.</div></div>
+<div class="isrc"><span class="tk">FRED:BOPGSTB (US Trade Balance) &middot; TradingEconomics for all countries</span><span class="ss">~5 weeks after month end</span></div>
+</div></div>
+
+</div><!-- end ig -->
+</div><!-- s5 -->
+
+<!-- S6: LAGGING INDICATORS -->
+<div class="ps" id="s6">
+<div class="stag">Module 06 &middot; The 20 Indicators</div>
+<h2 class="sh">The 7 Lagging Indicators &mdash; What CBs React To</h2>
+<p class="sd">Lagging indicators confirm a trend already underway. They are what CBs use to justify decisions &mdash; reacting to what has already happened. Understanding the lag explains why CBs always seem behind the curve, and why that gap is your structural edge.</p>
+<div class="mentor"><div class="mhd">Mentor &mdash; Critical Warning</div>
+<p>The most expensive mistake in macro trading is using lagging indicators to make <em>entry decisions.</em> Unemployment at 3.9% does not mean the economy is healthy right now. It means it was healthy <strong>3&ndash;6 months ago.</strong> By the time unemployment rises visibly, the currency has already fallen substantially. <strong>Lagging indicators explain the past. Leading indicators predict the future. Trade the future.</strong></p></div>
+<table class="dt">
+<tr><th>Indicator</th><th>What It Confirms</th><th>Typical Lag</th><th>CB Use</th><th>Trader Rule</th></tr>
+<tr><td>Unemployment Rate</td><td class="bear">Recession already underway</td><td>3&ndash;6 months after recession starts</td><td>Primary mandate metric. CB cuts when this rises above comfort.</td><td>NEVER use for entry. Only assess how much CB cutting pressure exists.</td></tr>
+<tr><td>CPI Headline</td><td class="warn2">Inflation built 6&ndash;12 months ago</td><td>6&ndash;12 months</td><td>Primary inflation mandate metric. Above target = hawkish. Below = dovish.</td><td>3 consecutive falls from peak = hiking cycle ending. Begin reducing longs.</td></tr>
+<tr><td>Core PCE / Core CPI</td><td class="warn2">Underlying inflation trend</td><td>6&ndash;12 months</td><td>Fed's PREFERRED measure. ECB watches Core HICP. Most important CB input.</td><td>Below 2.5% and falling = pivot approaching within 2&ndash;3 meetings.</td></tr>
+<tr><td>Average Hourly Earnings</td><td class="warn2">Labour market tightness 3&ndash;6 months prior</td><td>3&ndash;6 months</td><td>Key inflation input. Wages above 4% = services inflation stays elevated.</td><td>Wages high but PMI falling = late expansion. Wait for wages to cool before declaring inflation won.</td></tr>
+<tr><td>CB Policy Rate</td><td class="neut">Economic conditions 12&ndash;18 months prior</td><td>12&ndash;18 months transmission</td><td>The policy tool. Every past hike still flowing through the economy.</td><td>All past hikes are still in the pipeline. Never underestimate cumulative tightening effects.</td></tr>
+<tr><td>Business Inventories</td><td class="neut">Past sales trends and production decisions</td><td>2&ndash;4 months</td><td>Inventory-to-sales ratio rising = businesses caught with unsold stock.</td><td>GDP beat driven by inventory build = FADE the rally. Next quarter = production cuts drag GDP lower.</td></tr>
+<tr><td>C&amp;I Loans Outstanding</td><td class="neut">Past credit demand and conditions</td><td>3&ndash;6 months</td><td>Credit contraction = economic activity will slow. Expansion = activity building.</td><td>When C&amp;I loans contract despite rates at the floor = debt-deflation trap risk.</td></tr>
+</table>
+</div>
+
+<!-- S7: TREND READING -->
+<div class="ps" id="s7">
+<div class="stag">Module 07 &middot; Skill Building</div>
+<h2 class="sh">The 8 Trend-Reading Rules &mdash; Extract Signal from Noise</h2>
+<p class="sd">Reading one indicator print means nothing. Reading a trend correctly generates tradeable signals. These 8 rules govern how you extract a clean directional verdict from noisy, revised, seasonally adjusted economic data.</p>
+<div class="sc-grid">
+<div class="sc-card"><div class="sc-num">01</div><div class="sc-body"><h4>Direction beats level &mdash; always</h4><p>A PMI of 49.2 rising from 43 over 5 months is more bullish than a PMI of 55 falling from 60. <strong>Direction tells you where the economy is going. Level tells you where it is.</strong> You trade the future, not the present. Every indicator must be assessed for direction before level. No exceptions.</p></div></div>
+<div class="sc-card"><div class="sc-num">02</div><div class="sc-body"><h4>Require 2&ndash;3 consecutive prints before calling a trend</h4><p>A single data point is not a trend. One weak NFP could be a strike, snowstorm, or calendar quirk. One hot CPI could be a base effect. <strong>Two consecutive prints in the same direction = a developing trend.</strong> Three = a confirmed trend. This single rule saves you from dozens of head-fake entries every year.</p></div></div>
+<div class="sc-card"><div class="sc-num">03</div><div class="sc-body"><h4>Smooth volatile series with 3&ndash;6 month moving averages</h4><p>NFP, retail sales, and industrial production have enormous month-to-month volatility from seasonal quirks, weather, and sampling noise. <strong>Plot a 3-month moving average over any volatile monthly series before drawing conclusions.</strong> Prints of +280K, &minus;40K, +190K look chaotic raw; the 3-month average shows a clean deceleration from +210K to +143K &mdash; that is the real signal. Chart it. Do not read a table.</p></div></div>
+<div class="sc-card"><div class="sc-num">04</div><div class="sc-body"><h4>Watch the rate of change OF the rate of change</h4><p>This is the single highest-value trend-reading skill. <strong>&minus;0.2%, &minus;0.9%, &minus;1.4% (worsening) is a completely different trade from &minus;1.4%, &minus;0.9%, &minus;0.2% (decelerating losses = trough forming)</strong>, even though both show three negative GDP prints. The first says stay short aggressively. The second says start covering and building longs. Always ask: is the deterioration or improvement itself accelerating or decelerating?</p></div></div>
+<div class="sc-card"><div class="sc-num">05</div><div class="sc-body"><h4>Use YoY for big picture, recent months annualised for the turn</h4><p>Year-over-year smooths seasonal distortions. Use it for big-picture trend assessment. But if inflation was high 12 months ago, this year's YoY will look artificially low (base effect). <strong>Always check the last 3 months annualised alongside YoY.</strong> If YoY says inflation is falling but recent months annualised show reacceleration, the YoY headline will catch up &mdash; and you are seeing it first.</p></div></div>
+<div class="sc-card"><div class="sc-num">06</div><div class="sc-body"><h4>Confirm with breadth &mdash; multiple indicators together</h4><p>One indicator turning is a clue. <strong>Three to five indicators turning together in the same direction at the same time is a verdict.</strong> PMI alone falling = monitor only. PMI + confidence + building permits + credit spreads all turning negative = high-conviction contraction thesis. The more independent signals aligning, the higher the conviction and the larger the appropriate position size.</p></div></div>
+<div class="sc-card"><div class="sc-num">07</div><div class="sc-body"><h4>Watch whether revisions confirm or fight the move</h4><p>Most economic releases are revised in subsequent months. <strong>Consistent revision direction is information.</strong> Three consecutive NFP prints revised down (e.g. 180K&rarr;140K, 165K&rarr;120K, 190K&rarr;145K) tells you the labour market is softer than initial prints showed &mdash; even if each revised number is still positive. Revisions consistently moving in one direction = the data is quietly confirming a trend the headlines obscured.</p></div></div>
+<div class="sc-card"><div class="sc-num">08</div><div class="sc-body"><h4>Chart 12&ndash;24 months visually rather than reading a table</h4><p><strong>The eye catches slope changes and inflection points in 2 seconds that take minutes to see in a column of numbers.</strong> Whenever assessing any indicator for a trend, plot the last 12&ndash;24 months before drawing any conclusion. This is how you catch the decelerating deterioration (trough signal), the peak-and-roll (peak signal), and the sustained recovery (early expansion signal) that a numbers table hides until it is obvious &mdash; and therefore too late.</p></div></div>
+</div></div>
+
+<!-- S8: TRANSITIONS -->
+<div class="ps" id="s8">
+<div class="stag">Module 08 &middot; Skill Building</div>
+<h2 class="sh">Phase Transition Detection &mdash; Where the Edge Lives</h2>
+<p class="sd">Detecting transitions before they become obvious is the highest-value skill in Layer 1. The crowd enters when coincident data confirms the transition. You enter when leading indicators signal it. That time advantage is the difference between a great entry and an average one.</p>
+<div class="tc">
+<div class="cb"><div class="cbl" style="color:var(--ambr)">Peak Detection &mdash; 5 Signals</div>
+<p><strong>Signal 1:</strong> PMI declining for 3+ consecutive months from its peak, still above 50.<br><br>
+<strong>Signal 2:</strong> Yield curve flat to slightly inverted (&minus;0.2% to +0.2% range).<br><br>
+<strong>Signal 3:</strong> Consumer confidence falling from its all-time high even if still elevated in absolute terms.<br><br>
+<strong>Signal 4:</strong> Unemployment rate first tick up from its record low &mdash; even 0.1% matters (3.4%&rarr;3.5%).<br><br>
+<strong>Signal 5:</strong> CB on hold for 2+ consecutive meetings after active hiking. FedWatch/OIS begins pricing future cuts.<br><br>
+<em style="color:var(--teal)">Action: 3 of 5 signals present = begin reducing longs, initiate short positions. 4 or 5 = maximum short conviction.</em></p>
+</div>
+<div class="cb"><div class="cbl" style="color:var(--teal)">Trough Detection &mdash; 5 Signals</div>
+<p><strong>Signal 1:</strong> GDP losses decelerating sharply (&minus;1.4%, &minus;0.9%, &minus;0.2%) &mdash; the bleeding is stopping.<br><br>
+<strong>Signal 2:</strong> PMI rising for 3+ consecutive months from its bottom, still below 50 but approaching it.<br><br>
+<strong>Signal 3:</strong> Credit spreads tightening from extreme wides (1,100bp&rarr;840bp&rarr;620bp).<br><br>
+<strong>Signal 4:</strong> Building permits first positive monthly print in 6+ months.<br><br>
+<strong>Signal 5:</strong> Consumer confidence stabilising for 2+ months after a sustained sharp decline.<br><br>
+<em style="color:var(--teal)">Action: 3 of 5 signals = cover shorts, begin building longs. Do NOT wait for unemployment to fall. It lags by 3&ndash;6 months. Enter early.</em></p>
+</div>
+</div>
+<div class="ib warn"><div class="ibh">The False Dawn Warning &mdash; Most Costly Transition Error</div>
+<p>A genuine recovery is self-sustaining and private-sector led. A false dawn is policy-stimulus-driven. <strong>The diagnostic check: is private sector credit growing?</strong> If GDP turns positive but private credit is still contracting (&minus;3% YoY) despite rates at the floor, the GDP bounce is government spending &mdash; it will reverse when the stimulus fades. Require: PMI above 50 for 2+ months AND private credit turning positive AND credit spreads normalising before declaring genuine recovery and running full-size longs.</p></div>
+<div class="ib warn"><div class="ibh">The Behind-the-Curve Signal &mdash; The Most Powerful Macro Setup</div>
+<p>When leading indicators are screaming overheating (PMI above 60, M2 up 20%, CPI rising sharply) but the CB is still on hold using "transitory" language, you have the behind-the-curve setup. <strong>This creates the most violent eventual currency moves in macro trading.</strong> The CB will eventually be forced to hike far more aggressively than priced. When they do, the currency surges violently as markets reprice 0%&rarr;5% in 12 months. The 2022 USD surge from DXY 89 to 115 was exactly this mechanism. Identify it from leading data. Position before the forced hike cycle begins.</p></div>
+</div>
+
+<!-- S9: MULTI ECONOMY -->
+<div class="ps" id="s9">
+<div class="stag">Module 09 &middot; Skill Building</div>
+<h2 class="sh">Multi-Economy Comparison Framework</h2>
+<p class="sd">No currency pair exists in isolation. EUR/USD is the differential between the US and Eurozone cycles. This is how you convert two individual cycle reads into one high-conviction trade decision.</p>
+<div class="sc-grid">
+<div class="sc-card"><div class="sc-num">01</div><div class="sc-body"><h4>Run the full cycle scan for each economy independently first</h4><p>Before comparing anything, establish each economy's independent cycle phase and trajectory using the full leading indicator panel. Write it: <strong>Economy A verdict: [phase], [accelerating/decelerating], [CB next move].</strong> Do the same for Economy B. Only then compare. The comparison is meaningless if either individual read is wrong.</p></div></div>
+<div class="sc-card"><div class="sc-num">02</div><div class="sc-body"><h4>Calculate the rate differential and its direction of travel</h4><p>Real Rate = Nominal CB Rate minus Inflation. Calculate for both. Identify: (a) which has the higher real rate today, and (b) <strong>is the differential widening or narrowing?</strong> Plot <span class="tk">TVC:US02Y-TVC:DE02Y</span> for EUR/USD, <span class="tk">TVC:US10Y-TVC:JP10Y</span> for USD/JPY. The direction of travel of the spread is your medium-term currency signal &mdash; more important than the current level.</p></div></div>
+<div class="sc-card"><div class="sc-num">03</div><div class="sc-body"><h4>Find the maximum cycle phase divergence</h4><p>The widest possible divergence = Mid Expansion vs. Contraction. One CB hiking while the other is cutting. <strong>This is always your highest-conviction bilateral trade.</strong> Never trade two economies both at Late Expansion &mdash; the divergence is thin, the noise large, the move small. Always ask: which pair has the widest phase gap this week? That is the pair to size up.</p></div></div>
+<div class="sc-card"><div class="sc-num">04</div><div class="sc-body"><h4>Define hold criteria and exit signal before entering</h4><p><strong>Write before you enter:</strong> "I will hold Long USD / Short EUR while: (a) US PMI stays above 52, (b) ECB is cutting or on hold, (c) rate differential is widening in USD's favour." Define the exit: "I exit if EZ PMI rises above 53 for 2 months, OR US PMI breaks below 50, OR the 2yr spread narrows below X%." Written criteria prevent emotional decision-making when individual prints go against you temporarily.</p></div></div>
+<div class="sc-card"><div class="sc-num">05</div><div class="sc-body"><h4>For commodity currencies &mdash; add the commodity cycle overlay</h4><p>AUD/USD: Run Australia's domestic cycle AND China's Caixin PMI + iron ore price direction. <strong>China's cycle can override RBA's cycle entirely</strong> when the divergence is large. USD/CAD: domestic scan + WTI oil direction. NOK: domestic scan + Brent direction. When domestic cycle and commodity cycle both point the same direction, you have the highest-conviction commodity currency trade available.</p></div></div>
+</div></div>
+
+<!-- S10: CB LANGUAGE -->
+<div class="ps" id="s10">
+<div class="stag">Module 10 &middot; Skill Building</div>
+<h2 class="sh">CB Language Decoder &mdash; The Vocabulary You Must Master</h2>
+<p class="sd">CBs communicate in precise, coded language. Knowing the code turns a press conference from noise into a clear signal about the next 2&ndash;3 rate decisions. This is free, real-time information the market prices instantly &mdash; you must read it as fast as the market does.</p>
+<div class="lscale">
+<div class="ls ls1">MOST HAWKISH<br>Buy currency</div>
+<div class="ls ls2">HAWKISH<br>Bullish bias</div>
+<div class="ls ls3">NEUTRAL<br>No signal</div>
+<div class="ls ls4">DOVISH<br>Bearish bias</div>
+<div class="ls ls5">MOST DOVISH<br>Sell currency</div>
+</div>
+<table class="dt">
+<tr><th>CB Phrase</th><th>What It Actually Means</th><th>Cycle Stage</th><th>Currency Signal</th></tr>
+<tr><td>"Inflation is well above target and we remain highly committed to returning it to 2%"</td><td>More hikes coming. Will hike even if it hurts growth. No pivot near.</td><td>Peak / Active Tightening</td><td class="bull">HAWKISH &mdash; BUY</td></tr>
+<tr><td>"We are in a position to begin the process of normalising policy"</td><td>First rate cut announcement. Cutting cycle begins NOW. Multiple cuts to follow.</td><td>Transition: Peak&rarr;Contraction</td><td class="bear">MOST DOVISH &mdash; SELL</td></tr>
+<tr><td>"The risks to the economic outlook are now more balanced"</td><td>No longer only worried about inflation. Growth is now a concern too. Pivot beginning.</td><td>Late Expansion / Peak</td><td class="warn2">BEARISH SHIFT &mdash; Reduce longs</td></tr>
+<tr><td>"We will make further adjustments to the policy rate over coming meetings"</td><td>Multiple rate cuts coming, not just one. Full cutting cycle signalled explicitly.</td><td>Contraction begins</td><td class="bear">STRONGLY DOVISH &mdash; SELL</td></tr>
+<tr><td>"Inflation is transitory / supply-driven"</td><td>Choosing to wait. Believe inflation will resolve without action. Behind-the-curve risk.</td><td>Late Expansion (potential error)</td><td class="warn2">WATCH CAREFULLY &mdash; eventual surge signal</td></tr>
+<tr><td>"We will be data dependent"</td><td>No pre-commitment. Will react to incoming data. Transition phase &mdash; direction unclear.</td><td>Any transition phase</td><td class="neut">NEUTRAL &mdash; watch next prints</td></tr>
+<tr><td>"Significant progress has been made on inflation"</td><td>Inflation fight largely won. Conditions for cutting are building. Not yet committed.</td><td>Late Tightening / Pre-pivot</td><td class="warn2">MILDLY DOVISH &mdash; Trim longs</td></tr>
+<tr><td>"We stand ready to act with all available tools"</td><td>Emergency language. QE or other unconventional tools are on the table.</td><td>Deep Contraction / Crisis</td><td class="bear">VERY DOVISH &mdash; SELL hard</td></tr>
+<tr><td>"The labour market remains solid / resilient"</td><td>Do not see enough weakness to cut yet. Waiting for more deterioration before moving.</td><td>Late Expansion / Early Contraction</td><td class="warn2">CAUTIOUSLY NEUTRAL &mdash; Hold</td></tr>
+<tr><td>"Further adjustments will be gradual and well-signalled"</td><td>Not an emergency. Slow and predictable moves ahead. Not pricing in rapid change.</td><td>Early Recovery or Controlled Tightening</td><td class="neut">MODERATE &mdash; Slow trend</td></tr>
+</table>
+<div class="ib tip"><div class="ibh">Press Conference Reading Framework</div>
+<ul>
+<li>Listen for <strong>changes from the previous meeting's language</strong> &mdash; that delta is the signal, not the absolute wording.</li>
+<li>Which mandate is mentioned first? Inflation before growth = hawkish. Growth before inflation = pivoting dovish.</li>
+<li>Count uncertainty words ("may," "if warranted," "should") vs commitment words ("will," "are committed," "determined"). More uncertainty = closer to neutral.</li>
+<li>The Q&amp;A is often more revealing than the prepared statement &mdash; journalists ask what the CB didn't want to address.</li>
+</ul></div>
+</div>
+
+<!-- S11: WEEKLY SCAN -->
+<div class="ps" id="s11">
+<div class="stag">Module 11 &middot; The Weekly Process</div>
+<h2 class="sh">The Sunday Cycle Scan &mdash; Your Weekly Ritual</h2>
+<p class="sd">Every Sunday before markets open, you run this scan. 45&ndash;90 minutes until mastered, 20&ndash;30 minutes after. The output is your directional bias for every pair you trade. This is non-negotiable discipline.</p>
+<div class="mentor"><div class="mhd">Mentor</div>
+<p>Do not skip this because you think you know the story from last week. The market changes. Your edge is in running this systematically, updating your view with fresh data, and NOT letting last week's conviction anchor this week's read. <strong>The trader who stops running the scan eventually stops seeing the turns coming. This is not optional work. This is the work.</strong></p></div>
+<ul class="cl" id="scanCL">
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 1: Pull the economic calendar.</strong> Identify every high-impact release for each economy you trade this week. Mark date, time, prior reading, and consensus estimate. This tells you which sessions will have the biggest moves.</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 2: Update your cycle phase verdict for each economy.</strong> Has any data from the past week shifted the read? Check the latest PMI, confidence, and any GDP or employment data released. Record: phase, trajectory (accelerating or decelerating), confidence level 1&ndash;10.</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 3: Check the full leading indicator panel.</strong> PMI and sub-indices direction. Yield curve shape. Credit spread trend (FRED:BAMLH0A0HYM2). Consumer confidence. Building permits 3-month trend. Are 2+ leading indicators aligned in the same direction?</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 4: Plot and assess key rate differentials.</strong> EUR/USD: TVC:US02Y&minus;TVC:DE02Y. USD/JPY: TVC:US10Y&minus;TVC:JP10Y. GBP/USD: TVC:GB02Y&minus;TVC:US02Y. Is the differential widening or narrowing vs. last week? The direction of travel of the spread is your medium-term currency signal.</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 5: Decode the latest CB communications.</strong> Any speeches, minutes, decisions, or statements from the past week? Apply the language decoder. Has the language shifted from the prior reading? Even a subtle shift from "committed" to "monitoring carefully" is a meaningful dovish signal to price in.</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 6: Check the risk sentiment dashboard.</strong> VIX level and direction. AUD/JPY. HY credit spreads. Is the environment open to expressing your structural thesis? If VIX above 25 and rising, size down regardless of how clean the cycle story looks.</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 7: Write your weekly verdict for each pair.</strong> Format: "[Economy A] is in [phase], trajectory [accelerating/stable/decelerating]. [Economy B] is in [phase]. Rate differential is [widening/narrowing] in [A]'s favour. Bias: [Long/Short/Neutral]. Hold while [criteria]. Exit if [criteria]."</div></li>
+<li onclick="togCL(this)"><div class="chb"></div><div class="cht"><strong>Step 8: Set event-based response plans.</strong> For each major release this week, define in advance: "If this prints above consensus, it [confirms/contradicts] my thesis. Action: [add/reduce/exit]." Pre-thought responses prevent panic reactions when prints surprise.</div></li>
+</ul>
+<div class="ib rule"><div class="ibh">The Weekly Bias Rule</div>
+<p>Trade WITH your structural bias at full size. Trade AGAINST it at reduced size (30&ndash;50%), only with tighter stops, and only when the counter-trade has a specific short-term catalyst that doesn't change the underlying thesis. <strong>If you are short EUR/USD on cycle divergence and a one-off EZ PMI beat sends it 80 pips higher, that is a retracement to sell into &mdash; not a signal to flip your thesis.</strong></p></div>
+</div>
+
+<!-- S12: SPECIAL REGIMES -->
+<div class="ps" id="s12">
+<div class="stag">Module 12 &middot; Advanced</div>
+<h2 class="sh">Special Regimes &mdash; When Standard Rules Change</h2>
+<table class="dt">
+<tr><th>Regime</th><th>What Breaks</th><th>Modified Framework</th><th>What Still Works</th></tr>
+<tr><td>Stagflation</td><td>Standard "contraction = CB cuts = bearish currency" logic.</td><td>No clean directional trade. Reduce all positions 50%+. Trade data releases not sustained directional bias.</td><td>Long Gold. Long energy exporters (NOK, CAD). Short equities.</td></tr>
+<tr><td>Zero Lower Bound</td><td>Rate differential framework. All CBs at zero = no spread to trade.</td><td>Replace rate with QE size direction. QE expansion = bearish. QE tapering = bullish. Watch CB balance sheets.</td><td>Relative recovery speed. PMI trajectory divergence. Commodity cycle.</td></tr>
+<tr><td>Exogenous Shock (COVID, war)</td><td>Standard leading indicator read. PMI can move 15 points in one month.</td><td>Phase 1: Risk-off = buy USD/JPY/CHF/Gold. Phase 2: Policy response = watch QE size and speed. Phase 3: Track which economy recovers first.</td><td>Relative recovery speed. Commodity cycle for subsequent positioning.</td></tr>
+<tr><td>Debt-Deflation Trap</td><td>Monetary policy transmission. Cutting rates does not stimulate when private sector is deleveraging.</td><td>Domestic cycle data largely irrelevant for currency direction. Watch US yields and global risk for JPY. Trade carry not domestic indicators.</td><td>Safe-haven flows. Global risk regime. US-Japan yield differential.</td></tr>
+<tr><td>Fiscal Dominance Crisis</td><td>"Higher rates = stronger currency" rule. Yields can spike while currency collapses (UK 2022).</td><td>Bond market credibility becomes the driver. If bonds selling AND currency selling simultaneously = fiscal crisis regime.</td><td>Short the currency aggressively. Long USD/CHF/Gold as safe havens.</td></tr>
+</table>
+</div>
+
+<!-- S13: PHASE ID EXERCISES -->
+<div class="ps" id="s13">
+<div class="stag">Module 13 &middot; Mastery Exercises</div>
+<h2 class="sh">Phase Identification Drills</h2>
+<div class="pb"><div class="pf" id="pf1"></div></div>
+<div id="ex13"></div></div>
+
+<!-- S14: INDICATOR READING -->
+<div class="ps" id="s14">
+<div class="stag">Module 14 &middot; Mastery Exercises</div>
+<h2 class="sh">Indicator Reading Mastery</h2>
+<div class="pb"><div class="pf" id="pf2"></div></div>
+<div id="ex14"></div></div>
+
+<!-- S15: TRANSITION & CB -->
+<div class="ps" id="s15">
+<div class="stag">Module 15 &middot; Mastery Exercises</div>
+<h2 class="sh">Transition Detection &amp; CB Language</h2>
+<div class="pb"><div class="pf" id="pf3"></div></div>
+<div id="ex15"></div></div>
+
+<!-- S16: SYNTHESIS -->
+<div class="ps" id="s16">
+<div class="stag">Module 16 &middot; Expert Synthesis</div>
+<h2 class="sh">Full Macro Synthesis &mdash; Build the Trade</h2>
+<div class="pb"><div class="pf" id="pf4"></div></div>
+<div id="ex16"></div></div>
+
+<!-- S17: REFERENCE -->
+<div class="ps" id="s17">
+<div class="stag">Module 17 &middot; Quick Reference</div>
+<h2 class="sh">Master Reference Cards</h2>
+<div class="stag" style="margin-top:22px">20 Indicators &mdash; Priority Hierarchy &amp; Sources</div>
+<table class="dt">
+<tr><th>#</th><th>Indicator</th><th>Category</th><th>Lead Time</th><th>Key Rule</th><th>Primary Source</th></tr>
+<tr><td style="color:var(--g2);font-weight:700">1</td><td>PMI Composite + New Orders</td><td class="bull">Leading</td><td>1&ndash;3 months</td><td>50 = crossover. New Orders leads headline by 2&ndash;3 months.</td><td>TradingEconomics &middot; ISM</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">2</td><td>Yield Curve (2yr/10yr spread)</td><td class="bull">Leading</td><td>12&ndash;18 months</td><td>Inverted = recession. Bull steepen = Fed cutting aggressively.</td><td>TVC:US02Y&minus;TVC:US10Y</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">3</td><td>HY &amp; IG Credit Spreads</td><td class="bull">Leading</td><td>3&ndash;6 months</td><td>HY above 500bp = contraction. Above 800bp = crisis.</td><td>FRED:BAMLH0A0HYM2</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">4</td><td>Consumer Confidence</td><td class="bull">Leading</td><td>3&ndash;6 months</td><td>30+ point fall from peak = spending contraction coming.</td><td>Conference Board &middot; GfK</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">5</td><td>Building Permits</td><td class="bull">Leading</td><td>6&ndash;18 months</td><td>20%+ decline from peak = GDP headwind in 9&ndash;18 months.</td><td>FRED:PERMIT</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">6</td><td>M2 Money Supply Growth</td><td class="bull">Leading</td><td>6&ndash;18 months</td><td>Above 10% YoY = inflation risk building significantly.</td><td>FRED:M2SL</td></tr>
+<tr><td style="color:var(--g2);font-weight:700">7</td><td>Equity Market + Breadth</td><td class="bull">Leading</td><td>3&ndash;9 months</td><td>Sustained &minus;20% = recession signal. Confirm with PMI + spreads.</td><td>SPX &middot; VIX &middot; Advance-Decline</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">8</td><td>GDP Growth Rate</td><td class="neut">Coincident</td><td>0 months</td><td>Read composition. Inventory-driven beat = fade it.</td><td>BEA.gov &middot; Eurostat</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">9</td><td>Non-Farm Payrolls</td><td class="neut">Coincident</td><td>0&ndash;1 months</td><td>Use 3-month average. Watch revisions. 200K+ = healthy.</td><td>BLS.gov (1st Friday)</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">10</td><td>Industrial Production</td><td class="neut">Coincident</td><td>0&ndash;1 months</td><td>9 consecutive months declining = structural recession.</td><td>FRED:INDPRO</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">11</td><td>Retail Sales</td><td class="neut">Coincident</td><td>0 months</td><td>Lags confidence 2&ndash;3 months. Use core (ex-auto, ex-gas).</td><td>FRED:RSAFS</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">12</td><td>PCE / Personal Income</td><td class="neut">Coincident</td><td>0 months</td><td>Core PCE below 2.5% falling = pivot approaching.</td><td>FRED:DPCCRG3M086SBEA</td></tr>
+<tr><td style="color:var(--blue);font-weight:600">13</td><td>Trade Balance / Current Account</td><td class="neut">Coincident</td><td>0&ndash;1 months</td><td>Widening deficit + above PPP = structural vulnerability.</td><td>FRED:BOPGSTB</td></tr>
+<tr><td style="color:var(--red);font-weight:600">14</td><td>Unemployment Rate</td><td class="bear">Lagging</td><td>&minus;3 to &minus;6 months</td><td>NEVER use for entry. Lags recession start by 3&ndash;6 months.</td><td>BLS.gov</td></tr>
+<tr><td style="color:var(--red);font-weight:600">15</td><td>CPI Headline</td><td class="bear">Lagging</td><td>&minus;6 to &minus;12 months</td><td>3 consecutive monthly falls from peak = hiking cycle ending.</td><td>BLS.gov (2nd week)</td></tr>
+<tr><td style="color:var(--red);font-weight:600">16</td><td>Core PCE / Core CPI</td><td class="bear">Lagging</td><td>&minus;6 to &minus;12 months</td><td>Fed's preferred gauge. Below 2.5% falling = pivot near.</td><td>FRED:DPCCRG3M086SBEA</td></tr>
+<tr><td style="color:var(--red);font-weight:600">17</td><td>Average Hourly Earnings</td><td class="bear">Lagging</td><td>&minus;3 to &minus;6 months</td><td>Above 4% = services inflation stays elevated.</td><td>BLS.gov (with NFP)</td></tr>
+<tr><td style="color:var(--red);font-weight:600">18</td><td>CB Policy Rate</td><td class="bear">Lagging</td><td>&minus;12 to &minus;18 months</td><td>All past hikes still flowing through the economy.</td><td>Fed.gov &middot; ECB.europa.eu</td></tr>
+<tr><td style="color:var(--red);font-weight:600">19</td><td>Business Inventories</td><td class="bear">Lagging</td><td>&minus;2 to &minus;4 months</td><td>Inventory build driving GDP = fade the headline beat.</td><td>FRED:ISRATIO</td></tr>
+<tr><td style="color:var(--red);font-weight:600">20</td><td>C&amp;I Loans Outstanding</td><td class="bear">Lagging</td><td>&minus;3 to &minus;6 months</td><td>Contraction despite low rates = debt-deflation trap risk.</td><td>FRED:BUSLOANS</td></tr>
+</table>
+
+<div class="stag" style="margin-top:28px">Primary Data Sources &mdash; Bookmark All Seven</div>
+<table class="dt">
+<tr><th>Source</th><th>What You Get</th><th>Best Used For</th></tr>
+<tr><td>fred.stlouisfed.org</td><td>All US economic data series. Free, auto-updated, fully chartable.</td><td>All US indicators. Also mirrors EZ, UK, Japan series. Best single source.</td></tr>
+<tr><td>tradingeconomics.com</td><td>Global data for 196 countries. PMI, GDP, unemployment, CPI, CB rates for any economy.</td><td>Non-US economies. Building your cycle scan for EZ, UK, Japan, Australia, Canada.</td></tr>
+<tr><td>tradingview.com</td><td>Live bond yield charts (TVC prefix). FRED-mirrored indicators. Spread charts.</td><td>Real-time yield curves. Rate differential charts. Credit spreads via FRED prefix.</td></tr>
+<tr><td>ism.ws</td><td>US ISM Manufacturing and Services PMI with full sub-index detail.</td><td>Drilling into New Orders, Inventories, Employment sub-components beyond the headline.</td></tr>
+<tr><td>worldgovernmentbonds.com</td><td>Sovereign CDS spreads 50+ countries. Credit ratings. CB rates by country.</td><td>Quick cross-country sovereign risk scan. Financial stress monitoring by country.</td></tr>
+<tr><td>bls.gov</td><td>US CPI, NFP, wages with full breakdowns by sector, category, and demographic.</td><td>Deep analysis of employment and inflation components beyond the headline prints.</td></tr>
+<tr><td>oecd.org/statistics</td><td>PPP exchange rates and inflation comparisons across all OECD members.</td><td>PPP fair-value assessment for long-term structural currency vulnerability analysis.</td></tr>
+</table>
+</div>
+
+<footer>
+<span>Layer 1 Genius &mdash; Business Cycle Mastery &middot; <span class="hl">Abraham Kibirige</span> &middot; Kampala, Uganda</span>
+<span>Master this foundation and you master the market.</span>
+</footer>
+</div><!-- .main -->
+
+<script>
+// ── SCORE ENGINE ──
+var score=0,possible=0,done=0;
+function updScore(){
+  document.getElementById('sc').textContent=score;
+  document.getElementById('sp').textContent=possible;
+  var p=possible>0?Math.round(score/possible*100):0;
+  document.getElementById('pct').textContent=p>0?p+'%':'';
+}
+
+function checkMCQ(qid,chosen,correct,fbid){
+  var c=document.getElementById(qid);
+  if(!c||c.dataset.done)return;
+  c.dataset.done=1;
+  c.querySelectorAll('.opt').forEach(function(o){
+    o.classList.add('D');
+    if(o.dataset.l===correct)o.classList.add('C');
+    else if(o.dataset.l===chosen)o.classList.add('W');
+  });
+  var fb=document.getElementById(fbid);
+  if(!fb)return;
+  fb.classList.add('show');
+  var ok=chosen===correct;
+  fb.classList.add(ok?'ok':'no');
+  fb.querySelector('.fbh').textContent=ok?'\u2713 Correct \u2014 '+fb.dataset.hd:'Not quite \u2014 '+fb.dataset.hd;
+  if(ok)score++;
+  possible++;done++;updScore();
+  updateProgress();
+}
+
+function revealAnswer(btn,mid){
+  document.getElementById(mid).classList.add('show');
+  btn.style.display='none';
+  done++;updScore();
+  updateProgress();
+}
+
+function updateProgress(){
+  var total=40;
+  var w=Math.min(done/total*100,100);
+  ['pf1','pf2','pf3','pf4'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.style.width=w+'%';
+  });
+}
+
+// ── PHASE TABS ──
+function showP(id,el){
+  document.querySelectorAll('.ppanel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ptab').forEach(function(b){b.classList.remove('active');});
+  var panel=document.getElementById('ph-'+id);
+  if(panel)panel.classList.add('active');
+  if(el&&el.classList){el.classList.add('active');}
+  else{
+    var map={rec:0,exp:1,peak:2,con:3,stag:4};
+    document.querySelectorAll('.ptab')[map[id]].classList.add('active');
+  }
+}
+
+// ── CHECKLIST ──
+function togCL(li){li.classList.toggle('done');}
+
+// ── SIDENAV ACTIVE ──
+window.addEventListener('scroll',function(){
+  var scrollY=window.scrollY+120;
+  document.querySelectorAll('[id]').forEach(function(sec){
+    var top=sec.offsetTop,bot=top+sec.offsetHeight;
+    if(scrollY>=top&&scrollY<bot){
+      var id=sec.id;
+      document.querySelectorAll('.sn-a').forEach(function(a){
+        a.classList.remove('active');
+        if(a.getAttribute('href')==='#'+id)a.classList.add('active');
+      });
+    }
+  });
+},{ passive:true });
+
+// ── EXERCISE RENDERER ──
+function mkMCQ(e,container){
+  var q=e,qid='Q'+q.id,fbid='F'+q.id;
+  var opts=q.opts.map(function(o){
+    return '<button class="opt" data-l="'+o.l+'" onclick="checkMCQ(\''+qid+'\',\''+o.l+'\',\''+q.ans+'\',\''+fbid+'\')">'
+    +'<span class="ol">'+o.l+'</span><span class="ot">'+o.t+'</span></button>';
+  }).join('');
+  var html='<div class="ex-card"><div class="ex-hdr">'
+  +'<div class="ex-num">'+q.n+'</div>'
+  +'<div><div class="ex-t">'+q.title+'</div><div class="ex-s">'+q.sub+'</div></div>'
+  +'</div><div class="ex-body">'
+  +'<div class="scb">'+q.scenario+'</div>'
+  +'<div class="qtxt">'+q.q+'</div>'
+  +'<div class="opts" id="'+qid+'">'+opts+'</div>'
+  +'<div class="fb" id="'+fbid+'" data-hd="'+q.fbhd+'"><div class="fbh"></div>'+q.fbody+'</div>'
+  +'</div></div>';
+  document.getElementById(container).insertAdjacentHTML('beforeend',html);
+}
+
+function mkOpen(e,container){
+  var mid='M'+e.id;
+  var html='<div class="ex-card"><div class="ex-hdr">'
+  +'<div class="ex-num">'+e.n+'</div>'
+  +'<div><div class="ex-t">'+e.title+'</div><div class="ex-s">'+e.sub+'</div></div>'
+  +'</div><div class="ex-body">'
+  +'<div class="scb">'+e.scenario+'</div>'
+  +'<div class="qtxt">'+e.q+'</div>'
+  +'<div class="oe"><textarea placeholder="'+e.ph+'" rows="6"></textarea>'
+  +'<button class="brv" onclick="revealAnswer(this,\''+mid+'\')">Compare to Expert Answer &rarr;</button>'
+  +'<div class="ma" id="'+mid+'">'+e.ans+'</div>'
+  +'</div></div></div>';
+  document.getElementById(container).insertAdjacentHTML('beforeend',html);
+}
+
+// ── EXERCISE DATA ──
+var E13=[
+{id:'1a',n:'01',title:'Economy Atlas \u2014 Which Phase?',sub:'Phase Identification \u00b7 Foundation',
+scenario:'<strong>Economy Atlas:</strong> GDP +3.6% (above trend) \u00b7 PMI Composite 56.4 and rising (+3.2 pts last 4 months) \u00b7 Unemployment 3.8% falling from 5.2% over 18 months \u00b7 CPI 3.1% rising \u00b7 CB Rate 3.00% (5th consecutive hike, 25bp each) \u00b7 Consumer Confidence 114 (high, stable) \u00b7 Credit Spreads: HY 280bp (tight) \u00b7 Building Permits +12% YoY',
+q:'Which business cycle phase is Economy Atlas in, and what is the correct currency and trade action?',
+opts:[{l:'A',t:'Recovery/Trough \u2014 PMI above 50 for the first time, cautiously accumulate longs'},{l:'B',t:'Mid Expansion \u2014 GDP above trend, PMI rising, unemployment falling, CB actively hiking, confidence high. STRONGLY BULLISH. Ride the hiking cycle at full size.',correct:true},{l:'C',t:'Late Expansion/Peak \u2014 inflation above 2% signals the peak is near, begin building shorts'},{l:'D',t:'Contraction \u2014 CPI at 3.1% above target always signals recession'}],
+ans:'B',
+fbhd:'Mid Expansion \u2014 Full Long Position',
+fbody:'Every indicator aligned for textbook mid-expansion: PMI at 56.4 and RISING (not falling from a peak), GDP above trend, unemployment falling from 5.2%\u21923.8% over 18 months (tightening but not yet at record low), CB actively hiking for the 5th meeting (early in hike cycle, rate not yet at neutral), confidence high and stable, credit spreads tight at 280bp. <strong>Currency: STRONGLY BULLISH. Full position size. Trail stop below recent swing lows. Hold while PMI stays above 53 and CB continues hiking.</strong>'},
+
+{id:'1b',n:'02',title:'Economy Beta \u2014 Detect the Transition',sub:'Phase Identification \u00b7 Peak Detection',
+scenario:'<strong>Economy Beta:</strong> GDP +0.8% (slowing from +2.9%) \u00b7 PMI 52.4 but FALLING from 58.1 peak (4 consecutive monthly falls) \u00b7 Unemployment 3.2% (record low, first tick to 3.3% this month) \u00b7 CPI 4.1% (6-month high, but rate of increase slowing) \u00b7 CB Rate 5.50% (3rd consecutive hold) \u00b7 Consumer Confidence 102 (high level but down from 121 peak) \u00b7 Yield Curve: \u22120.3% (slightly inverted)',
+q:'What phase is Economy Beta in and what is the correct trading action?',
+opts:[{l:'A',t:'Mid Expansion \u2014 PMI still above 50 and unemployment at record lows. Stay fully long, this is fine.'},{l:'B',t:'Late Expansion/Peak \u2014 PMI falling 4 months, CB on hold for 3 meetings, unemployment first tick up, yield curve inverted, confidence falling. REDUCE longs aggressively. Begin building the short thesis. Highest R:R entry available.',correct:true},{l:'C',t:'Trough/Recovery \u2014 PMI approaching 50 means the trough is forming'},{l:'D',t:'Stagflation \u2014 CPI above 4% while PMI falls is always stagflation'}],
+ans:'B',
+fbhd:'Late Expansion/Peak \u2014 Maximum Short Entry',
+fbody:'Five peak signals present simultaneously: (1) PMI falling from 58.1 for 4 consecutive months \u2014 the direction says the cycle is turning. (2) CB on hold for 3 meetings \u2014 hiking cycle complete. Market begins pricing cuts, not hikes. (3) Unemployment first tick up from record low (3.2%\u21923.3%) \u2014 the tiniest crack in the labour market. (4) Yield curve inverted at \u22120.3% \u2014 bond market pricing recession in 12\u201318 months. (5) Confidence falling from peak. All five = maximum short conviction. <strong>Action: Reduce longs aggressively now. Initiate short with stop above recent high. This is the highest R:R entry in the entire cycle.</strong>'},
+
+{id:'1c',n:'03',title:'Economy Gamma \u2014 Trough or Contraction?',sub:'Phase Identification \u00b7 Trough Detection',
+scenario:'<strong>Economy Gamma (after 4 quarters of recession):</strong> GDP last 5 quarters: \u22121.8%, \u22121.2%, \u22120.7%, \u22120.3%, \u22120.1% (losses decelerating sharply) \u00b7 PMI: 49.4 (lowest was 42.8 eight months ago, now rising for 4 consecutive months from 42.8\u219243.5\u219245.1\u219247.3\u219249.4) \u00b7 Unemployment: 8.4% (still high but STABLE for 2 months) \u00b7 CPI: 0.9% (subdued) \u00b7 CB Rate: 0.25% (floor) \u00b7 Building Permits: +5% MoM (first positive in 9 months) \u00b7 Credit Spreads: 1,100bp\u2192840bp\u2192620bp (tightening from extremes)',
+q:'What is the correct cycle verdict and trading action?',
+opts:[{l:'A',t:'Still in deep contraction \u2014 GDP still negative, unemployment 8.4%. Stay fully short at maximum size.'},{l:'B',t:'Mid expansion \u2014 PMI rising strongly, go long at full size immediately'},{l:'C',t:'TROUGH FORMING \u2014 GDP losses decelerating sharply, PMI rising 4 consecutive months from its bottom, permits first positive, credit spreads tightening. Cover shorts, accumulate longs. Do NOT wait for GDP to turn positive.',correct:true},{l:'D',t:'Stagflation \u2014 CPI below target means deflation trap forming'}],
+ans:'C',
+fbhd:'Trough Forming \u2014 Cover Shorts, Build Longs',
+fbody:'The trough is identified not by indicators being good, but by the RATE OF DETERIORATION DECELERATING. GDP: \u22121.8%, \u22121.2%, \u22120.7%, \u22120.3%, \u22120.1% = losses cutting in half each quarter. The economy is still contracting but clearly stopping. PMI rose from 42.8 to 49.4 over 4 consecutive months = powerful 6.6-point recovery still below 50. Credit spreads tightening 1,100\u2192620bp = financial conditions dramatically improving. Building permits first positive in 9 months. Unemployment STABILISING at 8.4% (not rising). <strong>The trader who waits for unemployment to fall will enter 300+ pips too late. Unemployment is a LAGGING indicator by 3\u22126 months. Cover shorts now. Build longs as each additional confirming print arrives.</strong>'},
+
+{id:'1d',n:'04',title:'Stagflation Identification',sub:'Phase Identification \u00b7 Special Regime',
+scenario:'<strong>Economy Delta:</strong> GDP \u22120.4% (2nd consecutive negative quarter) \u00b7 PMI 46.2 falling \u00b7 Unemployment 5.8% rising \u00b7 CPI 7.9% surging (oil up 80% YoY after supply disruption) \u00b7 Core CPI 5.1% \u00b7 CB Rate 4.50% (hiking DESPITE recession \u2014 3 consecutive hikes into negative GDP) \u00b7 Consumer Confidence \u221232 (very negative)',
+q:'What regime is this and what is the only correct positioning?',
+opts:[{l:'A',t:'Normal contraction \u2014 CB will cut aggressively soon. Sell the currency at full size.'},{l:'B',t:'STAGFLATION \u2014 GDP contracting + inflation surging simultaneously. CB forced to hike despite recession. No clean directional currency trade. Reduce all positions 50%+. Long Gold and long energy exporters (CAD, NOK) only.',correct:true},{l:'C',t:'Late expansion \u2014 CB hiking always signals a strong economy, buy the currency'},{l:'D',t:'Overheating \u2014 high CPI means the economy is running too hot'}],
+ans:'B',
+fbhd:'Stagflation \u2014 No Clean Currency Trade',
+fbody:'GDP contracting for 2 consecutive quarters + CPI at 7.9% = stagflation. The oil shock (+80% YoY) creates cost-push inflation the CB cannot ignore even while the economy contracts. If the CB cuts: risks wage-price spiral and inflation unanchoring. If it hikes more: deepens the recession. The hiking provides some yield support but the contracting economy is bearish. These forces conflict, creating erratic volatile moves with no sustained trend. <strong>Correct action: Reduce ALL position sizes by 50%+. Do not force a directional trade. Long Gold (real yields deeply negative) and Long NOK/CAD (energy exporters who benefit from the oil shock causing the stagflation) are the only clean positions in this regime.</strong>'},
+
+{id:'1e',n:'05',title:'Two-Economy Comparison \u2014 EUR/USD',sub:'Bilateral Analysis \u00b7 Intermediate',
+scenario:'<strong>US:</strong> GDP +1.4% (slowing from +2.3%) \u00b7 PMI 47.8 below 50 (falling) \u00b7 Core PCE 2.1% \u00b7 Fed Rate 3.75% \u00b7 FedWatch 78% probability of cut next meeting \u00b7 US02Y 3.92% falling.<br><strong>Eurozone:</strong> GDP +0.5% rising \u00b7 PMI 52.4 and rising \u00b7 HICP 2.3% stable \u00b7 ECB on hold at 2.50% \u00b7 DE02Y 2.68% stable.',
+q:'What is the complete EUR/USD verdict based on this cycle divergence data?',
+opts:[{l:'A',t:'Bearish EUR/USD \u2014 US rates (3.75%) still higher than EZ (2.50%) so USD should stay stronger'},{l:'B',t:'BULLISH EUR/USD \u2014 US in late expansion/early contraction (PMI below 50, Fed cutting). EZ in early-to-mid expansion (PMI 52.4 rising, ECB on hold). Rate differential narrowing from both sides. Capital flows from falling US yield to stable EZ yield.',correct:true},{l:'C',t:'Neutral \u2014 both economies too similar to trade with conviction'},{l:'D',t:'Bearish EUR/USD \u2014 ECB holding while Fed cuts means EZ rates become relatively higher, selling EUR'}],
+ans:'B',
+fbhd:'Bullish EUR/USD \u2014 Maximum Cycle Divergence',
+fbody:'US cycle: PMI 47.8 (below 50 = contracting), GDP slowing, FedWatch 78% cut = late expansion/early contraction, CB pivoting dovish. EZ cycle: PMI 52.4 rising = expanding, GDP accelerating from a low base, ECB on hold = early expansion, no cuts priced. <strong>This is OPPOSITE cycle phases.</strong> US02Y at 3.92% FALLING. DE02Y at 2.68% STABLE. The spread was much wider 12 months ago and is now narrowing. Capital flows from falling US yield toward stable EZ yield. <strong>EUR/USD bias: BULLISH. Long EUR/USD. Hold while: Fed continues cutting, EZ PMI stays above 51, rate differential continues narrowing. Exit if: EZ PMI breaks below 50 for 2 months OR HICP reaccelerates above 3%.</strong>'},
+
+{id:'1f',n:'06',title:'The Behind-the-Curve Setup',sub:'Advanced \u00b7 CB Policy Error Detection',
+scenario:'<strong>Economy Omega (mid-2021 equivalent):</strong> GDP +6.4% annualised (surging) \u00b7 PMI 61.2 (extreme expansion) \u00b7 Unemployment falling rapidly 6.1%\u21925.4% \u00b7 CPI rising sharply: 2.6%\u21924.2%\u21925.4% over 3 months \u00b7 M2 Growth +24% YoY (most in 80 years) \u00b7 CB Rate 0.25% (still at emergency COVID low) \u00b7 CB Language: "Inflation is transitory and supply-driven. We will look through it."',
+q:'What is the correct macro read and trade thesis from this data combination?',
+opts:[{l:'A',t:'Bearish currency \u2014 rates still at 0.25%, always bearish when rates are at the floor'},{l:'B',t:'Trust the CB\u2019s transitory narrative and stay neutral'},{l:'C',t:'LONG the currency aggressively on 6\u201318 month horizon. The CB is BEHIND THE CURVE. PMI 61, GDP 6.4%, M2 +24%, CPI accelerating. The CB MUST eventually hike dramatically. When they do (and they will be forced to), the currency surges violently as rates go 0.25%\u21925%+ in 18 months.',correct:true},{l:'D',t:'Short the currency \u2014 surging inflation always causes economic collapse and currency crash'}],
+ans:'C',
+fbhd:'Long the Currency \u2014 Behind-the-Curve Setup',
+fbody:'This is the US mid-2021 pattern exactly. Every leading indicator screams overheating: PMI at 61 (extreme expansion), GDP at 6.4% (well above trend), M2 up 24% (unprecedented), CPI already at 5.4% and accelerating rapidly. The CB is still at 0.25% citing "transitory." The CB is not just slightly behind the curve \u2014 it is dramatically behind. This is not IF they hike, it is WHEN and HOW MUCH they are forced to hike. When they eventually move, they must hike extremely aggressively to catch up (0.25%\u21925.25% in 12 months in the 2022 real case). <strong>The currency does not just rise \u2014 it SURGES. DXY went 89\u2192115. EUR/USD fell 1.23\u21920.96. This data told that story a full year before the consensus understood it. This is your structural edge from reading leading indicators.</strong>'}
+];
+
+var E14=[
+{id:'2a',n:'07',title:'PMI Direction vs Level \u2014 The #1 Rule',sub:'Indicator Reading \u00b7 Rule 01',
+scenario:'<strong>Two economies, PMI sequences over 5 months:</strong><br>Economy A: PMI 54.8 \u2192 54.1 \u2192 53.2 \u2192 52.1 \u2192 50.8 (5 consecutive monthly falls)<br>Economy B: PMI 43.2 \u2192 44.8 \u2192 46.4 \u2192 48.1 \u2192 49.6 (5 consecutive monthly rises)',
+q:'Based ONLY on these PMI sequences, which economy has the more bullish currency outlook and why?',
+opts:[{l:'A',t:'Economy A \u2014 its PMI level of 50.8 is higher than Economy B\u2019s 49.6. Level is what matters.'},{l:'B',t:'Economy B \u2014 despite the lower absolute level, DIRECTION matters more than level. Economy B has been rising for 5 consecutive months. Its CB is beginning to contemplate future hikes. Economy A\u2019s CB is moving toward cuts.',correct:true},{l:'C',t:'Both are equivalent \u2014 only 1.2 PMI points separate them, within noise margin'},{l:'D',t:'Cannot determine from PMI alone \u2014 need GDP and unemployment data first'}],
+ans:'B',
+fbhd:'Economy B \u2014 Direction Always Beats Level',
+fbody:'This is the single most important PMI rule. <strong>Direction beats level, always.</strong> Economy A at 54.8 falling to 50.8 over 5 months = expansion losing momentum systematically. Its GDP will slow further. Its CB will eventually stop hiking and move toward cuts. Economy B at 43.2 rising to 49.6 = an economy recovering from a trough, building momentum toward 50 crossover. Its CB will begin hiking within 6\u221212 months. Buy Economy B\u2019s currency. Sell Economy A\u2019s. This principle applies identically to confidence, industrial production, retail sales \u2014 every series. Direction first. Level second. Always.'},
+
+{id:'2b',n:'08',title:'GDP Composition \u2014 Fake the Beat',sub:'Indicator Reading \u00b7 Coincident',
+scenario:'<strong>GDP Release \u2014 Economy X:</strong> Headline GDP: +2.8% (beat vs +1.9% forecast. Currency rallied 70 pips instantly.)<br><br>Breakdown: Consumer Spending +0.3pp \u00b7 Business Investment \u22120.2pp \u00b7 Government Spending +0.4pp \u00b7 Net Exports \u22120.1pp \u00b7 <strong>INVENTORY BUILD: +2.4pp</strong> (businesses stockpiling unsold goods)',
+q:'What should you do with the 70-pip currency rally generated by the headline GDP beat?',
+opts:[{l:'A',t:'Hold longs and add more \u2014 GDP beat is a GDP beat, confirmed economic strength'},{l:'B',t:'FADE the rally \u2014 sell into the 70-pip spike. 2.4pp of the 2.8% came from inventory build. Real final demand (C+I+G+NX excluding inventory) was only +0.4pp. Next quarter, businesses will cut production to clear excess stock and GDP will likely print 0.4\u22120.8%.',correct:true},{l:'C',t:'Stand aside \u2014 composition is complex, no clear trade signal'},{l:'D',t:'Inventory build is bullish \u2014 shows businesses confident about future demand'}],
+ans:'B',
+fbhd:'Fade the Inventory-Driven GDP Beat',
+fbody:'When most of a GDP beat comes from inventory accumulation, the headline MASKS underlying demand weakness. Real final sales was: +0.3 \u2212 0.2 + 0.4 \u2212 0.1 = +0.4pp. The 2.4pp inventory build = companies produced more than consumers bought. Next quarter: (1) Companies slow production to clear excess stock, (2) GDP reverts to the true demand run-rate of ~0.4%, (3) Currency gives back the rally and more. <strong>The 70-pip spike was an algorithm reading the headline number. You read the composition. The trade: sell the currency into the spike. This is one of the most reliably repeatable edges in economic data trading.</strong>'},
+
+{id:'2c',n:'09',title:'Yield Curve: What Does Bull Steepening Mean?',sub:'Indicator Reading \u00b7 Leading',
+scenario:'<strong>US Yield Curve Sequence over 24 months:</strong><br>Month 1: 2yr 1.2%, 10yr 2.8% = +1.6% (Normal steep curve)<br>Month 8: 2yr 3.8%, 10yr 3.9% = +0.1% (Flat curve)<br>Month 14: 2yr 5.1%, 10yr 3.8% = \u22121.3% (Maximum inversion \u2014 recession signal)<br>Month 22: 2yr 3.6%, 10yr 4.2% = +0.6% (Re-steepening \u2014 2yr fell faster than 10yr = BULL STEEPENING)',
+q:'What does Month 22 bull steepening signal and what is the correct USD trade?',
+opts:[{l:'A',t:'Bullish USD \u2014 yield curve back to positive, the worst is over, economy recovering'},{l:'B',t:'Bull steepening (2yr falling faster than 10yr) signals the Fed is cutting aggressively because recession has arrived or is imminent. SHORT USD. The cutting cycle that destroys USD yield advantage is being front-run by the bond market.',correct:true},{l:'C',t:'Neutral \u2014 steepening just means the curve is normalising, no trading signal'},{l:'D',t:'Long USD \u2014 re-steepening always means growth and inflation expectations rising'}],
+ans:'B',
+fbhd:'Bull Steepening = Fed Cutting Aggressively = Short USD',
+fbody:'The TYPE of steepening matters enormously. <strong>Bear steepening</strong> (long end rises faster than short end) = growth and inflation expectations rising = USD bullish. <strong>Bull steepening</strong> (short end falls faster than long end) = Fed cutting aggressively because recession is arriving = USD bearish. Month 22: 2yr went 5.1%\u21923.6% (fell 150bp). 10yr went 3.8%\u21924.2% (ROSE 40bp). The front end is pricing rapid, aggressive Fed cuts. <strong>This is the green light for the full dovish USD thesis. The month the bull steepening becomes clear is the highest-conviction short USD entry in the entire rate cycle. This was the exact 2023 pattern that drove EUR/USD from 0.99 to 1.12.</strong>'},
+
+{id:'2d',n:'10',title:'Credit Spreads Leading GDP',sub:'Indicator Reading \u00b7 Leading',
+scenario:'<strong>Economy Tau:</strong> US HY Spreads over 6 months: 285bp \u2192 310bp \u2192 380bp \u2192 490bp \u2192 640bp \u2192 840bp (nearly tripling from tight levels)<br><br>US PMI: 52.1 (still above 50) \u00b7 US GDP: +1.6% (still positive) \u00b7 US Unemployment: 4.1% (stable)',
+q:'Credit spreads have nearly tripled but all other economic data still looks fine. What is happening and what is the correct action?',
+opts:[{l:'A',t:'Ignore the credit spreads \u2014 PMI and GDP are positive so the economy is clearly still healthy'},{l:'B',t:'Credit spreads rising 285\u2192840bp (195% increase) is the EARLIEST available warning. GDP and PMI look fine because credit spreads LEAD them by 3\u22126 months. Reduce risk immediately. The GDP and PMI misses will arrive within 2\u22123 months.',correct:true},{l:'C',t:'Credit spread rise is a bond market technical, not an economic signal'},{l:'D',t:'Wait for GDP to turn negative before acting on credit spread movements'}],
+ans:'B',
+fbhd:'Credit Spreads Lead GDP by 3\u20136 Months \u2014 Act Now',
+fbody:'HY at 285\u2192840bp in 6 months is a 195% increase. The bond market is pricing rising corporate default risk in real time. When borrowing costs surge: (1) Companies immediately cut capex plans, (2) Freeze hiring, (3) Draw down existing credit lines. This corporate defensive action flows through to employment in 2\u22124 months, then to GDP in 3\u22126 months. <strong>The crowd is reading today\u2019s PMI of 52.1 and seeing expansion. You are reading 840bp spreads and seeing a recession signal 3\u22126 months ahead. This is exactly the structural time advantage that Layer 1 leading indicators give you. Reduce longs now. Build the short thesis. The PMI and GDP confirmation is coming \u2014 you are just seeing it first.</strong>'},
+
+{id:'2e',n:'11',title:'Consumer Confidence \u2014 The Lead-Lag Principle',sub:'Indicator Reading \u00b7 Applied',
+scenario:'<strong>Sequence for Economy Phi:</strong><br>Month 1: Consumer Confidence falls 35 points (from 118 to 83) over 5 months. BUT retail sales STILL +0.3% MoM.<br>Month 4: Retail sales +0.1% (slowing)<br>Month 6: Retail sales \u22120.4% (turning negative)<br>Month 8: GDP turns negative.',
+q:'A junior analyst says: "Confidence fell but retail sales are still positive \u2014 it is just sentiment, ignore it." What is fundamentally wrong with this analysis?',
+opts:[{l:'A',t:'Nothing \u2014 real sales data should always override sentiment surveys'},{l:'B',t:'The analyst is confusing a leading indicator (confidence) with a coincident indicator (retail sales). Confidence fell in Month 1. Retail sales turned negative in Month 6 \u2014 a 5-month lag. A professional was already building the bearish thesis in Month 1, not waiting for Month 6 confirmation.',correct:true},{l:'C',t:'The analyst is partly right \u2014 confidence alone is too low quality to act on'},{l:'D',t:'Retail sales and confidence always move simultaneously with no lead-lag'}],
+ans:'B',
+fbhd:'Confidence Leads Retail Sales by 3\u20136 Months',
+fbody:'This illustrates the lead-lag relationship precisely. Confidence changes because household EXPECTATIONS change. Spending changes when those expectations persist long enough for households to act on them \u2014 typically 3\u22126 months. By Month 1 when confidence fell 35 points, the professional trader is building the bearish thesis. By Month 6 when retail sales finally turns negative, the currency has already fallen substantially and the trade is now discussed in every financial news outlet \u2014 meaning the move is largely done. <strong>Leading indicators give you the edge precisely because they work before the coincident data arrives. The junior analyst\u2019s mistake: requiring real confirmation of what the leading data already told you clearly. That mistake costs you the best 300 pips of every move.</strong>'}
+];
+
+var E15=[
+{id:'3a',n:'12',title:'Spot the Peak \u2014 6-Month Sequence',sub:'Transition Detection \u00b7 Peak-to-Contraction',
+scenario:'<strong>Economy Pi \u2014 6 Monthly Updates:</strong><br>PMI: 57.1 \u2192 56.4 \u2192 54.8 \u2192 52.1 \u2192 50.3 \u2192 49.1<br>Unemployment: 3.3% \u2192 3.3% \u2192 3.4% \u2192 3.6% \u2192 3.9% \u2192 4.2%<br>CB Rate: 5.50%\u21925.50%\u21925.50%\u219225bp cut\u219225bp cut\u219225bp cut<br>CPI: 4.8% \u2192 4.4% \u2192 3.9% \u2192 3.4% \u2192 3.0% \u2192 2.6%',
+q:'At what point in this sequence should a skilled analyst have initiated a short position, and why?',
+opts:[{l:'A',t:'Month 6 \u2014 when PMI finally crossed below 50, confirming the contraction'},{l:'B',t:'Months 2\u22123 \u2014 when PMI began falling from its 57.1 peak for 2 consecutive months. By Month 6 the trade is fully crowded and most of the move is done.',correct:true},{l:'C',t:'Month 4 \u2014 when the CB made its first cut'},{l:'D',t:'Cannot enter short until 2 consecutive negative GDP quarters are confirmed'}],
+ans:'B',
+fbhd:'Months 2\u22123 Were the Ideal Entry \u2014 Not Month 6',
+fbody:'Month 1: PMI 57.1 \u2014 at peak. All longs maintained. Month 2: PMI 56.4 \u2014 first monthly fall. Not enough. Watch carefully. Month 3: PMI 54.8 \u2014 SECOND consecutive fall. This is the FIRST warning signal. Begin trimming longs and initiating small shorts. Month 4: PMI 52.1, unemployment ticking up 3.3%\u21923.6%, CB first cut. Evidence accumulating. BUILD the short. Months 5\u22126: PMI crosses 50, contraction confirmed. By now the move is well underway and discussed in every financial publication. <strong>The lesson: the best R:R entry is in Months 2\u22123 when the cycle turn is signalled but not yet confirmed by lagging data. Waiting for Month 6 confirmation means entering a crowded trade after the best 400 pips have already moved.</strong>'},
+
+{id:'3b',n:'13',title:'CB Language \u2014 Three Meeting Sequence',sub:'CB Communication \u00b7 Transition',
+scenario:'<strong>Three consecutive press conferences:</strong><br><strong>Meeting A:</strong> "Inflation remains well above our 2% target. We are highly committed to returning inflation to target and will use all available tools."<br><strong>Meeting B:</strong> "We have made significant progress in our fight against inflation. The labour market, while strong, is showing some signs of cooling. We continue to monitor incoming data carefully."<br><strong>Meeting C:</strong> "We believe we have achieved sufficient restriction. We are now in a position to begin the process of normalisation. We expect to make further adjustments over coming meetings."',
+q:'At which meeting did the CB signal the BEGINNING of the rate-cutting cycle, and why?',
+opts:[{l:'A',t:'Meeting A \u2014 mention of "all available tools" is an emergency signal'},{l:'B',t:'Meeting B \u2014 acknowledging labour market cooling is a dovish pivot announcement'},{l:'C',t:'Meeting C \u2014 "begin the process of normalisation" + "further adjustments over coming meetings" together signal: first cut NOW, multiple cuts explicitly forecast to follow.',correct:true},{l:'D',t:'Cannot determine from language alone \u2014 need to see actual rate decision data'}],
+ans:'C',
+fbhd:'Meeting C \u2014 Full Pivot Announcement Decoded',
+fbody:'Meeting A: HAWKISH. "Highly committed" + "all available tools" = still fighting hard. Hold or add longs. Meeting B: NEUTRAL-TO-DOVISH SHIFT. "Significant progress" = inflation fight largely won. "Signs of cooling" = labour market weakening. Language shifting but no cut commitment yet. Begin trimming longs. Meeting C: FULL DOVISH PIVOT. Decode phrase by phrase: "Sufficient restriction achieved" = finished hiking. "Begin the process of normalisation" = FIRST CUT IS TODAY. "Further adjustments over coming meetings" = 2+ additional cuts explicitly forecast after this one. <strong>This is the green light for the full currency bear thesis. Short the currency at Meeting C. Hold while language says "approaching neutral rate." Exit when they say "we may need to hold at this level."</strong>'},
+
+{id:'3c',n:'14',title:'Identify the Policy Error',sub:'Advanced \u00b7 Behind-the-Curve Detection',
+scenario:'<strong>Economy Omega timeline:</strong><br>Months 1\u20138: CPI rises 2%\u21926%. CB holds at 0.5%. Language: "inflation is supply-driven and transitory."<br>Month 9: CPI 7.2%. CB finally hikes 25bp (first move in 8 months of rising inflation).<br>Months 10\u201314: CB panics, hikes 75bp per meeting. Rate: 0.5%\u21924.0% in 5 months.<br>Month 15: PMI crosses below 50. GDP first negative print.<br>Month 18: GDP \u22120.9%. Recession confirmed.',
+q:'What was the policy error and what did it mean for the informed trader who read leading indicators?',
+opts:[{l:'A',t:'The CB hiked too early in Month 9 \u2014 should have waited for clearer data'},{l:'B',t:'Policy error was "behind the curve" \u2014 holding at 0.5% while CPI doubled from 2% to 6%. Forced into panic 75bp hikes that pushed economy into recession. But the trader reading M2, PMI, and CPI in Months 1\u22124 was already long the currency before the hikes even began.',correct:true},{l:'C',t:'No policy error \u2014 recessions always follow expansions regardless of CB policy'},{l:'D',t:'Error was cutting in Month 20 \u2014 should have held rates higher for longer'}],
+ans:'B',
+fbhd:'Behind-the-Curve Error \u2014 The Informed Trader Was Positioned Early',
+fbody:'The policy error was in Months 1\u22128. CPI doubling from 2% to 6% while M2 is running at 20%+ and PMI at 58 is not transitory. The CB chose to hold, citing "supply dynamics." The Layer 1 trader reading the data in Month 2\u22123 knew: (1) inflation is building from demand (M2 confirms this), (2) the CB will eventually have to hike dramatically, (3) when they do, the currency will surge violently. <strong>Correct trade: LONG the currency in Months 2\u22123, before the hike cycle begins. Catch the entire surge during the panic hiking Months 9\u201314. Then EXIT when recession risk builds in Month 15. This is the full behind-the-curve trade sequence.</strong>'},
+
+{id:'3d',n:'15',title:'False Dawn vs Genuine Recovery',sub:'Advanced \u00b7 Pattern Recognition',
+scenario:'<strong>Economy Rho \u2014 After 3 quarters of recession:</strong><br>Latest: GDP turns positive to +0.7% (first positive quarter!) \u00b7 PMI 51.8 (above 50!) \u00b7 Consumer Confidence \u221218 (recovering from \u221234 low).<br><br>BUT: Private sector credit STILL contracting at \u22123.8% YoY despite rates at 0.25% floor. Government just announced a $500B fiscal stimulus package. Mortgage applications still declining.',
+q:'Is this a genuine recovery or a false dawn? What single piece of data is most diagnostic?',
+opts:[{l:'A',t:'Genuine recovery \u2014 GDP positive and PMI above 50 are definitive economic signals'},{l:'B',t:'FALSE DAWN \u2014 The GDP bounce and PMI improvement are entirely driven by the $500B government spending package. Private sector credit still contracting at \u22123.8% despite rates at the floor = businesses and households are deleveraging, not borrowing to invest. This bounce will reverse when the stimulus fades.',correct:true},{l:'C',t:'Cannot determine \u2014 need 3 more months of data to know'},{l:'D',t:'False dawn because consumer confidence is still negative'}],
+ans:'B',
+fbhd:'False Dawn \u2014 Government-Stimulus Bounce Only',
+fbody:'The most diagnostic question for any apparent recovery is: IS PRIVATE SECTOR CREDIT EXPANDING? A genuine recovery is self-sustaining because the private sector (businesses and consumers) begins borrowing and investing of their own accord. When private credit is contracting at \u22123.8% despite rates at the floor (cheapest possible borrowing conditions), the private sector is deleveraging \u2014 paying down debt, not taking on new debt. The GDP bounce came entirely from the $500B government package (G in GDP = C+I+G+NX). When that package runs its course: (1) Government spending falls, (2) GDP reverts to private-sector run rate (~&minus;0.4%), (3) Economy dips again. <strong>Do not flip to full long on this data. Wait for: PMI above 50 for 2+ months AND private credit turning positive AND credit spreads normalising. All three = genuine recovery. One alone = false dawn.</strong>'}
+];
+
+var E16=[
+{id:'4a',n:'16',title:'Full Macro Synthesis \u2014 USD/JPY Trade',sub:'Expert Synthesis \u00b7 Open Exercise',open:true,
+scenario:'<strong>Full Dataset:</strong><br><strong>US:</strong> GDP +1.2% (slowing from 2.4%). PMI 47.8 falling. Core PCE 2.1% (near target). NFP +78K (big miss). FedWatch 84% cut next meeting. US10Y 3.85% falling. US02Y 3.92% falling.<br><strong>Japan:</strong> Tokyo CPI 3.1% rising. Wage growth 4.8% (highest in 30 years). BoJ Rate 0.75% (raised from \u22120.10% over 2 years). JP10Y 1.15% rising. BoJ: "Will act further if data supports."<br><strong>Risk:</strong> VIX 17. HY Spreads tight.',
+q:'Write your complete trade thesis: (1) US cycle phase and trajectory. (2) Japan cycle phase and trajectory. (3) Rate differential direction and mechanism. (4) USD/JPY directional bias with hold criteria. (5) What invalidates your thesis.',
+ph:'US cycle phase:\nJapan cycle phase:\nRate differential:\nUSD/JPY bias:\nHold while:\nInvalidation:',
+ans:'<strong>1. US Cycle Phase:</strong> Late Expansion transitioning to Contraction. PMI 47.8 below 50, GDP slowing 2.4%\u21921.2%, NFP badly missing forecasts, FedWatch 84% cut. CB has pivoted fully dovish. US02Y falling confirms rates going lower fast.<br><br><strong>2. Japan Cycle Phase:</strong> Recovery to Early Expansion. BoJ normalising from emergency lows. Wages 4.8% (historic high) = deflation finally and durably ending. Tokyo CPI 3.1% sustained above 2% target for the first time in 30 years. Japan exiting a 30-year debt-deflation trap = a long-duration structural story with years of normalisation ahead.<br><br><strong>3. Rate Differential:</strong> US10Y at 3.85% FALLING (Fed cutting). JP10Y at 1.15% RISING (BoJ hiking). The US-Japan spread is compressing from BOTH ENDS simultaneously. This is the rarest and most powerful USD/JPY bearish convergence signal available in macro analysis. Every 10bp the spread narrows, USD/JPY falls proportionally. Both CBs are actively moving in opposite directions.<br><br><strong>4. USD/JPY Bias:</strong> STRONGLY BEARISH USD/JPY (Short USD, Buy JPY). Rationale: Fed cutting (US yield falling) + BoJ hiking (JP yield rising) = rate spread compressing from both sides = carry trade unwind. Risk-on (VIX 17) means no offsetting safe-haven demand for USD. Entry: sell USD/JPY rallies to resistance. Target: 300\u2013800 pip move over 4\u201314 weeks.<br><br><strong>5. Hold while:</strong> US PMI stays below 51, Fed continues cutting, BoJ language stays hawkish, JP10Y continues rising.<br><br><strong>6. Invalidation:</strong> US CPI reaccelerates above 3% (cuts repriced out). BoJ reverses normalisation. VIX spikes above 35 (risk-off = temporary USD buy). US02Y-JP02Y spread stops narrowing for 2+ consecutive weeks.'},
+
+{id:'4b',n:'17',title:'EUR/USD \u2014 Stagflation Complication',sub:'Expert Synthesis \u00b7 Open Exercise',open:true,
+scenario:'<strong>EZ:</strong> GDP \u22120.2% (Q2 2026). PMI 48.4 (below 50, falling from 52.5 peak Nov 2025). HICP 3.2% (rising sharply from 1.7% in Jan 2026 due to energy supply shock). Core HICP 2.5%. ECB Rate 2.15% (cut cycle paused). Unemployment 6.3% (rising). Confidence: \u221219 (collapsed).<br><strong>US:</strong> GDP +1.4% (stable). PMI 51.2 (rising). Core PCE 2.1%. Fed Rate 3.75% (cutting gradually). US02Y 3.68%.',
+q:'Write the complete EUR/USD verdict: (1) EZ cycle phase and complication. (2) US cycle phase. (3) ECB\u2019s most likely next action and why. (4) EUR/USD directional bias with full reasoning. (5) Key data release that would decisively change your view.',
+ph:'EZ cycle phase:\nEZ complication:\nUS cycle phase:\nECB next action:\nEUR/USD bias:\nKey risk release:',
+ans:'<strong>1. EZ Cycle Phase:</strong> Contraction with stagflationary complication. GDP \u22120.2% + PMI 48.4 (below 50, falling) + unemployment rising + confidence collapsed = clear contraction. BUT HICP at 3.2% and rising from 1.7% in just 5 months = inflation reaccelerating due to energy supply shock = ECB cannot cut freely despite growth weakness.<br><br><strong>2. EZ Complication:</strong> Classic stagflation setup. Needs cuts (GDP negative, unemployment rising) but cannot cut (HICP above target and reaccelerating). ECB is in the same impossible position as 2022. The energy shock is exogenous and cannot be solved by monetary policy.<br><br><strong>3. US Cycle Phase:</strong> Mid-to-Late Expansion. PMI 51.2 rising = still expanding. GDP +1.4% stable. Core PCE 2.1% near target. Fed cutting gradually toward neutral, not in emergency mode. US cycle healthier than EZ but not dramatically so.<br><br><strong>4. ECB Next Action:</strong> Hawkish hold at 2.15%. Cannot cut because HICP at 3.2% rising is a direct mandate violation. Cannot hike because GDP is negative. Most likely outcome: hold with deliberately vague language acknowledging growth concerns while reaffirming 2% commitment. Outcome: range-bound EUR on ECB date.<br><br><strong>5. EUR/USD Bias:</strong> Complex and range-bound with modest bearish EZ bias. EZ contraction is bearish for EUR, but ECB forced hold provides yield support. US02Y (3.68%) minus DE02Y (~2.7%) = ~1% spread still favouring USD. But: Fed cutting narrows this (bearish USD). Net: EUR/USD likely range-bound 1.02\u20131.10 with direction determined by which force wins.<br><br><strong>6. Decisive Data:</strong> EZ HICP Flash (month end). If HICP rises above 3.5%: ECB locked from cutting, EUR gets yield support, EUR/USD rises. If HICP falls below 2.5%: ECB cuts aggressively, EUR/USD falls 200+ pips. This single print decides the dominant direction for the next 6\u22128 weeks.'}
+];
+
+// ── RENDER ALL EXERCISES ──
+E13.forEach(function(e){ mkMCQ(e,'ex13'); });
+E14.forEach(function(e){ mkMCQ(e,'ex14'); });
+E15.forEach(function(e){ mkMCQ(e,'ex15'); });
+E16.forEach(function(e){ mkOpen(e,'ex16'); });
+
+// ── SCROLL REVEAL ──
+var io=new IntersectionObserver(function(ents){
+  ents.forEach(function(e){if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';}});
+},{threshold:0.03});
+document.querySelectorAll('.ex-card,.ic,.sc-card,.pc').forEach(function(el){
+  el.style.opacity='0';el.style.transform='translateY(14px)';
+  el.style.transition='opacity .38s ease,transform .38s ease';
+  io.observe(el);
+});
+</script></body></html>
