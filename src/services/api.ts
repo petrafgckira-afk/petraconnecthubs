@@ -73,8 +73,15 @@ async function _doFetch(path: string, options: RequestInit): Promise<any> {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res  = await fetch(`${API_BASE}${path}`, { ...options, headers });
-  const data = await res.json();
+  // Retry once on empty response (PHP-FPM cold start on shared hosting)
+  let res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  let text = await res.text();
+  if (!text.trim()) {
+    await new Promise(r => setTimeout(r, 800));
+    res  = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    text = await res.text();
+  }
+  const data = JSON.parse(text);
 
   if (res.status === 401) {
     clearSession();
@@ -127,12 +134,20 @@ async function request(path: string, options: RequestInit = {}) {
 
 // ── Auth ──────────────────────────────────────────────
 export async function loginUser(email: string, password: string) {
-  const res  = await fetch(`${API_BASE}/auth/login.php`, {
+  const loginOpts = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
-  });
-  const data = await res.json();
+  };
+  let res  = await fetch(`${API_BASE}/auth/login.php`, loginOpts);
+  let text = await res.text();
+  // Retry once on empty response — PHP-FPM cold start on shared hosting
+  if (!text.trim()) {
+    await new Promise(r => setTimeout(r, 800));
+    res  = await fetch(`${API_BASE}/auth/login.php`, loginOpts);
+    text = await res.text();
+  }
+  const data = JSON.parse(text);
   if (!res.ok) {
     const err: any = new Error(data.error || 'Login failed');
     if (data.pending) err.pending = true;
