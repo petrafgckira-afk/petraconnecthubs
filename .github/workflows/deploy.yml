@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./petra-api/
-          server-dir: ${{ secrets.FTP_SERVER_DIR_API }}
+          server-dir: "${{ secrets.FTP_SERVER_DIR_API }}/"
           # Never upload or delete config/database.php — it lives on the server only
           exclude: |
             **/.git*
