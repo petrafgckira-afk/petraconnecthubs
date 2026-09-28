@@ -73,11 +73,12 @@ async function _doFetch(path: string, options: RequestInit): Promise<any> {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  // Retry once on empty response (PHP-FPM cold start on shared hosting)
+  // Retry up to 2× on empty response — PHP-FPM cold start on shared hosting
+  // can take 1–3 s; 3 total attempts at 1.5 s apart covers the warm-up window
   let res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   let text = await res.text();
-  if (!text.trim()) {
-    await new Promise(r => setTimeout(r, 800));
+  for (let attempt = 0; attempt < 2 && !text.trim(); attempt++) {
+    await new Promise(r => setTimeout(r, 1500));
     res  = await fetch(`${API_BASE}${path}`, { ...options, headers });
     text = await res.text();
   }
@@ -139,12 +140,12 @@ export async function loginUser(email: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   };
-  let res  = await fetch(`${API_BASE}/auth/login.php`, loginOpts);
+  let res  = await fetch(`${API_BASE}auth/login.php`, loginOpts);
   let text = await res.text();
-  // Retry once on empty response — PHP-FPM cold start on shared hosting
-  if (!text.trim()) {
-    await new Promise(r => setTimeout(r, 800));
-    res  = await fetch(`${API_BASE}/auth/login.php`, loginOpts);
+  // Retry up to 2× on empty response — PHP-FPM cold start on shared hosting
+  for (let attempt = 0; attempt < 2 && !text.trim(); attempt++) {
+    await new Promise(r => setTimeout(r, 1500));
+    res  = await fetch(`${API_BASE}auth/login.php`, loginOpts);
     text = await res.text();
   }
   const data = JSON.parse(text);
