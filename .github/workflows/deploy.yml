@@ -33,8 +33,8 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /public_html/connecthubs.petrafgc.org/
-          dangerous-clean-slate: true
+          server-dir: ./
+          dangerous-clean-slate: false
 
   # ── Job 2: Deploy PHP backend (runs in parallel with Job 1) ────────
   deploy-backend:
